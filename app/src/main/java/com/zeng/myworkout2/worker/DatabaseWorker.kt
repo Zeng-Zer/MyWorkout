@@ -30,36 +30,44 @@ class DatabaseWorker(
     private suspend fun populateDatabase(database: AppDatabase) {
         val exerciseDao = database.exerciseDao()
         val workoutDao = database.workoutDao()
+
+        val squatExercise = Exercise("Squat", "Legs")
+        val benchExercise = Exercise("Bench Press", "Chest")
+        val deadliftExercise = Exercise("Deadlift", "Legs")
+
+        squatExercise.id = exerciseDao.insert(squatExercise)
+        benchExercise.id = exerciseDao.insert(benchExercise)
+        deadliftExercise.id = exerciseDao.insert(deadliftExercise)
+
         val squat = WorkoutExercise(
-            Exercise("Squat", "Legs"),
+            squatExercise,
             listOf(5, 5, 5, 5, 5),
             120f,
             0
         )
 
-
-        val deadlift = WorkoutExercise(
-            Exercise("Deadlift", "Legs"),
-            listOf(5),
-            200f,
-            1
-        )
-
         val bench = WorkoutExercise(
-            Exercise("Bench Press", "Chest"),
+            benchExercise,
             listOf(10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
             60f,
             2
         )
 
+        val deadlift = WorkoutExercise(
+            deadliftExercise,
+            listOf(5),
+            200f,
+            1
+        )
+
         val workout = Workout(
-            listOf(squat, deadlift, bench),
+            listOf(squat, bench, deadlift),
             "Fullbody",
             "test"
         )
 
         val workout2 = Workout(
-            listOf(squat, deadlift, bench),
+            listOf(squat),
             "Fullbody2",
             "test"
         )

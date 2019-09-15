@@ -20,12 +20,10 @@ abstract class ExerciseDao {
 
     @Insert
     open suspend fun insertAllWorkoutExercise(workoutExercises: List<WorkoutExercise>) {
-        val exercises = workoutExercises.map {
-            val exerciseId = insert(it.exercise)
-            it.exerciseId = exerciseId
-            it
+        workoutExercises.forEach {
+            it.exerciseId = it.exercise.id
         }
-        insertAllWorkoutExerciseSql(exercises)
+        insertAllWorkoutExerciseSql(workoutExercises)
     }
 
     @Delete
