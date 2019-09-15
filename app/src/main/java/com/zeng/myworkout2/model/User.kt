@@ -4,13 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
-@Entity(tableName = "user")
-open class UserSql(
-    @PrimaryKey(autoGenerate = true)
-    var id: Long? = null,
-    var workoutId: Long? = null
-)
-
 class User(
     workout: Workout? = null,
     id: Long? = null,
@@ -19,5 +12,16 @@ class User(
 
     @Relation(parentColumn = "workoutId", entityColumn = "id", entity = WorkoutSql::class)
     var workouts: List<Workout> = if (workout != null) listOf(workout) else listOf()
-    val workout: Workout? get() = workouts.firstOrNull()
+    var workout: Workout?
+        get() = workouts.firstOrNull()
+        set(value) {
+            workoutId = value?.id
+        }
 }
+
+@Entity(tableName = "user")
+open class UserSql(
+    @PrimaryKey(autoGenerate = true)
+    var id: Long? = null,
+    var workoutId: Long? = null
+)

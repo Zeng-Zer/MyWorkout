@@ -6,6 +6,15 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.io.Serializable
 
+class Workout(
+    @Relation(parentColumn = "id", entityColumn = "workoutId", entity = WorkoutExerciseSql::class)
+    var exercises: List<WorkoutExercise> = listOf(),
+    name: String = "",
+    description: String = "",
+    routineId: Long? = null,
+    id: Long? = null
+) : WorkoutSql(name, description, routineId, id)
+
 @Entity(tableName = "workout")
 open class WorkoutSql(
     @ColumnInfo
@@ -21,12 +30,3 @@ open class WorkoutSql(
     var id: Long? = null
 
 ) : Serializable
-
-class Workout(
-    @Relation(parentColumn = "id", entityColumn = "workoutId", entity = WorkoutExerciseSql::class)
-    var exercises: List<WorkoutExercise> = listOf(),
-    name: String = "",
-    description: String = "",
-    routineId: Long? = null,
-    id: Long? = null
-) : WorkoutSql(name, description, routineId, id)

@@ -21,15 +21,15 @@ abstract class WorkoutDao {
     abstract fun delete(workoutSql: WorkoutSql)
 
     @Insert
-    abstract fun insert(workoutSql: WorkoutSql): Long
+    abstract fun insertWorkoutSql(workoutSql: WorkoutSql): Long
 
     @Transaction
     open suspend fun insert(exerciseDao: ExerciseDao, workout: Workout): Long {
-        val workoutId = insert(workout)
+        val workoutId = insertWorkoutSql(workout)
         workout.exercises.forEach {
             it.workoutId = workoutId
         }
-        exerciseDao.insertWorkoutExercises(workout.exercises)
+        exerciseDao.insertAllWorkoutExercise(workout.exercises)
         return workoutId
     }
 

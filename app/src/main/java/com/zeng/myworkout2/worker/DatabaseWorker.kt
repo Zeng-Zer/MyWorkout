@@ -7,7 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.zeng.myworkout2.database.AppDatabase
 import com.zeng.myworkout2.model.Exercise
-import com.zeng.myworkout2.model.UserSql
+import com.zeng.myworkout2.model.User
 import com.zeng.myworkout2.model.Workout
 import com.zeng.myworkout2.model.WorkoutExercise
 import kotlinx.coroutines.coroutineScope
@@ -52,7 +52,7 @@ class DatabaseWorker(
             2
         )
 
-        val workoutWithExercise = Workout(
+        val workout = Workout(
             listOf(squat, deadlift, bench),
             "Fullbody",
             "test"
@@ -63,11 +63,9 @@ class DatabaseWorker(
             "Fullbody2",
             "test"
         )
-        val workoutId = workoutDao.insert(exerciseDao, workoutWithExercise)
+        workout.id = workoutDao.insert(exerciseDao, workout)
 
-        val user = UserSql()
-        user.workoutId = workoutId
-        user.id = 0
+        val user = User(workout, 0)
         database.userDao().insert(user)
 
         workout2.id = 8

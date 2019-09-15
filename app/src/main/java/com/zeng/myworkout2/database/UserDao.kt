@@ -7,27 +7,33 @@ import com.zeng.myworkout2.model.UserSql
 import com.zeng.myworkout2.model.WorkoutSql
 
 @Dao
-interface UserDao {
+abstract class UserDao {
     @Transaction
     @Query("SELECT * FROM user")
-    fun getAll(): LiveData<List<UserSql>>
+    abstract fun getAll(): LiveData<List<UserSql>>
 
     /**
      * id 0 equals phone it
      */
     @Transaction
     @Query("SELECT * FROM user where id = 0")
-    fun getCurrentUser() : LiveData<User>
+    abstract fun getCurrentUser() : LiveData<User>
 
     @Insert
-    suspend fun insert(userSql: UserSql): Long
+    abstract suspend fun insertUserSql(user: UserSql): Long
+
+    @Transaction
+    open suspend fun insert(user: User): Long {
+        user.workoutId = user.workout?.id
+        return insertUserSql(user)
+    }
 
     @Insert
-    suspend fun insertAll(vararg workoutSqls: WorkoutSql): List<Long>
+    abstract suspend fun insertAll(vararg workoutSqls: WorkoutSql): List<Long>
 
     @Update
-    suspend fun update(userSql: UserSql)
+    abstract suspend fun update(userSql: UserSql)
 
     @Delete
-    suspend fun delete(workoutSql: WorkoutSql)
+    abstract suspend fun delete(workoutSql: WorkoutSql)
 }
