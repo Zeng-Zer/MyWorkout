@@ -11,7 +11,7 @@ abstract class WorkoutDao {
 
     @Transaction
     @Query("SELECT * FROM workout WHERE id = :id")
-    abstract fun getWorkoutById(id: Long): LiveData<WorkoutSql>
+    abstract fun getWorkoutById(id: Long): LiveData<Workout>
 
     @Transaction
     @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId")

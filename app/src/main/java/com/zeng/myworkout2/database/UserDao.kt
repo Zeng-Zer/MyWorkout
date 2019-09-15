@@ -10,7 +10,7 @@ import com.zeng.myworkout2.model.WorkoutSql
 abstract class UserDao {
     @Transaction
     @Query("SELECT * FROM user")
-    abstract fun getAll(): LiveData<List<UserSql>>
+    abstract fun getAll(): LiveData<List<User>>
 
     /**
      * id 0 equals phone it
@@ -27,9 +27,6 @@ abstract class UserDao {
         user.workoutId = user.workout?.id
         return insertUserSql(user)
     }
-
-    @Insert
-    abstract suspend fun insertAll(vararg workoutSqls: WorkoutSql): List<Long>
 
     @Update
     abstract suspend fun update(userSql: UserSql)

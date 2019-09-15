@@ -6,10 +6,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.zeng.myworkout2.database.AppDatabase
-import com.zeng.myworkout2.model.Exercise
-import com.zeng.myworkout2.model.User
-import com.zeng.myworkout2.model.Workout
-import com.zeng.myworkout2.model.WorkoutExercise
+import com.zeng.myworkout2.model.*
 import kotlinx.coroutines.coroutineScope
 
 class DatabaseWorker(
@@ -28,8 +25,10 @@ class DatabaseWorker(
     }
 
     private suspend fun populateDatabase(database: AppDatabase) {
-        val exerciseDao = database.exerciseDao()
+        val userDao = database.userDao()
+        val routineDao = database.routineDao()
         val workoutDao = database.workoutDao()
+        val exerciseDao = database.exerciseDao()
 
         val squatExercise = Exercise("Squat", "Legs")
         val benchExercise = Exercise("Bench Press", "Chest")
@@ -50,14 +49,14 @@ class DatabaseWorker(
             benchExercise,
             listOf(10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
             60f,
-            2
+            1
         )
 
         val deadlift = WorkoutExercise(
             deadliftExercise,
             listOf(5),
             200f,
-            1
+            2
         )
 
         val workout = Workout(
@@ -71,13 +70,20 @@ class DatabaseWorker(
             "Fullbody2",
             "test"
         )
-        workout.id = workoutDao.insert(exerciseDao, workout)
+
+        val routine = Routine(
+            listOf(workout, workout2),
+            "routine fullbody",
+            "3x / week"
+        )
+        routineDao.insert(routine)
+
+        workout.id = 8
+        workoutDao.insert(exerciseDao, workout)
+        workout2.id = workoutDao.insert(exerciseDao, workout2)
 
         val user = User(workout, 0)
-        database.userDao().insert(user)
-
-        workout2.id = 8
-        workoutDao.insert(exerciseDao, workout2)
+        userDao.insert(user)
     }
 
     companion object {

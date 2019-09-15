@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.zeng.myworkout2.view.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_routine"
+        android:name="com.zeng.myworkout2.view.RoutineFragment"
+        android:label="@string/title_routine"
+        tools:layout="@layout/fragment_routine" />
 
     <fragment
         android:id="@+id/navigation_notifications"

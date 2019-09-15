@@ -8,19 +8,27 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.zeng.myworkout2.model.Exercise
-import com.zeng.myworkout2.model.UserSql
-import com.zeng.myworkout2.model.WorkoutSql
-import com.zeng.myworkout2.model.WorkoutExerciseSql
+import com.zeng.myworkout2.model.*
 import com.zeng.myworkout2.util.DataConverter
 import com.zeng.myworkout2.worker.DatabaseWorker
 
-@Database(entities = [WorkoutSql::class, Exercise::class, WorkoutExerciseSql::class, UserSql::class], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        UserSql::class,
+        RoutineSql::class,
+        WorkoutSql::class,
+        WorkoutExerciseSql::class,
+        Exercise::class
+    ],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(DataConverter::class)
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
+    abstract fun routineDao(): RoutineDao
     abstract fun workoutDao(): WorkoutDao
     abstract fun exerciseDao(): ExerciseDao
-    abstract fun userDao(): UserDao
 
     companion object {
 
