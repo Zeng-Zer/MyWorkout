@@ -11,9 +11,10 @@ class Workout(
     var exercises: List<WorkoutExercise> = listOf(),
     name: String = "",
     description: String = "",
+    order: Int = 0,
     routineId: Long? = null,
     id: Long? = null
-) : WorkoutSql(name, description, routineId, id)
+) : WorkoutSql(name, description, order, routineId, id)
 
 @Entity(tableName = "workout")
 open class WorkoutSql(
@@ -22,6 +23,9 @@ open class WorkoutSql(
 
     @ColumnInfo
     var description: String = "",
+
+    @ColumnInfo
+    var order: Int = 0,
 
     @ColumnInfo
     var routineId: Long? = null,

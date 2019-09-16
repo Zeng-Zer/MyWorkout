@@ -5,6 +5,7 @@ import com.zeng.myworkout2.database.AppDatabase
 import com.zeng.myworkout2.database.RoutineRepository
 import com.zeng.myworkout2.database.WorkoutRepository
 import com.zeng.myworkout2.viewmodel.HomeViewModelFactory
+import com.zeng.myworkout2.viewmodel.RoutineDetailViewModelFactory
 import com.zeng.myworkout2.viewmodel.RoutineViewModelFactory
 
 object InjectorUtils {
@@ -22,6 +23,7 @@ object InjectorUtils {
         return RoutineRepository.getInstance(database.routineDao())
     }
 
+
     fun provideHomeViewModelFactory(context: Context): HomeViewModelFactory {
         val repository = getWorkoutRepository(context)
         return HomeViewModelFactory(repository)
@@ -30,5 +32,10 @@ object InjectorUtils {
     fun provideRoutineViewModelFactory(context: Context): RoutineViewModelFactory {
         val repository = getRoutineRepository(context)
         return RoutineViewModelFactory(repository)
+    }
+
+    fun provideRoutineDetailViewModelFactory(context: Context): RoutineDetailViewModelFactory {
+        val repository = getRoutineRepository(context)
+        return RoutineDetailViewModelFactory(repository)
     }
 }

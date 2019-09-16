@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">MyWorkout2</string>
+
     <string name="title_home">Home</string>
     <string name="title_routine">Routine</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_routine_detail">RoutineDetailActivity</string>
+
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+
+    <!--  Intent for RoutineDetailActivity  -->
+    <string name="intent_routine">routine</string>
+    <string name="intent_new_routine">new_routine</string>
 </resources>

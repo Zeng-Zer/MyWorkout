@@ -20,3 +20,11 @@ class RoutineViewModelFactory(private val repository: RoutineRepository) : ViewM
         return RoutineViewModel(repository) as T
     }
 }
+
+class RoutineDetailViewModelFactory(private val repository: RoutineRepository) : ViewModelProvider.NewInstanceFactory() {
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return RoutineDetailViewModel(repository) as T
+    }
+}

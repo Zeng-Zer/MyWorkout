@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout2.databinding.ListItemRoutineBinding
 import com.zeng.myworkout2.model.Routine
+import com.zeng.myworkout2.viewmodel.RoutineViewModel
 
-class RoutineAdapter : ListAdapter<Routine, RecyclerView.ViewHolder>(RoutineDiffCallback()) {
+class RoutineAdapter(
+    private val viewModel: RoutineViewModel,
+    private val handleRoutineDetail: (Routine, Boolean) -> Unit
+) : ListAdapter<Routine, RecyclerView.ViewHolder>(RoutineDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RoutineViewHolder(ListItemRoutineBinding.inflate(
@@ -23,9 +27,16 @@ class RoutineAdapter : ListAdapter<Routine, RecyclerView.ViewHolder>(RoutineDiff
 
     inner class RoutineViewHolder(private val binding: ListItemRoutineBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.card.setOnClickListener{
-                binding.routine?.workouts
-//                binding.routine?.
+            binding.delete.setOnClickListener {
+                binding.routine?.let {
+                    viewModel.deleteRoutine(it)
+                }
+            }
+
+            binding.card.setOnClickListener {
+                binding.routine?.let {
+                    handleRoutineDetail(it, false)
+                }
             }
         }
 

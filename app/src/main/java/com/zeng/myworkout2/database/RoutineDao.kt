@@ -9,7 +9,7 @@ import com.zeng.myworkout2.model.RoutineSql
 abstract class RoutineDao {
 
     @Transaction
-    @Query("SELECT * FROM routine WHERE id = :id")
+    @Query("SELECT * FROM routine WHERE id =:id")
     abstract fun getRoutineById(id: Long): LiveData<Routine>
 
     @Transaction
@@ -23,8 +23,9 @@ abstract class RoutineDao {
     abstract fun insertRoutineSql(routineSql: RoutineSql): Long
 
     @Transaction
-    open suspend fun insert(routine: Routine) : Long {
+    open suspend fun insert(routine: Routine): Long {
         val routineId = insertRoutineSql(routine)
+        routine.id = routineId
         routine.workouts.forEach{
             it.routineId = routineId
         }
