@@ -5,13 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-        <variable
-            name="handler"
-            type="com.zeng.myworkout2.view.RoutineDetailActivity" />
-        <variable
-            name="manager"
-            type="androidx.fragment.app.FragmentManager" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -39,6 +32,7 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabMode="scrollable"
                 android:background="?attr/colorPrimary" />
         </com.google.android.material.appbar.AppBarLayout>
 

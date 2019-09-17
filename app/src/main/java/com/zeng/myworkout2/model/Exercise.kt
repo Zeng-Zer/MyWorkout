@@ -13,6 +13,9 @@ data class Exercise(
     @ColumnInfo
     var category: String = "",
 
+    @ColumnInfo
+    var deleted: Boolean = false,
+
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 

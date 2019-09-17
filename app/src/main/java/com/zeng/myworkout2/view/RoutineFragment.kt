@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout2.databinding.FragmentRoutineBinding
 import com.zeng.myworkout2.model.Routine
-import com.zeng.myworkout2.util.InjectorUtils
+import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.view.adapter.RoutineAdapter
 import com.zeng.myworkout2.viewmodel.RoutineViewModel
+import com.zeng.myworkout2.viewmodel.getViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
@@ -24,8 +24,9 @@ class RoutineFragment : Fragment() {
 
     private lateinit var binding: FragmentRoutineBinding
 
-    private val viewModel: RoutineViewModel by viewModels {
-        InjectorUtils.provideRoutineViewModelFactory(requireContext())
+    private val viewModel: RoutineViewModel by lazy {
+        val routineRepository = RepositoryUtils.getRoutineRepository(requireContext())
+        getViewModel({RoutineViewModel(routineRepository)})
     }
 
     private val handleRoutineDetail = fun (routine: Routine, isNew: Boolean) {
@@ -62,6 +63,7 @@ class RoutineFragment : Fragment() {
         })
     }
 
+    // TODO 2 WAYS DATABINDING
     private fun showNewRoutineDialog(inflater: LayoutInflater) {
         val formDialog = DialogRoutineFormBinding.inflate(inflater, container, false)
         val dialog = AlertDialog.Builder(context)

@@ -8,7 +8,7 @@ import java.io.Serializable
 
 class Routine(
     @Relation(parentColumn = "id", entityColumn = "routineId", entity = WorkoutSql::class)
-    var workouts: List<Workout> = listOf(),
+    var workouts: List<WorkoutSql> = listOf(),
     name: String = "",
     description: String = "",
     id: Long? = null

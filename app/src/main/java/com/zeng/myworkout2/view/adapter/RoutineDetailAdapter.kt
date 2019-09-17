@@ -3,14 +3,21 @@ package com.zeng.myworkout2.view.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import com.zeng.myworkout2.view.WorkoutFragment
 
 class RoutineDetailAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    private var workouts: List<WorkoutFragment> = emptyList()
     override fun getItem(position: Int): Fragment {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return workouts[position]
     }
 
     override fun getCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return workouts.size
+    }
+
+    fun submitList(workouts: List<WorkoutFragment>) {
+        this.workouts = workouts
+        notifyDataSetChanged()
     }
 //
 //    override fun getItem(position: Int): WorkoutFragment {

@@ -13,11 +13,15 @@ abstract class RoutineDao {
     abstract fun getRoutineById(id: Long): LiveData<Routine>
 
     @Transaction
+    @Query("SELECT * FROM routine WHERE id =:id")
+    abstract fun getRoutineSqlById(id: Long): LiveData<RoutineSql>
+
+    @Transaction
     @Query("SELECT * FROM routine")
     abstract fun getAllRoutine(): LiveData<List<Routine>>
 
     @Delete
-    abstract fun delete(routineSql: RoutineSql)
+    abstract suspend fun delete(routineSql: RoutineSql)
 
     @Insert
     abstract fun insertRoutineSql(routineSql: RoutineSql): Long
