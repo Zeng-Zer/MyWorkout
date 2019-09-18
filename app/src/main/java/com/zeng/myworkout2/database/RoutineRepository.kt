@@ -7,6 +7,7 @@ class RoutineRepository private constructor(private val routineDao: RoutineDao) 
 
     fun getRoutines(): LiveData<List<Routine>> = routineDao.getAllRoutine()
     fun getRoutineById(routineId: Long): LiveData<Routine> = routineDao.getRoutineById(routineId)
+
     suspend fun addRoutine(routine: Routine): Long = routineDao.insert(routine)
     suspend fun deleteRoutine(routine: Routine) = routineDao.delete(routine)
 

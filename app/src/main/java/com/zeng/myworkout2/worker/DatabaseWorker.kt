@@ -63,14 +63,14 @@ class DatabaseWorker(
             listOf(squat, bench, deadlift),
             "Fullbody",
             "test",
-            0
+            1
         )
 
         val workout2 = Workout(
             listOf(squat),
             "Fullbody2",
             "test",
-            1
+            0
         )
 
         val routine = Routine(

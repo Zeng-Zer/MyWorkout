@@ -20,9 +20,6 @@ abstract class RoutineDao {
     @Query("SELECT * FROM routine")
     abstract fun getAllRoutine(): LiveData<List<Routine>>
 
-    @Delete
-    abstract suspend fun delete(routineSql: RoutineSql)
-
     @Insert
     abstract fun insertRoutineSql(routineSql: RoutineSql): Long
 
@@ -36,4 +33,6 @@ abstract class RoutineDao {
         return routineId
     }
 
+    @Delete
+    abstract suspend fun delete(routineSql: RoutineSql)
 }

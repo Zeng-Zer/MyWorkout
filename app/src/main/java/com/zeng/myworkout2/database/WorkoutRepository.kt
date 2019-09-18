@@ -3,6 +3,7 @@ package com.zeng.myworkout2.database
 import androidx.lifecycle.LiveData
 import com.zeng.myworkout2.model.User
 import com.zeng.myworkout2.model.Workout
+import com.zeng.myworkout2.model.WorkoutSql
 
 class WorkoutRepository private constructor(private val workoutDao: WorkoutDao, private val userDao: UserDao) {
 
@@ -16,6 +17,10 @@ class WorkoutRepository private constructor(private val workoutDao: WorkoutDao, 
 
     fun getWorkoutById(workoutId: Long): LiveData<Workout> {
         return workoutDao.getWorkoutById(workoutId)
+    }
+
+    suspend fun insertWorkoutSql(workout: WorkoutSql) {
+        workoutDao.insertWorkoutSql(workout)
     }
 
     companion object {

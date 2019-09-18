@@ -11,12 +11,12 @@ import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.viewmodel.WorkoutViewModel
 import com.zeng.myworkout2.viewmodel.getViewModel
 
-class WorkoutFragment(private val workoutId: Long) : Fragment() {
+class WorkoutFragment(val workoutId: Long) : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
 
     // Set view model with its workout
-    private val viewModel : WorkoutViewModel by lazy {
+    val viewModel : WorkoutViewModel by lazy {
         val workoutRepository = RepositoryUtils.getWorkoutRepository(requireContext())
         getViewModel({ WorkoutViewModel(workoutRepository, workoutId)}, workoutId.toString())
     }
@@ -27,7 +27,7 @@ class WorkoutFragment(private val workoutId: Long) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
-        viewModel.workout.observe(this, Observer {
+        viewModel.workout.observe(viewLifecycleOwner, Observer {
             it?.apply {
                 binding.textView.text = this.name
             }
