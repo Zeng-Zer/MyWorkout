@@ -14,9 +14,7 @@ class User(
     var workouts: List<Workout> = if (workout != null) listOf(workout) else listOf()
     var workout: Workout?
         get() = workouts.firstOrNull()
-        set(value) {
-            workoutId = value?.id
-        }
+        set(value) { workoutId = value?.id }
 }
 
 @Entity(tableName = "user")

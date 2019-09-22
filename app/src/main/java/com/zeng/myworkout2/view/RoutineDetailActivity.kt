@@ -3,9 +3,12 @@ package com.zeng.myworkout2.view
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout2.R
@@ -35,12 +38,12 @@ class RoutineDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         adapter = RoutineDetailAdapter(supportFragmentManager, lifecycle).also {
             binding.viewPager.adapter = it
         }
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
 
@@ -49,6 +52,23 @@ class RoutineDetailActivity : AppCompatActivity() {
             // TODO REMOVE
             viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
         }
+
+        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            val animUp = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_up)
+            val animDown = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_down)
+            override fun onPageScrollStateChanged(state: Int) {
+                when(state) {
+                    SCROLL_STATE_IDLE -> {
+                        fab.startAnimation(animUp)
+                        fab.postOnAnimation{ fab.show() }
+                    }
+                    else -> {
+                        fab.startAnimation(animDown)
+                        fab.postOnAnimation{ fab.hide() }
+                    }
+                }
+            }
+        })
 
         subscribeUi()
     }
@@ -69,6 +89,8 @@ class RoutineDetailActivity : AppCompatActivity() {
                 viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
                 return true
             }
+
+            // TODO
 //
 //            R.id.action_delete_workout -> {
 //                sectionsPagerAdapter.removeTab(viewPager.currentItem)

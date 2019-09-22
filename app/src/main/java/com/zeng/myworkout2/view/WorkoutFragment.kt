@@ -16,12 +16,12 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
 
-    val viewModel : WorkoutViewModel by lazy {
+    val viewModel: WorkoutViewModel by lazy {
         val workoutRepository = RepositoryUtils.getWorkoutRepository(requireContext())
         getViewModel({ WorkoutViewModel(workoutRepository, workoutId)}, workoutId.toString())
     }
 
-    private val adapter : WorkoutExerciseAdapter by lazy {
+    private val adapter: WorkoutExerciseAdapter by lazy {
         WorkoutExerciseAdapter(viewModel)
     }
 

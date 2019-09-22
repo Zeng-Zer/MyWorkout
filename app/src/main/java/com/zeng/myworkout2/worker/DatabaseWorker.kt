@@ -40,21 +40,24 @@ class DatabaseWorker(
 
         val squat = WorkoutExercise(
             squatExercise,
-            listOf(5, 5, 5, 5, 5),
+            5,
+            5,
             120f,
             0
         )
 
         val bench = WorkoutExercise(
             benchExercise,
-            listOf(10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
+            10,
+            10,
             60f,
             1
         )
 
         val deadlift = WorkoutExercise(
             deadliftExercise,
-            listOf(5),
+            1,
+            5,
             200f,
             2
         )

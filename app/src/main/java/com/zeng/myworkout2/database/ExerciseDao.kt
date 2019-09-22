@@ -26,6 +26,9 @@ abstract class ExerciseDao {
         insertAllWorkoutExerciseSql(workoutExercises)
     }
 
+    @Update
+    abstract suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql)
+
     @Delete
     abstract suspend fun delete(exercise: Exercise)
 }

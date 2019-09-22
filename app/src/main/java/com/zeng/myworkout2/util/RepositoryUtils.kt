@@ -11,6 +11,7 @@ object RepositoryUtils {
         val database = AppDatabase.getInstance(context.applicationContext)
         return WorkoutRepository.getInstance(
             database.workoutDao(),
+            database.exerciseDao(),
             database.userDao()
         )
     }

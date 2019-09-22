@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="weight"
+            type="Float" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/decrease"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="30dp"
+            android:background="?android:selectableItemBackground"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_remove_black_24dp" />
+
+        <EditText
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number|numberDecimal"
+            android:digits="0123456789."
+            android:selectAllOnFocus="true"
+            android:text="@{weight.toString()}" />
+
+        <ImageButton
+            android:id="@+id/increase"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:background="?android:selectableItemBackground"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_add_black_24dp" />
+
+    </LinearLayout>
+</layout>

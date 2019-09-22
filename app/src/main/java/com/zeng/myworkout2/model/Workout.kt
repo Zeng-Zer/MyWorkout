@@ -27,6 +27,7 @@ open class WorkoutSql(
     @ColumnInfo
     var order: Int = 0,
 
+    // TODO SETUP FOREIGN KEY - DELETE CASCADE ?
     @ColumnInfo
     var routineId: Long? = null,
 
