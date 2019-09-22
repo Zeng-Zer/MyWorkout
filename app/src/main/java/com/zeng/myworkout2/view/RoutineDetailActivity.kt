@@ -1,6 +1,8 @@
 package com.zeng.myworkout2.view
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -38,19 +40,58 @@ class RoutineDetailActivity : AppCompatActivity() {
             binding.viewPager.adapter = it
         }
 
-        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, pos ->
-            tab.text = "test $pos"
-        }.attach()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             // TODO REMOVE
             viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
         }
 
         subscribeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.routine_detail_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+
+            R.id.action_new_workout -> {
+                viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
+                return true
+            }
+//
+//            R.id.action_delete_workout -> {
+//                sectionsPagerAdapter.removeTab(viewPager.currentItem)
+//                return true
+//            }
+//
+//            R.id.action_move_right_workout -> {
+//                if (viewPager.currentItem + 1 < sectionsPagerAdapter.fragments.size) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItem, viewPager.currentItem + 1)
+//                    viewPager.setCurrentItem(viewPager.currentItem + 1, true)
+//                }
+//                return true
+//            }
+//
+//            R.id.action_move_left_workout -> {
+//                if (viewPager.currentItem - 1 >= 0) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItem, viewPager.currentItem - 1)
+//                    viewPager.setCurrentItem(viewPager.currentItem - 1, true)
+//                }
+//                return true
+//            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun subscribeUi() {
