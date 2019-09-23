@@ -11,8 +11,9 @@ class Routine(
     var workouts: List<WorkoutSql> = listOf(),
     name: String = "",
     description: String = "",
+    order: Int = 0,
     id: Long? = null
-) : RoutineSql(name, description, id)
+) : RoutineSql(name, description, order, id)
 
 @Entity(tableName = "routine")
 open class RoutineSql(
@@ -21,6 +22,9 @@ open class RoutineSql(
 
     @ColumnInfo
     var description: String = "",
+
+    @ColumnInfo
+    var order: Int = 0,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

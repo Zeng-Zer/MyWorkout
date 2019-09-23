@@ -17,8 +17,12 @@ abstract class RoutineDao {
     abstract fun getRoutineSqlById(id: Long): LiveData<RoutineSql>
 
     @Transaction
-    @Query("SELECT * FROM routine")
+    @Query("SELECT * FROM routine ORDER BY [order] ASC")
     abstract fun getAllRoutine(): LiveData<List<Routine>>
+
+    @Transaction
+    @Query("SELECT * FROM routine ORDER BY [order] ASC")
+    abstract fun getAllRoutineSql(): LiveData<List<RoutineSql>>
 
     @Insert
     abstract fun insertRoutineSql(routineSql: RoutineSql): Long

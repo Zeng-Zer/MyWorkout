@@ -73,15 +73,18 @@ class DatabaseWorker(
             listOf(squat),
             "Fullbody2",
             "test",
-            0
+            1
         )
 
         val routine = Routine(
             listOf(workout, workout2),
-            "routine fullbody",
-            "3x / week"
+            "Fullbody - Test",
+            "2x / week",
+            0
         )
+        val routine2 = Routine(emptyList(), "Routine 2 - Test", "testing ordering", 0)
         routineDao.insert(routine)
+        routineDao.insert(routine2)
 
         workout.id = 8
         workoutDao.insert(exerciseDao, workout)

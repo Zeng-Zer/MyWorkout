@@ -23,9 +23,11 @@ class RoutineDetailActivity : AppCompatActivity() {
     private val routineId by lazy { intent.extras?.getLong(resources.getString(R.string.intent_routine)) as Long }
 
     private val viewModel by lazy {
-        val routineRepository = RepositoryUtils.getRoutineRepository(this)
-        val workoutRepository = RepositoryUtils.getWorkoutRepository(this)
-        getViewModel({RoutineDetailViewModel(routineRepository, workoutRepository, routineId)})
+        getViewModel({RoutineDetailViewModel(
+            RepositoryUtils.getRoutineRepository(this),
+            RepositoryUtils.getWorkoutRepository(this),
+            routineId
+        )})
     }
 
     private val binding by lazy {
