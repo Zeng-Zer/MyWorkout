@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout2.databinding.FragmentRoutineBinding
@@ -25,8 +27,13 @@ class RoutineFragment : Fragment() {
     private lateinit var binding: FragmentRoutineBinding
 
     private val viewModel: RoutineViewModel by lazy {
-        val routineRepository = RepositoryUtils.getRoutineRepository(requireContext())
-        getViewModel({RoutineViewModel(routineRepository)})
+        getViewModel({RoutineViewModel(
+            RepositoryUtils.getRoutineRepository(requireContext())
+        )})
+    }
+
+    private val adapter: RoutineAdapter by lazy {
+        RoutineAdapter(viewModel, handleRoutineDetail)
     }
 
     private val handleRoutineDetail = fun (routine: Routine, isNew: Boolean) {
@@ -43,21 +50,31 @@ class RoutineFragment : Fragment() {
     ): View? {
         binding = FragmentRoutineBinding.inflate(inflater, container, false)
 
-        val adapter = RoutineAdapter(viewModel, handleRoutineDetail)
-//        adapter.disableSwipe()
-        binding.list.adapter = adapter
-//        val helper = ItemTouchHelper(adapter.callback)
-//        helper.attachToRecyclerView(binding.list)
-
-        subscribeUi(adapter)
-        binding.fab.setOnClickListener{
-            showNewRoutineDialog(inflater)
-        }
+        setupRecyclerView()
+        subscribeUi()
+        setupFab(inflater)
 
         return binding.root
     }
 
-    private fun subscribeUi(adapter: RoutineAdapter) {
+    private fun setupFab(inflater: LayoutInflater) {
+        binding.fab.setOnClickListener{
+            showNewRoutineDialog(inflater)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.list.adapter = adapter
+
+        // prevent RecyclerView blinking on submitList
+        val animator = binding.list.itemAnimator as SimpleItemAnimator
+        animator.supportsChangeAnimations = false
+
+        val helper = ItemTouchHelper(adapter.callback)
+        helper.attachToRecyclerView(binding.list)
+    }
+
+    private fun subscribeUi() {
         viewModel.routines.observe(viewLifecycleOwner, Observer { routines ->
             adapter.submitList(routines)
         })

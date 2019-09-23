@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout2.database.RoutineRepository
 import com.zeng.myworkout2.model.Routine
+import com.zeng.myworkout2.model.RoutineSql
 import kotlinx.coroutines.launch
 
 class RoutineViewModel(private val repository: RoutineRepository) : ViewModel() {
@@ -18,6 +19,12 @@ class RoutineViewModel(private val repository: RoutineRepository) : ViewModel() 
     fun deleteRoutine(routine: Routine) {
         viewModelScope.launch {
             repository.deleteRoutine(routine)
+        }
+    }
+
+    fun updateAllRoutineSql(routines: List<RoutineSql>) {
+        viewModelScope.launch {
+            repository.updateAllRoutineSql(routines)
         }
     }
 }

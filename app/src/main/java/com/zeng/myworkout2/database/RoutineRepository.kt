@@ -11,6 +11,7 @@ class RoutineRepository private constructor(private val routineDao: RoutineDao) 
 
     suspend fun addRoutine(routine: Routine): Long = routineDao.insert(routine)
     suspend fun deleteRoutine(routine: Routine) = routineDao.delete(routine)
+    suspend fun updateAllRoutineSql(routines: List<RoutineSql>) = routineDao.updateAllRoutineSql(routines)
 
     companion object {
 

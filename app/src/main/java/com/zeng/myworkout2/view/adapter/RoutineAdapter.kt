@@ -4,16 +4,28 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout2.databinding.ListItemRoutineBinding
 import com.zeng.myworkout2.model.Routine
+import com.zeng.myworkout2.util.DraggableListAdapter
 import com.zeng.myworkout2.viewmodel.RoutineViewModel
 
 class RoutineAdapter(
     private val viewModel: RoutineViewModel,
     private val handleRoutineDetail: (Routine, Boolean) -> Unit
-) : ListAdapter<Routine, RecyclerView.ViewHolder>(RoutineDiffCallback()) {
+) : DraggableListAdapter<Routine>(RoutineDiffCallback()) {
+
+    init {
+        enableDrag()
+    }
+
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        return true
+    }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        viewModel.updateAllRoutineSql(currentList)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RoutineViewHolder(ListItemRoutineBinding.inflate(

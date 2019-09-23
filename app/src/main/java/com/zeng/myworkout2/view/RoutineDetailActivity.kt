@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.ActivityRoutineDetailBinding
@@ -22,6 +21,10 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private val routineId by lazy { intent.extras?.getLong(resources.getString(R.string.intent_routine)) as Long }
 
+    private val binding by lazy {
+        DataBindingUtil.setContentView<ActivityRoutineDetailBinding>(this, R.layout.activity_routine_detail)
+    }
+
     private val viewModel by lazy {
         getViewModel({RoutineDetailViewModel(
             RepositoryUtils.getRoutineRepository(this),
@@ -30,27 +33,18 @@ class RoutineDetailActivity : AppCompatActivity() {
         )})
     }
 
-    private val binding by lazy {
-        DataBindingUtil.setContentView<ActivityRoutineDetailBinding>(this, R.layout.activity_routine_detail)
+    private val adapter: RoutineDetailAdapter by lazy {
+        RoutineDetailAdapter(supportFragmentManager, lifecycle)
     }
-
-    private lateinit var adapter: RoutineDetailAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        adapter = RoutineDetailAdapter(supportFragmentManager, lifecycle).also {
-            binding.viewPager.adapter = it
-        }
-
-
-        TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
-
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        setupFab(fab)
-
+        setupViewPager()
+        setupFab()
         subscribeUi()
     }
 
@@ -97,9 +91,10 @@ class RoutineDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupFab(fab: FloatingActionButton) {
+    private fun setupFab() {
+        val fab = binding.fab
+
         fab.setOnClickListener {
-            // TODO REMOVE
             adapter.workouts[binding.viewPager.currentItem].addExercise()
         }
 
@@ -111,6 +106,11 @@ class RoutineDetailActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun setupViewPager() {
+        binding.viewPager.adapter = adapter
+        TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
     }
 
     private fun subscribeUi() {

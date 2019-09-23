@@ -35,17 +35,22 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
+
+        setupRecyclerView()
+        subscribeUi()
+
+        return binding.root
+    }
+
+    private fun setupRecyclerView() {
         binding.list.adapter = adapter
+
         // prevent RecyclerView blinking on submitList
         val animator = binding.list.itemAnimator as SimpleItemAnimator
         animator.supportsChangeAnimations = false
 
         val helper = ItemTouchHelper(adapter.callback)
         helper.attachToRecyclerView(binding.list)
-
-        subscribeUi()
-
-        return binding.root
     }
 
     private fun subscribeUi() {

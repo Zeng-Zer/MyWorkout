@@ -25,13 +25,6 @@ abstract class WorkoutDao {
     @Query("SELECT * FROM workout WHERE routineId = :routineId ORDER BY [order] ASC")
     abstract fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>>
 
-//    @Transaction
-//    @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId ORDER BY [order] ASC")
-//    abstract suspend fun getExerciseDetailList(workoutId: Long): List<WorkoutExerciseSql>
-
-    @Delete
-    abstract suspend fun delete(workoutSql: WorkoutSql)
-
     @Insert
     abstract suspend fun insertWorkoutSql(workoutSql: WorkoutSql): Long
 
@@ -44,5 +37,8 @@ abstract class WorkoutDao {
         exerciseDao.insertAllWorkoutExercise(workout.exercises)
         return workoutId
     }
+
+    @Delete
+    abstract suspend fun delete(workoutSql: WorkoutSql)
 
 }
