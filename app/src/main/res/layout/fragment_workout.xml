@@ -16,6 +16,8 @@
             android:id="@+id/list"
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

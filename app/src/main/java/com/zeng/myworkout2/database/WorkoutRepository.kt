@@ -1,10 +1,7 @@
 package com.zeng.myworkout2.database
 
 import androidx.lifecycle.LiveData
-import com.zeng.myworkout2.model.User
-import com.zeng.myworkout2.model.Workout
-import com.zeng.myworkout2.model.WorkoutExerciseSql
-import com.zeng.myworkout2.model.WorkoutSql
+import com.zeng.myworkout2.model.*
 
 class WorkoutRepository private constructor(
     private val workoutDao: WorkoutDao,
@@ -29,6 +26,14 @@ class WorkoutRepository private constructor(
 
     suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
         exerciseDao.updateWorkoutExerciseSql(exercise)
+    }
+
+    suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
+        exerciseDao.insertWorkoutExerciseSql(exercise)
+    }
+
+    suspend fun insertExercise(exercise: Exercise) {
+        exercise.id = exerciseDao.insert(exercise)
     }
 
     companion object {

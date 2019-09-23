@@ -11,7 +11,6 @@ import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.IntegerPickerBinding
@@ -19,11 +18,21 @@ import com.zeng.myworkout2.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout2.databinding.NumberPickerBinding
 import com.zeng.myworkout2.model.WorkoutExercise
 import com.zeng.myworkout2.model.WorkoutExerciseSql
+import com.zeng.myworkout2.util.DraggableListAdapter
 import com.zeng.myworkout2.viewmodel.WorkoutViewModel
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : ListAdapter<WorkoutExercise, RecyclerView.ViewHolder>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : DraggableListAdapter<WorkoutExercise>(WorkoutExerciseDiffCallback()) {
+
+    init {
+        enableDrag()
+    }
+
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+
+        return true
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context

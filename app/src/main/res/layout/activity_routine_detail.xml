@@ -51,6 +51,7 @@
             android:clickable="true"
             android:focusable="true"
             style="@style/fab_bg"
+            app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior"
             app:srcCompat="@drawable/ic_add_black_24dp" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

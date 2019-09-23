@@ -16,6 +16,9 @@ abstract class ExerciseDao {
     abstract suspend fun insert(exercise: Exercise): Long
 
     @Insert
+    abstract suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql)
+
+    @Insert
     abstract suspend fun insertAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>)
 
     @Insert

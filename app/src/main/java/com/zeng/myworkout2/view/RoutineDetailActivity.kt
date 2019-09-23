@@ -48,27 +48,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener {
-            // TODO REMOVE
-            viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
-        }
-
-        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            val animUp = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_up)
-            val animDown = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_down)
-            override fun onPageScrollStateChanged(state: Int) {
-                when(state) {
-                    SCROLL_STATE_IDLE -> {
-                        fab.startAnimation(animUp)
-                        fab.postOnAnimation{ fab.show() }
-                    }
-                    else -> {
-                        fab.startAnimation(animDown)
-                        fab.postOnAnimation{ fab.hide() }
-                    }
-                }
-            }
-        })
+        setupFab(fab)
 
         subscribeUi()
     }
@@ -114,6 +94,30 @@ class RoutineDetailActivity : AppCompatActivity() {
 //            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupFab(fab: FloatingActionButton) {
+        fab.setOnClickListener {
+            // TODO REMOVE
+            adapter.workouts[binding.viewPager.currentItem].addExercise()
+        }
+
+        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            val animUp = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_up)
+            val animDown = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_down)
+            override fun onPageScrollStateChanged(state: Int) {
+                when(state) {
+                    SCROLL_STATE_IDLE -> {
+                        fab.startAnimation(animUp)
+                        fab.postOnAnimation{ fab.show() }
+                    }
+                    else -> {
+                        fab.startAnimation(animDown)
+                        fab.postOnAnimation{ fab.hide() }
+                    }
+                }
+            }
+        })
     }
 
     private fun subscribeUi() {

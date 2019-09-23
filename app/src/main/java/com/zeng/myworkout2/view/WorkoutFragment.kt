@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.zeng.myworkout2.databinding.FragmentWorkoutBinding
+import com.zeng.myworkout2.model.Exercise
+import com.zeng.myworkout2.model.WorkoutExerciseSql
 import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout2.viewmodel.WorkoutViewModel
@@ -33,6 +36,9 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
         binding.list.adapter = adapter
 
+        val helper = ItemTouchHelper(adapter.callback)
+        helper.attachToRecyclerView(binding.list)
+
         subscribeUi()
 
         return binding.root
@@ -45,6 +51,8 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
     }
 
     fun addExercise() {
-        // TODO function to be called by the fab in parent view
+        val ex = Exercise("Pullups", "Back")
+        val exWorkout = WorkoutExerciseSql(5, 5, 20f, 1, workoutId)
+        viewModel.insertExerciceTest(ex, exWorkout)
     }
 }

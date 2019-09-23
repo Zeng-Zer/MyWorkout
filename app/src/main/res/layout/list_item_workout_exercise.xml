@@ -19,6 +19,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
         android:foreground="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/cardview_padding"

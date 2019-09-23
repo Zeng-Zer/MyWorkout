@@ -1,25 +1,27 @@
 package com.zeng.myworkout2.util
 
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class DraggableAdapter<T : RecyclerView.ViewHolder> : RecyclerView.Adapter<T>() {
+abstract class DraggableListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>)
+    : ListAdapter<T, RecyclerView.ViewHolder>(diffCallback) {
 
-    var longPressEnabled = true
+    private var longPressEnabled = false
 
-    val callback = object : SimpleCallback(UP.or(DOWN), LEFT.or(RIGHT)) {
+    val callback = object : SimpleCallback(0, 0) {
 
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            this@DraggableAdapter.onMove(recyclerView, viewHolder, target)
-            return true
+            return this@DraggableListAdapter.onMove(recyclerView, viewHolder, target)
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            this@DraggableAdapter.onSwiped(viewHolder, direction)
+            this@DraggableListAdapter.onSwiped(viewHolder, direction)
         }
 
         override fun isLongPressDragEnabled(): Boolean {
@@ -37,24 +39,21 @@ abstract class DraggableAdapter<T : RecyclerView.ViewHolder> : RecyclerView.Adap
     }
 
     fun disableDrag() {
+        longPressEnabled = false
         callback.setDefaultDragDirs(0)
     }
 
     fun enableDrag() {
+        longPressEnabled = true
         callback.setDefaultDragDirs(UP.or(DOWN))
     }
 
-    fun enableLongPressDrag() {
-        longPressEnabled = true
+    open fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        return true
     }
 
-    fun disableLongPressDrag() {
-        longPressEnabled = false
+    open fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
     }
-
-    abstract fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder)
-
-    abstract fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
 
 
 }
