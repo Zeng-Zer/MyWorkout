@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout2.databinding.FragmentWorkoutBinding
 import com.zeng.myworkout2.model.Exercise
 import com.zeng.myworkout2.model.WorkoutExerciseSql
@@ -35,6 +36,9 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
     ): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
         binding.list.adapter = adapter
+        // disable recyclerview blinking on submitlist
+        val animator = binding.list.itemAnimator as SimpleItemAnimator
+        animator.supportsChangeAnimations = false
 
         val helper = ItemTouchHelper(adapter.callback)
         helper.attachToRecyclerView(binding.list)
