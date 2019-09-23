@@ -38,7 +38,7 @@ abstract class RoutineDao {
     }
 
     @Update
-    abstract fun updateAllRoutineSql(routines: List<RoutineSql>)
+    abstract suspend fun updateAllRoutineSql(routines: List<RoutineSql>)
 
     @Delete
     abstract suspend fun delete(routineSql: RoutineSql)

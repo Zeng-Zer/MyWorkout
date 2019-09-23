@@ -22,7 +22,10 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
 
     val viewModel: WorkoutViewModel by lazy {
         val workoutRepository = RepositoryUtils.getWorkoutRepository(requireContext())
-        getViewModel({ WorkoutViewModel(workoutRepository, workoutId)}, workoutId.toString())
+        getViewModel({WorkoutViewModel(
+            workoutRepository,
+            workoutId
+        )}, workoutId.toString())
     }
 
     private val adapter: WorkoutExerciseAdapter by lazy {

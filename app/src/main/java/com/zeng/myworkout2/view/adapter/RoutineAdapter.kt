@@ -20,6 +20,17 @@ class RoutineAdapter(
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        val from = viewHolder.adapterPosition
+        val to = target.adapterPosition
+
+        // IS THERE A BETTER SOLUTION ?
+        val updatedList = currentList.toMutableList()
+
+        updatedList[from].order = to
+        updatedList[to].order = from
+        updatedList[from] = updatedList[to].also { updatedList[to] = updatedList[from] }
+
+        submitList(updatedList)
         return true
     }
 
