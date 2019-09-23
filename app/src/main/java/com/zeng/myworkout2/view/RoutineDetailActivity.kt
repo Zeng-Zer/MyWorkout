@@ -121,19 +121,20 @@ class RoutineDetailActivity : AppCompatActivity() {
     }
 
     private fun subscribeUi() {
-        // TODO SPLIT INTO SMALLER SQL ITEMS - IT SOLVES SORTING ISSUES | TRANSFORMATIONS.MAP ??
+        // Change toolbar title
         viewModel.routine.observe(this, Observer { routine ->
-            // Change toolbar title
             supportActionBar?.title = routine.name
+        })
 
-            // Update workouts
-            routine?.workouts?.apply {
-                adapter.submitList(this.map { workout ->
+        // Update workouts
+        viewModel.workouts.observe(this, Observer {
+            it?.let { workouts ->
+                adapter.submitList(workouts.map { workout ->
                     WorkoutFragment(workout.id!!)
                 })
 
                 // Set title for each tabs
-                this.mapIndexed { i, workout ->
+                workouts.mapIndexed { i, workout ->
                     binding.tabs.getTabAt(i)?.setText(workout.name)
                 }
             }

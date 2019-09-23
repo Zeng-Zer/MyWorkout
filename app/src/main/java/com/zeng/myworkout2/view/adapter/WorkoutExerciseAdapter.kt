@@ -123,7 +123,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
 
             val dialog = AlertDialog.Builder(context)
                 .setMessage(message)
-                .setPositiveButton("OK") { _, _ -> binding.exerciseSql?.apply(onValidation)}
+                .setPositiveButton("OK") { _, _ -> binding.exerciseSql?.let(onValidation)}
                 .setNegativeButton("CANCEL") {  _, _ ->  }
                 .setView(pickerBinding.root)
                 .create()

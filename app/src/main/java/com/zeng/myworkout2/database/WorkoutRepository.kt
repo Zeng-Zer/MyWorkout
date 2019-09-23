@@ -24,6 +24,10 @@ class WorkoutRepository private constructor(
         return workoutDao.getAllWorkoutExerciseById(workoutId)
     }
 
+    fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>> {
+        return workoutDao.getAllWorkoutSqlByRoutineId(routineId)
+    }
+
     suspend fun insertWorkoutSql(workout: WorkoutSql) {
         workoutDao.insertWorkoutSql(workout)
     }

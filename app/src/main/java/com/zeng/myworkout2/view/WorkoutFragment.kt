@@ -36,7 +36,7 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
     ): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
         binding.list.adapter = adapter
-        // disable recyclerview blinking on submitlist
+        // prevent RecyclerView blinking on submitList
         val animator = binding.list.itemAnimator as SimpleItemAnimator
         animator.supportsChangeAnimations = false
 
