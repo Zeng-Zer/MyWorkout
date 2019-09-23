@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout2.database.WorkoutRepository
 import com.zeng.myworkout2.model.Exercise
-import com.zeng.myworkout2.model.Workout
+import com.zeng.myworkout2.model.WorkoutExercise
 import com.zeng.myworkout2.model.WorkoutExerciseSql
+import com.zeng.myworkout2.model.WorkoutSql
 import kotlinx.coroutines.launch
 
 class WorkoutViewModel(
@@ -14,11 +15,19 @@ class WorkoutViewModel(
     workoutId: Long
 ) : ViewModel() {
 
-    val workout: LiveData<Workout> = workoutRepository.getWorkoutById(workoutId)
+    val workout: LiveData<WorkoutSql> = workoutRepository.getWorkoutSqlById(workoutId)
+
+    val exercises: LiveData<List<WorkoutExercise>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
 
     fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
         viewModelScope.launch {
             workoutRepository.updateWorkoutExerciseSql(exercise)
+        }
+    }
+
+    fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
+        viewModelScope.launch {
+            workoutRepository.updateAllWorkoutExerciseSql(exercises)
         }
     }
 

@@ -30,9 +30,24 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        val from = viewHolder.adapterPosition
+        val to = target.adapterPosition
 
+        // IS THERE A BETTER SOLUTION ?
+        val updatedList = currentList.toMutableList()
+
+        updatedList[from].order = to
+        updatedList[to].order = from
+        updatedList[from] = updatedList[to].also { updatedList[to] = updatedList[from] }
+
+        submitList(updatedList)
         return true
     }
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        viewModel.updateAllWorkoutExerciseSql(currentList)
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
@@ -52,20 +67,32 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
         init {
             binding.numberSet.setOnClickListener {
                 var nbSet = binding.numberSet.text.toString().toInt()
-                // 1st lambda onValueChange
-                // 2nd lambda onValidation
-                showIntegerPicker(nbSet, "Number of sets:", { newValue -> nbSet = newValue }) { exercise ->
-                    exercise.sets = nbSet
-                    viewModel.updateWorkoutExerciseSql(exercise)
-                }
+                showIntegerPicker(nbSet, "Number of sets:",
+                    // On value change
+                    { newValue ->
+                        nbSet = newValue
+                    },
+                    // On validation
+                    { exercise ->
+                        exercise.sets = nbSet
+                        viewModel.updateWorkoutExerciseSql(exercise)
+                    }
+                )
             }
 
             binding.numberRep.setOnClickListener {
                 var nbRep = binding.numberRep.text.toString().toInt()
-                showIntegerPicker(nbRep, "Number of reps:", { newValue -> nbRep = newValue }) { exercise ->
-                    exercise.reps = nbRep
-                    viewModel.updateWorkoutExerciseSql(exercise)
-                }
+                showIntegerPicker(nbRep, "Number of reps:",
+                    // On value change
+                    { newValue ->
+                        nbRep = newValue
+                    },
+                    // On validation
+                    { exercise ->
+                        exercise.reps = nbRep
+                        viewModel.updateWorkoutExerciseSql(exercise)
+                    }
+                )
             }
 
             binding.weight.setOnClickListener {
@@ -114,6 +141,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
             }
         }
 
+        // TODO PROBABLY NEED TO REFACTOR THIS
         private fun onWeightClickListener() {
             var weight = binding.exerciseSql?.weight ?: 0f
             val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)

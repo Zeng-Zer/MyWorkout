@@ -44,9 +44,9 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
         return binding.root
     }
 
-    fun subscribeUi() {
-        viewModel.workout.observe(viewLifecycleOwner, Observer { workout ->
-            adapter.submitList(workout.exercises)
+    private fun subscribeUi() {
+        viewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
+            adapter.submitList(exercises)
         })
     }
 

@@ -32,6 +32,9 @@ abstract class ExerciseDao {
     @Update
     abstract suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql)
 
+    @Update
+    abstract suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>)
+
     @Delete
     abstract suspend fun delete(exercise: Exercise)
 }

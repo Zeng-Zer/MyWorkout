@@ -28,6 +28,11 @@ abstract class DraggableListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>)
             return longPressEnabled
         }
 
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+            super.clearView(recyclerView, viewHolder)
+            this@DraggableListAdapter.clearView(recyclerView, viewHolder)
+        }
+
     }
 
     fun disableSwipe() {
@@ -53,6 +58,9 @@ abstract class DraggableListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>)
     }
 
     open fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+    }
+
+    open fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
     }
 
 
