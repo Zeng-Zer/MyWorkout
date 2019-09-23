@@ -3,7 +3,6 @@ package com.zeng.myworkout2.view
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -103,18 +102,10 @@ class RoutineDetailActivity : AppCompatActivity() {
         }
 
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            val animUp = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_up)
-            val animDown = AnimationUtils.loadAnimation(this@RoutineDetailActivity, R.anim.scale_down)
             override fun onPageScrollStateChanged(state: Int) {
                 when(state) {
-                    SCROLL_STATE_IDLE -> {
-                        fab.startAnimation(animUp)
-                        fab.postOnAnimation{ fab.show() }
-                    }
-                    else -> {
-                        fab.startAnimation(animDown)
-                        fab.postOnAnimation{ fab.hide() }
-                    }
+                    SCROLL_STATE_IDLE -> fab.show()
+                    else -> fab.hide()
                 }
             }
         })
