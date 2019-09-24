@@ -83,8 +83,8 @@ class DatabaseWorker(
             0
         )
         val routine2 = Routine(emptyList(), "Routine 2 - Test", "testing ordering", 0)
-        routineDao.insert(routine)
-        routineDao.insert(routine2)
+        routineDao.insertRoutine(routine)
+        routineDao.insertRoutine(routine2)
 
         workout.id = 8
         workoutDao.insert(exerciseDao, workout)

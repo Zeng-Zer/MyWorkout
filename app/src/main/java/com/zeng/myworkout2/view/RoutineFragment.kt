@@ -37,9 +37,9 @@ class RoutineFragment : Fragment() {
         RoutineAdapter(viewModel, ::showRoutineDetailActivity, ::deleteRoutineWithUndo)
     }
 
-    private fun showRoutineDetailActivity(routine: Routine, isNew: Boolean) {
+    private fun showRoutineDetailActivity(routineId: Long, isNew: Boolean) {
         val intent = Intent(activity, RoutineDetailActivity::class.java)
-        intent.putExtra(resources.getString(R.string.intent_routine), routine.id)
+        intent.putExtra(resources.getString(R.string.intent_routine), routineId)
         intent.putExtra(resources.getString(R.string.intent_new_routine), isNew)
         activity?.startActivity(intent)
     }
@@ -48,12 +48,12 @@ class RoutineFragment : Fragment() {
         viewHolder.binding.routine?.let {
             val oldList = adapter.currentList
 
-            viewModel.deleteRoutine(it)
+            viewModel.deleteRoutineSql(it)
 
             // Snackbar to restore old list
             val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
             snackbar.setAction("UNDO") {
-                viewModel.upsertAllRoutineSql(oldList)
+                viewModel.upsertRoutineSql(oldList)
             }
             snackbar.show()
         }
@@ -107,8 +107,8 @@ class RoutineFragment : Fragment() {
                     formDialog.description.text.toString()
                 )
                 viewModel.viewModelScope.launch {
-                    viewModel.insertRoutineSql(routine)
-                    showRoutineDetailActivity(routine, true)
+                    routine.id = viewModel.insertRoutineSql(routine)
+                    showRoutineDetailActivity(routine.id!!, true)
                 }
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }

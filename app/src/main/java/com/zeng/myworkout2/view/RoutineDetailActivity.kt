@@ -114,7 +114,7 @@ class RoutineDetailActivity : AppCompatActivity() {
     private fun subscribeUi() {
         // Change toolbar title
         viewModel.routine.observe(this, Observer { routine ->
-            supportActionBar?.title = routine.name
+            supportActionBar?.title = routine?.name
         })
 
         // Update workouts
