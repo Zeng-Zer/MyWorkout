@@ -10,11 +10,9 @@ import com.zeng.myworkout2.model.WorkoutExerciseSql
 import com.zeng.myworkout2.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout2.viewmodel.WorkoutViewModel
 
-class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Long) {
+class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Long, val viewModel: WorkoutViewModel) {
 
     lateinit var binding: ListItemWorkoutBinding
-
-    lateinit var viewModel: WorkoutViewModel
 
     private val adapter: WorkoutExerciseAdapter by lazy {
         WorkoutExerciseAdapter(viewModel)
@@ -44,7 +42,7 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
 
     fun addExercise() {
         val ex = Exercise("Pullups", "Back")
-        val exWorkout = WorkoutExerciseSql(5, 5, 20f, 1, viewModel.workoutId)
+        val exWorkout = WorkoutExerciseSql(5, 5, 20f, 1, workoutId)
         viewModel.insertExerciceTest(ex, exWorkout)
     }
 }

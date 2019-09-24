@@ -18,6 +18,7 @@ import com.zeng.myworkout2.model.WorkoutSql
 import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.view.adapter.RoutineDetailAdapter
 import com.zeng.myworkout2.viewmodel.RoutineDetailViewModel
+import com.zeng.myworkout2.viewmodel.WorkoutViewModel
 import com.zeng.myworkout2.viewmodel.getViewModel
 import kotlinx.coroutines.launch
 
@@ -37,9 +38,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         )})
     }
 
-    private val adapter: RoutineDetailAdapter by lazy {
-        RoutineDetailAdapter()
-    }
+    private val adapter = RoutineDetailAdapter()
 
     private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
 
@@ -139,18 +138,29 @@ class RoutineDetailActivity : AppCompatActivity() {
                 }
 
                 val newWorkoutItems = workouts.map { workout ->
-                    WorkoutItem(this, workout.id!!)
+                    createWorkoutItem(workout.id!!)
                 }
-                adapter.submitList(newWorkoutItems)
-                onListChangeCallback?.invoke(newWorkoutItems)
 
+                adapter.submitList(newWorkoutItems) {
+                    // On list committed
+                    onListChangeCallback?.invoke(newWorkoutItems)
 
-                // Set title for each tabs
-                workouts.mapIndexed { i, workout ->
-                    binding.tabs.getTabAt(i)?.setText(workout.name)
+                    // Set title for each tabs
+                    workouts.forEachIndexed { i, workout ->
+                        binding.tabs.getTabAt(i)?.text = workout.name
+                    }
                 }
             }
         })
+    }
+
+    private fun createWorkoutItem(workoutId: Long): WorkoutItem {
+        val workoutRepo = RepositoryUtils.getWorkoutRepository(this)
+        val workoutViewModel = getViewModel({WorkoutViewModel(
+            workoutRepo,
+            workoutId
+        )}, workoutId.toString())
+        return WorkoutItem(this, workoutId, workoutViewModel)
     }
 
     private fun addNewWorkout() {
