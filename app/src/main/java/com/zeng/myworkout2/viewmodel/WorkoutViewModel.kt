@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class WorkoutViewModel(
     private val workoutRepository: WorkoutRepository,
-    workoutId: Long
+    val workoutId: Long
 ) : ViewModel() {
 
     val workout: LiveData<WorkoutSql> = workoutRepository.getWorkoutSqlById(workoutId)
