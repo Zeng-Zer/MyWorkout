@@ -34,9 +34,9 @@ class DatabaseWorker(
         val benchExercise = Exercise("Bench Press", "Chest")
         val deadliftExercise = Exercise("Deadlift", "Legs")
 
-        squatExercise.id = exerciseDao.insert(squatExercise)
-        benchExercise.id = exerciseDao.insert(benchExercise)
-        deadliftExercise.id = exerciseDao.insert(deadliftExercise)
+        squatExercise.id = exerciseDao.insertExercise(squatExercise)
+        benchExercise.id = exerciseDao.insertExercise(benchExercise)
+        deadliftExercise.id = exerciseDao.insertExercise(deadliftExercise)
 
         val squat = WorkoutExercise(
             squatExercise,
@@ -87,8 +87,8 @@ class DatabaseWorker(
         routineDao.insertRoutine(routine2)
 
         workout.id = 8
-        workoutDao.insert(exerciseDao, workout)
-        workout2.id = workoutDao.insert(exerciseDao, workout2)
+        workoutDao.insertWorkout(exerciseDao, workout)
+        workout2.id = workoutDao.insertWorkout(exerciseDao, workout2)
 
         val user = User(workout, 0)
         userDao.insert(user)

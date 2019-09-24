@@ -1,13 +1,15 @@
 package com.zeng.myworkout2.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
 import com.zeng.myworkout2.model.Workout
 import com.zeng.myworkout2.model.WorkoutExercise
 import com.zeng.myworkout2.model.WorkoutSql
 
 @Dao
-abstract class WorkoutDao {
+abstract class WorkoutDao : BaseDao<WorkoutSql>() {
 
     @Transaction
     @Query("SELECT * FROM workout WHERE id = :id")
@@ -25,20 +27,14 @@ abstract class WorkoutDao {
     @Query("SELECT * FROM workout WHERE routineId = :routineId ORDER BY [order] ASC")
     abstract fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>>
 
-    @Insert
-    abstract suspend fun insertWorkoutSql(workoutSql: WorkoutSql): Long
-
     @Transaction
-    open suspend fun insert(exerciseDao: ExerciseDao, workout: Workout): Long {
-        val workoutId = insertWorkoutSql(workout)
+    open suspend fun insertWorkout(workoutExerciseDao: WorkoutExerciseDao, workout: Workout): Long {
+        val workoutId = insert(workout)
         workout.exercises.forEach {
             it.workoutId = workoutId
         }
-        exerciseDao.insertAllWorkoutExercise(workout.exercises)
+        workoutExerciseDao.insertAllWorkoutExercise(workout.exercises)
         return workoutId
     }
-
-    @Delete
-    abstract suspend fun delete(workoutSql: WorkoutSql)
 
 }

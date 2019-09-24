@@ -5,7 +5,7 @@ import com.zeng.myworkout2.model.*
 
 class WorkoutRepository private constructor(
     private val workoutDao: WorkoutDao,
-    private val exerciseDao: ExerciseDao,
+    private val workoutExerciseDao: WorkoutExerciseDao,
     private val userDao: UserDao
 ) {
     val currentUser: LiveData<User> = userDao.getCurrentUser()
@@ -29,23 +29,23 @@ class WorkoutRepository private constructor(
     }
 
     suspend fun insertWorkoutSql(workout: WorkoutSql) {
-        workoutDao.insertWorkoutSql(workout)
+        workoutDao.insert(workout)
     }
 
     suspend fun insertExercise(exercise: Exercise) {
-        exercise.id = exerciseDao.insert(exercise)
+        exercise.id = workoutExerciseDao.insertExercise(exercise)
     }
 
     suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
-        exerciseDao.insertWorkoutExerciseSql(exercise)
+        workoutExerciseDao.insert(exercise)
     }
 
     suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
-        exerciseDao.updateWorkoutExerciseSql(exercise)
+        workoutExerciseDao.update(exercise)
     }
 
     suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
-        exerciseDao.updateAllWorkoutExerciseSql(exercises)
+        workoutExerciseDao.update(exercises)
     }
 
     companion object {
@@ -53,9 +53,9 @@ class WorkoutRepository private constructor(
         // For Singleton instantiation
         @Volatile private var instance: WorkoutRepository? = null
 
-        fun getInstance(workoutDao: WorkoutDao, exerciseDao: ExerciseDao, userDao: UserDao) =
+        fun getInstance(workoutDao: WorkoutDao, workoutExerciseDao: WorkoutExerciseDao, userDao: UserDao) =
             instance ?: synchronized(this) {
-                instance ?: WorkoutRepository(workoutDao, exerciseDao, userDao).also { instance = it }
+                instance ?: WorkoutRepository(workoutDao, workoutExerciseDao, userDao).also { instance = it }
             }
     }
 }

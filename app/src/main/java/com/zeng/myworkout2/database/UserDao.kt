@@ -1,36 +1,29 @@
 package com.zeng.myworkout2.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Transaction
 import com.zeng.myworkout2.model.User
 import com.zeng.myworkout2.model.UserSql
-import com.zeng.myworkout2.model.WorkoutSql
 
 @Dao
-abstract class UserDao {
+abstract class UserDao : BaseDao<UserSql>() {
     @Transaction
     @Query("SELECT * FROM user")
     abstract fun getAll(): LiveData<List<User>>
 
     /**
-     * id 0 equals phone it
+     * TODO probable need to change this ?
+     * id 0 = user
      */
     @Transaction
     @Query("SELECT * FROM user where id = 0")
     abstract fun getCurrentUser() : LiveData<User>
 
-    @Insert
-    abstract suspend fun insertUserSql(user: UserSql): Long
-
     @Transaction
     open suspend fun insert(user: User): Long {
         user.workoutId = user.workout?.id
-        return insertUserSql(user)
+        return insert(user)
     }
-
-    @Update
-    abstract suspend fun update(userSql: UserSql)
-
-    @Delete
-    abstract suspend fun delete(workoutSql: WorkoutSql)
 }
