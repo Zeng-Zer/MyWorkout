@@ -14,6 +14,7 @@
     <string name="intent_new_routine">new_routine</string>
     <string name="action_delete_workout">Delete workout</string>
     <string name="action_new_workout">New workout</string>
+    <string name="action_edit_workout">Edit workout</string>
     <string name="action_move_left_workout">Move left</string>
     <string name="action_move_right_workout">Move right</string>
 </resources>

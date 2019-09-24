@@ -1,21 +1,25 @@
 package com.zeng.myworkout2.view
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.ActivityRoutineDetailBinding
+import com.zeng.myworkout2.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout2.model.WorkoutSql
 import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.view.adapter.RoutineDetailAdapter
 import com.zeng.myworkout2.viewmodel.RoutineDetailViewModel
 import com.zeng.myworkout2.viewmodel.getViewModel
+import kotlinx.coroutines.launch
 
 class RoutineDetailActivity : AppCompatActivity() {
 
@@ -37,11 +41,19 @@ class RoutineDetailActivity : AppCompatActivity() {
         RoutineDetailAdapter(supportFragmentManager, lifecycle)
     }
 
+    private var onListChangeCallback: ((List<WorkoutFragment>) -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        intent.extras?.let { extras ->
+            if (extras.getBoolean(resources.getString(R.string.intent_new_routine), false)) {
+                addNewWorkout()
+            }
+        }
 
         setupViewPager()
         setupFab()
@@ -61,7 +73,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             }
 
             R.id.action_new_workout -> {
-                viewModel.addWorkoutSql(WorkoutSql("Fullbody A", "test add workout", adapter.itemCount, routineId))
+                addNewWorkout()
                 return true
             }
 
@@ -126,9 +138,12 @@ class RoutineDetailActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
 
-                adapter.submitList(workouts.map { workout ->
+                val newWorkoutFragments = workouts.map { workout ->
                     WorkoutFragment(workout.id!!)
-                })
+                }
+                adapter.submitList(newWorkoutFragments)
+                onListChangeCallback?.invoke(newWorkoutFragments)
+
 
                 // Set title for each tabs
                 workouts.mapIndexed { i, workout ->
@@ -136,6 +151,34 @@ class RoutineDetailActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun addNewWorkout() {
+        val form = DataBindingUtil.inflate<DialogWorkoutFormBinding>(layoutInflater, R.layout.dialog_workout_form, null, false)
+        val dialog = AlertDialog.Builder(this)
+            .setMessage("New workout")
+            .setPositiveButton("CREATE") { _, _ ->
+                // Add workout to the end
+                val workout = WorkoutSql(
+                    form.workoutName.text.toString(),
+                    "",
+                    adapter.itemCount, routineId
+                )
+
+                viewModel.viewModelScope.launch {
+                    viewModel.addWorkoutSql(workout)
+                    // Move view to newly added item
+                    onListChangeCallback = { workoutsFragments ->
+                        binding.viewPager.setCurrentItem(workoutsFragments.size, true)
+                        onListChangeCallback = null
+                    }
+                }
+            }
+            .setNegativeButton("CANCEL") {  _, _ ->  }
+            .setView(form.root)
+            .create()
+
+        dialog.show()
     }
 
 }
