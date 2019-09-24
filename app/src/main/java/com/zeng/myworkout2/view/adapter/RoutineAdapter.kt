@@ -12,7 +12,8 @@ import com.zeng.myworkout2.viewmodel.RoutineViewModel
 
 class RoutineAdapter(
     private val viewModel: RoutineViewModel,
-    private val handleRoutineDetail: (Routine, Boolean) -> Unit
+    private val showRoutineDetailActivity: (Routine, Boolean) -> Unit,
+    private val deleteRoutineWithUndo: (RoutineViewHolder) -> Unit
 ) : DraggableListAdapter<Routine>(RoutineDiffCallback()) {
 
     init {
@@ -48,17 +49,15 @@ class RoutineAdapter(
         (holder as RoutineViewHolder).bind(item)
     }
 
-    inner class RoutineViewHolder(private val binding: ListItemRoutineBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RoutineViewHolder(val binding: ListItemRoutineBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.delete.setOnClickListener {
-                binding.routine?.let {
-                    viewModel.deleteRoutine(it)
-                }
+                deleteRoutineWithUndo(this)
             }
 
             binding.card.setOnClickListener {
                 binding.routine?.let {
-                    handleRoutineDetail(it, false)
+                    showRoutineDetailActivity(it, false)
                 }
             }
         }

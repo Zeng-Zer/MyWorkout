@@ -24,8 +24,11 @@ abstract class RoutineDao {
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
     abstract fun getAllRoutineSql(): LiveData<List<RoutineSql>>
 
-    @Insert
-    abstract fun insertRoutineSql(routineSql: RoutineSql): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertRoutineSql(routine: RoutineSql): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertAllRoutineSql(routines: List<RoutineSql>): List<Long>
 
     @Transaction
     open suspend fun insert(routine: Routine): Long {
@@ -39,6 +42,15 @@ abstract class RoutineDao {
 
     @Update
     abstract suspend fun updateAllRoutineSql(routines: List<RoutineSql>)
+
+    @Transaction
+    open suspend fun upsertAllRoutineSql(routines: List<RoutineSql>) {
+        val updateList = insertAllRoutineSql(routines).zip(routines)
+            .filter { (id, _) -> id == -1L }
+            .map { (_, routine) -> routine }
+
+        updateAllRoutineSql(updateList)
+    }
 
     @Delete
     abstract suspend fun delete(routineSql: RoutineSql)

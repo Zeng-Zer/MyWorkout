@@ -9,9 +9,10 @@ class RoutineRepository private constructor(private val routineDao: RoutineDao) 
     fun getRoutines(): LiveData<List<Routine>> = routineDao.getAllRoutine()
     fun getRoutineSqlById(routineId: Long): LiveData<RoutineSql> = routineDao.getRoutineSqlById(routineId)
 
-    suspend fun addRoutine(routine: Routine): Long = routineDao.insert(routine)
+    suspend fun insertRoutineSql(routine: Routine): Long = routineDao.insertRoutineSql(routine)
     suspend fun deleteRoutine(routine: Routine) = routineDao.delete(routine)
     suspend fun updateAllRoutineSql(routines: List<RoutineSql>) = routineDao.updateAllRoutineSql(routines)
+    suspend fun upsertAllRoutineSql(routines: List<RoutineSql>) = routineDao.upsertAllRoutineSql(routines)
 
     companion object {
 

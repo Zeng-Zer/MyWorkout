@@ -92,17 +92,15 @@ class RoutineDetailActivity : AppCompatActivity() {
     }
 
     private fun setupFab() {
-        val fab = binding.fab
-
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             adapter.workouts[binding.viewPager.currentItem].addExercise()
         }
 
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 when(state) {
-                    SCROLL_STATE_IDLE -> fab.show()
-                    else -> fab.hide()
+                    SCROLL_STATE_IDLE -> binding.fab.show()
+                    else -> binding.fab.hide()
                 }
             }
         })
@@ -122,6 +120,12 @@ class RoutineDetailActivity : AppCompatActivity() {
         // Update workouts
         viewModel.workouts.observe(this, Observer {
             it?.let { workouts ->
+                if (workouts.isEmpty()) {
+                    binding.fab.hide()
+                } else {
+                    binding.fab.show()
+                }
+
                 adapter.submitList(workouts.map { workout ->
                     WorkoutFragment(workout.id!!)
                 })

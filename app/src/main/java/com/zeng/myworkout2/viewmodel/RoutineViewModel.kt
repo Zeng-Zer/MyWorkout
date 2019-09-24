@@ -12,8 +12,8 @@ class RoutineViewModel(private val repository: RoutineRepository) : ViewModel() 
 
     val routines: LiveData<List<Routine>> = repository.getRoutines()
 
-    suspend fun addRoutine(routine: Routine) : Long {
-        return repository.addRoutine(routine)
+    suspend fun insertRoutineSql(routine: Routine) : Long {
+        return repository.insertRoutineSql(routine)
     }
 
     fun deleteRoutine(routine: Routine) {
@@ -25,6 +25,12 @@ class RoutineViewModel(private val repository: RoutineRepository) : ViewModel() 
     fun updateAllRoutineSql(routines: List<RoutineSql>) {
         viewModelScope.launch {
             repository.updateAllRoutineSql(routines)
+        }
+    }
+
+    fun upsertAllRoutineSql(routines: List<RoutineSql>) {
+        viewModelScope.launch {
+            repository.upsertAllRoutineSql(routines)
         }
     }
 }

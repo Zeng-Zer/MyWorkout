@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.snackbar.Snackbar
 import com.zeng.myworkout2.R
 import com.zeng.myworkout2.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout2.databinding.FragmentRoutineBinding
@@ -33,14 +34,29 @@ class RoutineFragment : Fragment() {
     }
 
     private val adapter: RoutineAdapter by lazy {
-        RoutineAdapter(viewModel, handleRoutineDetail)
+        RoutineAdapter(viewModel, ::showRoutineDetailActivity, ::deleteRoutineWithUndo)
     }
 
-    private val handleRoutineDetail = fun (routine: Routine, isNew: Boolean) {
+    private fun showRoutineDetailActivity(routine: Routine, isNew: Boolean) {
         val intent = Intent(activity, RoutineDetailActivity::class.java)
         intent.putExtra(resources.getString(R.string.intent_routine), routine.id)
         intent.putExtra(resources.getString(R.string.intent_new_routine), isNew)
         activity?.startActivity(intent)
+    }
+
+    private fun deleteRoutineWithUndo(viewHolder: RoutineAdapter.RoutineViewHolder) {
+        viewHolder.binding.routine?.let {
+            val oldList = adapter.currentList
+
+            viewModel.deleteRoutine(it)
+
+            // Snackbar to restore old list
+            val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
+            snackbar.setAction("UNDO") {
+                viewModel.upsertAllRoutineSql(oldList)
+            }
+            snackbar.show()
+        }
     }
 
     override fun onCreateView(
@@ -80,7 +96,6 @@ class RoutineFragment : Fragment() {
         })
     }
 
-    // TODO 2 WAYS DATABINDING
     private fun showNewRoutineDialog(inflater: LayoutInflater) {
         val formDialog = DialogRoutineFormBinding.inflate(inflater, container, false)
         val dialog = AlertDialog.Builder(context)
@@ -92,8 +107,8 @@ class RoutineFragment : Fragment() {
                     formDialog.description.text.toString()
                 )
                 viewModel.viewModelScope.launch {
-                    viewModel.addRoutine(routine)
-                    handleRoutineDetail(routine, true)
+                    viewModel.insertRoutineSql(routine)
+                    showRoutineDetailActivity(routine, true)
                 }
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }
