@@ -28,7 +28,8 @@ abstract class BaseDao<T> {
 
     @Transaction
     open suspend fun upsert(objs: List<T>) {
-        val updateList = (insert(objs) zip objs)
+        val resultIds = insert(objs)
+        val updateList = (resultIds zip objs)
             .filter { (id, _) -> id == -1L }
             .map { (_, obj) -> obj }
 
