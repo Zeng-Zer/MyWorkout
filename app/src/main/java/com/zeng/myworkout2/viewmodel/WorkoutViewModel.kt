@@ -16,7 +16,6 @@ class WorkoutViewModel(
 ) : ViewModel() {
 
     val workout: LiveData<WorkoutSql> = workoutRepository.getWorkoutSqlById(workoutId)
-
     val exercises: LiveData<List<WorkoutExercise>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
 
     fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
