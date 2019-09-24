@@ -30,7 +30,7 @@ abstract class BaseDao<T> {
     open suspend fun upsert(objs: List<T>) {
         val updateList = (insert(objs) zip objs)
             .filter { (id, _) -> id == -1L }
-            .map { (_, routine) -> routine }
+            .map { (_, obj) -> obj }
 
         update(updateList)
     }
