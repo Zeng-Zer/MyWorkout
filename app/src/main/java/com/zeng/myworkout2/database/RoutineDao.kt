@@ -27,6 +27,10 @@ abstract class RoutineDao : BaseDao<RoutineSql>() {
     abstract fun getAllRoutineSql(): LiveData<List<RoutineSql>>
 
     @Transaction
+    @Query("SELECT * FROM routine ORDER BY [order] ASC")
+    abstract fun allRoutineSql(): List<RoutineSql>
+
+    @Transaction
     open suspend fun insertRoutine(routine: Routine): Long {
         val routineId = insert(routine)
         routine.id = routineId
@@ -34,5 +38,31 @@ abstract class RoutineDao : BaseDao<RoutineSql>() {
             it.routineId = routineId
         }
         return routineId
+    }
+
+
+    @Transaction
+    open suspend fun insertRoutineSql(routine: RoutineSql): Long {
+        val routines = allRoutineSql()
+        val updateList = routines
+            .filter { r -> r.order >= routine.order }
+            .map { r -> r.order += 1; r }
+
+        update(updateList)
+        return insert(routine)
+    }
+
+    /**
+     * Delete Routine and update other routines' position
+     */
+    @Transaction
+    open suspend fun deleteRoutineSql(routine: RoutineSql) {
+        val routines = allRoutineSql()
+        val updateList = routines
+            .filter { r -> r.order > routine.order }
+            .map { r -> r.order -= 1; r }
+
+        delete(routine)
+        update(updateList)
     }
 }

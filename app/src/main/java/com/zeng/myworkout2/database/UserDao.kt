@@ -9,7 +9,6 @@ import com.zeng.myworkout2.model.UserSql
 
 @Dao
 abstract class UserDao : BaseDao<UserSql>() {
-    @Transaction
     @Query("SELECT * FROM user")
     abstract fun getAll(): LiveData<List<User>>
 

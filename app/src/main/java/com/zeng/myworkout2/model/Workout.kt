@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import java.io.Serializable
 
+// TODO REMOVE THESE CLASSES KEEP ONLY SQL
 class Workout(
     @Relation(parentColumn = "id", entityColumn = "workoutId", entity = WorkoutExerciseSql::class)
     var exercises: List<WorkoutExercise> = listOf(),
