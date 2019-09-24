@@ -91,7 +91,7 @@ class DatabaseWorker(
         workout2.id = workoutDao.insertWorkout(exerciseDao, workout2)
 
         val user = User(workout, 0)
-        userDao.insert(user)
+        userDao.insertUser(user)
     }
 
     companion object {

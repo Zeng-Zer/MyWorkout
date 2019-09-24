@@ -22,7 +22,7 @@ abstract class UserDao : BaseDao<UserSql>() {
     abstract fun getCurrentUser() : LiveData<User>
 
     @Transaction
-    open suspend fun insert(user: User): Long {
+    open suspend fun insertUser(user: User): Long {
         user.workoutId = user.workout?.id
         return insert(user)
     }

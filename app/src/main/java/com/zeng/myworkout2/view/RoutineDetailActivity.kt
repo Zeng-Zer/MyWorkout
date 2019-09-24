@@ -38,10 +38,10 @@ class RoutineDetailActivity : AppCompatActivity() {
     }
 
     private val adapter: RoutineDetailAdapter by lazy {
-        RoutineDetailAdapter(supportFragmentManager, lifecycle)
+        RoutineDetailAdapter()
     }
 
-    private var onListChangeCallback: ((List<WorkoutFragment>) -> Unit)? = null
+    private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +105,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
-            adapter.workouts[binding.viewPager.currentItem].addExercise()
+            adapter.currentList[binding.viewPager.currentItem].addExercise()
         }
 
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
@@ -138,11 +138,11 @@ class RoutineDetailActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
 
-                val newWorkoutFragments = workouts.map { workout ->
-                    WorkoutFragment(workout.id!!)
+                val newWorkoutItems = workouts.map { workout ->
+                    WorkoutItem(this, workout.id!!)
                 }
-                adapter.submitList(newWorkoutFragments)
-                onListChangeCallback?.invoke(newWorkoutFragments)
+                adapter.submitList(newWorkoutItems)
+                onListChangeCallback?.invoke(newWorkoutItems)
 
 
                 // Set title for each tabs
@@ -168,8 +168,8 @@ class RoutineDetailActivity : AppCompatActivity() {
                 viewModel.viewModelScope.launch {
                     viewModel.addWorkoutSql(workout)
                     // Move view to newly added item
-                    onListChangeCallback = { workoutsFragments ->
-                        binding.viewPager.setCurrentItem(workoutsFragments.size, true)
+                    onListChangeCallback = { workoutItems ->
+                        binding.viewPager.setCurrentItem(workoutItems.size, true)
                         onListChangeCallback = null
                     }
                 }

@@ -1,48 +1,28 @@
 package com.zeng.myworkout2.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.zeng.myworkout2.databinding.FragmentWorkoutBinding
+import com.zeng.myworkout2.databinding.ListItemWorkoutBinding
 import com.zeng.myworkout2.model.Exercise
 import com.zeng.myworkout2.model.WorkoutExerciseSql
-import com.zeng.myworkout2.util.RepositoryUtils
 import com.zeng.myworkout2.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout2.viewmodel.WorkoutViewModel
-import com.zeng.myworkout2.viewmodel.getViewModel
 
-class WorkoutFragment(val workoutId: Long) : Fragment() {
+class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Long) {
 
-    private lateinit var binding: FragmentWorkoutBinding
+    lateinit var binding: ListItemWorkoutBinding
 
-    val viewModel: WorkoutViewModel by lazy {
-        val workoutRepository = RepositoryUtils.getWorkoutRepository(requireContext())
-        getViewModel({WorkoutViewModel(
-            workoutRepository,
-            workoutId
-        )}, workoutId.toString())
-    }
+    lateinit var viewModel: WorkoutViewModel
 
     private val adapter: WorkoutExerciseAdapter by lazy {
         WorkoutExerciseAdapter(viewModel)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentWorkoutBinding.inflate(inflater, container, false)
-
+    fun init() {
         setupRecyclerView()
         subscribeUi()
-
-        return binding.root
     }
 
     private fun setupRecyclerView() {
@@ -57,14 +37,14 @@ class WorkoutFragment(val workoutId: Long) : Fragment() {
     }
 
     private fun subscribeUi() {
-        viewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
+        viewModel.exercises.observe(lifecycleOwner, Observer { exercises ->
             adapter.submitList(exercises)
         })
     }
 
     fun addExercise() {
         val ex = Exercise("Pullups", "Back")
-        val exWorkout = WorkoutExerciseSql(5, 5, 20f, 1, workoutId)
+        val exWorkout = WorkoutExerciseSql(5, 5, 20f, 1, viewModel.workoutId)
         viewModel.insertExerciceTest(ex, exWorkout)
     }
 }
