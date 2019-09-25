@@ -104,7 +104,9 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
-            adapter.currentList[binding.viewPager.currentItem].addExercise()
+            if (adapter.currentList.size >= binding.viewPager.currentItem) {
+                adapter.currentList[binding.viewPager.currentItem].addExercise()
+            }
         }
 
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
