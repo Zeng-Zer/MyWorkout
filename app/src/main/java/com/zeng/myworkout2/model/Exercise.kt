@@ -10,6 +10,7 @@ data class Exercise(
     @ColumnInfo
     var name: String = "",
 
+    // TODO FOREIGN KEY UPDATE
     @ColumnInfo
     var category: String = "",
 

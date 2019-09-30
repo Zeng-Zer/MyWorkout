@@ -24,19 +24,20 @@ class DatabaseWorker(
         }
     }
 
+    // TODO ADD CATEGORY
     private suspend fun populateDatabase(database: AppDatabase) {
         val userDao = database.userDao()
         val routineDao = database.routineDao()
         val workoutDao = database.workoutDao()
-        val exerciseDao = database.exerciseDao()
+        val workoutExerciseDao = database.workoutExerciseDao()
 
         val squatExercise = Exercise("Squat", "Legs")
         val benchExercise = Exercise("Bench Press", "Chest")
         val deadliftExercise = Exercise("Deadlift", "Legs")
 
-        squatExercise.id = exerciseDao.insertExercise(squatExercise)
-        benchExercise.id = exerciseDao.insertExercise(benchExercise)
-        deadliftExercise.id = exerciseDao.insertExercise(deadliftExercise)
+        squatExercise.id = workoutExerciseDao.insertExercise(squatExercise)
+        benchExercise.id = workoutExerciseDao.insertExercise(benchExercise)
+        deadliftExercise.id = workoutExerciseDao.insertExercise(deadliftExercise)
 
         val squat = WorkoutExercise(
             squatExercise,
@@ -87,8 +88,8 @@ class DatabaseWorker(
         routineDao.insertRoutine(routine2)
 
         workout.id = 8
-        workoutDao.insertWorkout(exerciseDao, workout)
-        workout2.id = workoutDao.insertWorkout(exerciseDao, workout2)
+        workoutDao.insertWorkout(workoutExerciseDao, workout)
+        workout2.id = workoutDao.insertWorkout(workoutExerciseDao, workout2)
 
         val user = User(workout, 0)
         userDao.insertUser(user)

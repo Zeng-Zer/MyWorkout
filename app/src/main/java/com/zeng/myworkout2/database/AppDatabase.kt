@@ -18,7 +18,8 @@ import com.zeng.myworkout2.worker.DatabaseWorker
         RoutineSql::class,
         WorkoutSql::class,
         WorkoutExerciseSql::class,
-        Exercise::class
+        Exercise::class,
+        Category::class
     ],
     version = 1,
     exportSchema = false
@@ -28,7 +29,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun routineDao(): RoutineDao
     abstract fun workoutDao(): WorkoutDao
-    abstract fun exerciseDao(): WorkoutExerciseDao
+    abstract fun workoutExerciseDao(): WorkoutExerciseDao
+    abstract fun exerciseDao(): ExerciseDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
 

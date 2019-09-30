@@ -1,6 +1,7 @@
 package com.zeng.myworkout2.view
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -99,13 +100,15 @@ class RoutineDetailActivity : AppCompatActivity() {
 //                return true
 //            }
         }
-        return super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item!!)
     }
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (adapter.currentList.size >= binding.viewPager.currentItem) {
-                adapter.currentList[binding.viewPager.currentItem].addExercise()
+                val intent = Intent(this, ExerciseActivity::class.java)
+                startActivityForResult(intent, ExerciseActivity.PICK_EXERCISE_REQUEST)
+//                adapter.currentList[binding.viewPager.currentItem].addExercise()
             }
         }
 
@@ -179,7 +182,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
                 viewModel.viewModelScope.launch {
                     viewModel.addWorkoutSql(workout)
-                    // Move view to newly added item
+                    // Focus newly added view
                     onListChangeCallback = { workoutItems ->
                         binding.viewPager.setCurrentItem(workoutItems.size, true)
                         onListChangeCallback = null
