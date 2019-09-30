@@ -9,6 +9,9 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
+    <!--  ExerciseActivity  -->
+    <string name="intent_result_list">result_list</string>
+
     <!--  RoutineDetailActivity  -->
     <string name="intent_routine">routine</string>
     <string name="intent_new_routine">new_routine</string>

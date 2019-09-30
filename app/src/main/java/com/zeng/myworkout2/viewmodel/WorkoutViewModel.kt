@@ -36,19 +36,15 @@ class WorkoutViewModel(
         }
     }
 
-    fun insertExercise(exercise: Exercise) {
+    fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
         viewModelScope.launch {
-            workoutRepository.insertExercise(exercise)
+            workoutRepository.insertWorkoutExerciseSql(exercises)
         }
     }
 
-    // TODO TEST FUNCTION TO BE REMOVED
-
-    fun insertExerciceTest(exercise: Exercise, workoutExercise: WorkoutExerciseSql) {
+    fun insertExercise(exercise: Exercise) {
         viewModelScope.launch {
             workoutRepository.insertExercise(exercise)
-            workoutExercise.exerciseId = exercise.id
-            workoutRepository.insertWorkoutExerciseSql(workoutExercise)
         }
     }
 }

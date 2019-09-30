@@ -37,6 +37,7 @@ open class WorkoutExerciseSql(
     @ColumnInfo
     var reps: Int = 0,
 
+    // TODO CONVERT TO "LOAD" TO HANDLE BODYWEIGHT WEIGHT STATIC ETC
     @ColumnInfo
     var weight: Float = 0f,
 

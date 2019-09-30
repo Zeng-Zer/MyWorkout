@@ -40,6 +40,10 @@ class WorkoutRepository private constructor(
         workoutExerciseDao.insert(exercise)
     }
 
+    suspend fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
+        workoutExerciseDao.insert(exercises)
+    }
+
     suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
         workoutExerciseDao.update(exercise)
     }

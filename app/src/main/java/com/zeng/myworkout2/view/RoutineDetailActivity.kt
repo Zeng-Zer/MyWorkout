@@ -1,5 +1,6 @@
 package com.zeng.myworkout2.view
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -103,12 +104,21 @@ class RoutineDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item!!)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == ExerciseActivity.PICK_EXERCISE_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                val exerciseIds = data?.extras?.getSerializable(resources.getString(R.string.intent_result_list)) as Array<Long>? ?: emptyArray()
+                adapter.currentList[binding.viewPager.currentItem].addExercises(exerciseIds)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (adapter.currentList.size >= binding.viewPager.currentItem) {
                 val intent = Intent(this, ExerciseActivity::class.java)
                 startActivityForResult(intent, ExerciseActivity.PICK_EXERCISE_REQUEST)
-//                adapter.currentList[binding.viewPager.currentItem].addExercise()
             }
         }
 
