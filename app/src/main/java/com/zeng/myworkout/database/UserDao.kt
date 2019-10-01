@@ -5,10 +5,9 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.zeng.myworkout.model.User
-import com.zeng.myworkout.model.UserSql
 
 @Dao
-abstract class UserDao : BaseDao<UserSql>() {
+abstract class UserDao : BaseDao<User>() {
     @Transaction
     @Query("SELECT * FROM user")
     abstract fun getAll(): LiveData<List<User>>
@@ -20,10 +19,4 @@ abstract class UserDao : BaseDao<UserSql>() {
     @Transaction
     @Query("SELECT * FROM user where id = 0")
     abstract fun getCurrentUser() : LiveData<User>
-
-    @Transaction
-    open suspend fun insertUser(user: User): Long {
-        user.workoutId = user.workout?.id
-        return insert(user)
-    }
 }

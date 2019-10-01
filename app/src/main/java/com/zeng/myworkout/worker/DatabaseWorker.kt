@@ -48,7 +48,7 @@ class DatabaseWorker(
         workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
     }
 
-    private suspend fun insertUser(user: UserSql) {
+    private suspend fun insertUser(user: User) {
         user.id = database.userDao().insert(user)
     }
 
@@ -78,7 +78,7 @@ class DatabaseWorker(
         // Add squat to workout2
         WorkoutExerciseSql(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
 
-        UserSql(workout.id, 0).also { insertUser(it) }
+        User(workout.id, 0).also { insertUser(it) }
 
         // TESTING ROUTING TODO REMOVE
         val routine2 = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
