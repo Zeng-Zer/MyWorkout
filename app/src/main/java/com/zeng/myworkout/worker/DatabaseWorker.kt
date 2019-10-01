@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.zeng.myworkout.database.AppDatabase
+import com.zeng.myworkout.database.Category
 import com.zeng.myworkout.model.*
 import kotlinx.coroutines.coroutineScope
 
@@ -13,10 +14,13 @@ class DatabaseWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
+
+    private lateinit var database: AppDatabase
+
     override suspend fun doWork(): Result = coroutineScope {
         try {
-            val database = AppDatabase.getInstance(applicationContext)
-            populateDatabase(database)
+            database = AppDatabase.getInstance(applicationContext)
+            populateDatabase()
             Result.success()
         } catch (ex: Exception) {
             Log.e(TAG, "Error seeding database", ex)
@@ -24,75 +28,60 @@ class DatabaseWorker(
         }
     }
 
-    // TODO ADD CATEGORY
-    private suspend fun populateDatabase(database: AppDatabase) {
-        val userDao = database.userDao()
-        val routineDao = database.routineDao()
-        val workoutDao = database.workoutDao()
-        val workoutExerciseDao = database.workoutExerciseDao()
+    private suspend fun insertRoutine(routine: RoutineSql) {
+        routine.id = database.routineDao().insert(routine)
+    }
 
-        val squatExercise = Exercise("Squat", "Legs")
-        val benchExercise = Exercise("Bench Press", "Chest")
-        val deadliftExercise = Exercise("Deadlift", "Legs")
+    private suspend fun insertWorkout(workout: WorkoutSql) {
+        workout.id = database.workoutDao().insert(workout)
+    }
 
-        squatExercise.id = workoutExerciseDao.insertExercise(squatExercise)
-        benchExercise.id = workoutExerciseDao.insertExercise(benchExercise)
-        deadliftExercise.id = workoutExerciseDao.insertExercise(deadliftExercise)
+    private suspend fun insertCategory(category: Category) {
+        database.categoryDao().insert(category)
+    }
 
-        val squat = WorkoutExercise(
-            squatExercise,
-            5,
-            5,
-            120f,
-            0
-        )
+    private suspend fun insertExercise(exercise: Exercise) {
+        exercise.id = database.exerciseDao().insert(exercise)
+    }
 
-        val bench = WorkoutExercise(
-            benchExercise,
-            10,
-            10,
-            60f,
-            1
-        )
+    private suspend fun insertWorkoutExercise(workoutExercise: WorkoutExerciseSql) {
+        workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
+    }
 
-        val deadlift = WorkoutExercise(
-            deadliftExercise,
-            1,
-            5,
-            200f,
-            2
-        )
+    private suspend fun insertUser(user: UserSql) {
+        user.id = database.userDao().insert(user)
+    }
 
-        val workout = Workout(
-            listOf(squat, bench, deadlift),
-            "Fullbody",
-            "test",
-            1
-        )
+    private suspend fun populateDatabase() {
+        // Category
+        val legs = Category("Legs").also { insertCategory(it) }
+        val chest = Category("Chest").also { insertCategory(it) }
 
-        val workout2 = Workout(
-            listOf(squat),
-            "Fullbody2",
-            "test",
-            1
-        )
+        // Exercise
+        val squatExercise = Exercise("Squat", legs.id).also { insertExercise(it) }
+        val benchExercise = Exercise("Bench Press", chest.id).also { insertExercise(it) }
+        val deadliftExercise = Exercise("Deadlift", legs.id).also { insertExercise(it) }
 
-        val routine = Routine(
-            listOf(workout, workout2),
-            "Fullbody - Test",
-            "2x / week",
-            0
-        )
-        val routine2 = Routine(emptyList(), "Routine 2 - Test", "testing ordering", 0)
-        routineDao.insertRoutine(routine)
-        routineDao.insertRoutine(routine2)
+        val routine = RoutineSql("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
 
-        workout.id = 8
-        workoutDao.insertWorkout(workoutExerciseDao, workout)
-        workout2.id = workoutDao.insertWorkout(workoutExerciseDao, workout2)
+        val workout = WorkoutSql("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
-        val user = User(workout, 0)
-        userDao.insertUser(user)
+        // Add squat to workout
+        WorkoutExerciseSql(5, 5, 120f, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        // Add bench to workout
+        WorkoutExerciseSql(10, 10, 60f, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+        // Add deadlift to workout
+        WorkoutExerciseSql(1, 5, 200f, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
+
+        val workout2 = WorkoutSql("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
+
+        // Add squat to workout2
+        WorkoutExerciseSql(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+
+        UserSql(workout.id, 0).also { insertUser(it) }
+
+        // TESTING ROUTING TODO REMOVE
+        val routine2 = RoutineSql("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
     }
 
     companion object {

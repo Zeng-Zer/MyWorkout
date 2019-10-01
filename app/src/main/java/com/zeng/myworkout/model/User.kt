@@ -6,9 +6,9 @@ import androidx.room.Relation
 
 class User(
     workout: Workout? = null,
-    id: Long? = null,
-    workoutId: Long? = null
-) : UserSql(id, workoutId) {
+    workoutId: Long? = null,
+    id: Long? = null
+) : UserSql(workoutId, id) {
 
     @Relation(parentColumn = "workoutId", entityColumn = "id", entity = WorkoutSql::class)
     var workouts: List<Workout> = if (workout != null) listOf(workout) else listOf()
@@ -19,7 +19,8 @@ class User(
 
 @Entity(tableName = "user")
 open class UserSql(
+    var workoutId: Long? = null,
+
     @PrimaryKey(autoGenerate = true)
-    var id: Long? = null,
-    var workoutId: Long? = null
+    var id: Long? = null
 )
