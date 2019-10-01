@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.zeng.myworkout2.viewmodel.HomeViewModel"/>
+            type="com.zeng.myworkout.viewmodel.HomeViewModel"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

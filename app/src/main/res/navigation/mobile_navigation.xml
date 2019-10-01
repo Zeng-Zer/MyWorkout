@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.zeng.myworkout2.view.HomeFragment"
+        android:name="com.zeng.myworkout.view.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_routine"
-        android:name="com.zeng.myworkout2.view.RoutineFragment"
+        android:name="com.zeng.myworkout.view.RoutineFragment"
         android:label="@string/title_routine"
         tools:layout="@layout/fragment_routine" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.zeng.myworkout2.view.NotificationsFragment"
+        android:name="com.zeng.myworkout.view.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

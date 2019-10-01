@@ -10,7 +10,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "com.zeng.myworkout2"
+        applicationId 'com.zeng.myworkout'
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1

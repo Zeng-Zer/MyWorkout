@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyWorkout2</string>
+    <string name="app_name">MyWorkout</string>
 
     <string name="title_home">Home</string>
     <string name="title_routine">Routine</string>

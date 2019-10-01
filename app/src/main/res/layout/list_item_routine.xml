@@ -6,7 +6,7 @@
 
         <variable
             name="routine"
-            type="com.zeng.myworkout2.model.Routine"/>
+            type="com.zeng.myworkout.model.Routine"/>
     </data>
 
     <androidx.cardview.widget.CardView

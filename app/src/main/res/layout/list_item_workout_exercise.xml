@@ -7,13 +7,13 @@
 
         <variable
             name="exerciseSql"
-            type="com.zeng.myworkout2.model.WorkoutExerciseSql"/>
+            type="com.zeng.myworkout.model.WorkoutExerciseSql"/>
         <variable
             name="exercise"
-            type="com.zeng.myworkout2.model.Exercise"/>
+            type="com.zeng.myworkout.model.Exercise"/>
         <variable
             name="holder"
-            type="com.zeng.myworkout2.view.adapter.WorkoutExerciseAdapter.WorkoutExerciseViewHolder" />
+            type="com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter.WorkoutExerciseViewHolder" />
     </data>
 
     <androidx.cardview.widget.CardView
