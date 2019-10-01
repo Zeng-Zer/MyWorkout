@@ -28,7 +28,7 @@ class DatabaseWorker(
         }
     }
 
-    private suspend fun insertRoutine(routine: RoutineSql) {
+    private suspend fun insertRoutine(routine: Routine) {
         routine.id = database.routineDao().insert(routine)
     }
 
@@ -62,7 +62,7 @@ class DatabaseWorker(
         val benchExercise = Exercise("Bench Press", chest.id).also { insertExercise(it) }
         val deadliftExercise = Exercise("Deadlift", legs.id).also { insertExercise(it) }
 
-        val routine = RoutineSql("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
+        val routine = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
 
         val workout = WorkoutSql("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
@@ -81,7 +81,7 @@ class DatabaseWorker(
         UserSql(workout.id, 0).also { insertUser(it) }
 
         // TESTING ROUTING TODO REMOVE
-        val routine2 = RoutineSql("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
+        val routine2 = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
     }
 
     companion object {

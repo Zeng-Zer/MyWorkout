@@ -15,7 +15,7 @@ import com.zeng.myworkout.worker.DatabaseWorker
 @Database(
     entities = [
         UserSql::class,
-        RoutineSql::class,
+        Routine::class,
         WorkoutSql::class,
         WorkoutExerciseSql::class,
         Exercise::class,

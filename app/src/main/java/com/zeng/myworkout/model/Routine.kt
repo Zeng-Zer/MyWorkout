@@ -3,20 +3,10 @@ package com.zeng.myworkout.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import java.io.Serializable
 
-class Routine(
-    @Relation(parentColumn = "id", entityColumn = "routineId", entity = WorkoutSql::class)
-    var workouts: List<WorkoutSql> = listOf(),
-    name: String = "",
-    description: String = "",
-    order: Int = 0,
-    id: Long? = null
-) : RoutineSql(name, description, order, id)
-
 @Entity(tableName = "routine")
-open class RoutineSql(
+open class Routine(
     @ColumnInfo
     var name: String = "",
 

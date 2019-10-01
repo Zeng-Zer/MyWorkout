@@ -102,9 +102,9 @@ class RoutineFragment : Fragment() {
             .setMessage("New routine")
             .setPositiveButton("CREATE") { _, _ ->
                 val routine = Routine(
-                    emptyList(),
                     formDialog.name.text.toString(),
                     formDialog.description.text.toString()
+                    // default order is 0
                 )
                 viewModel.viewModelScope.launch {
                     routine.id = viewModel.insertRoutineSqlAsync(routine)

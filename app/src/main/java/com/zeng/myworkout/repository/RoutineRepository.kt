@@ -3,17 +3,16 @@ package com.zeng.myworkout.repository
 import androidx.lifecycle.LiveData
 import com.zeng.myworkout.database.RoutineDao
 import com.zeng.myworkout.model.Routine
-import com.zeng.myworkout.model.RoutineSql
 
 class RoutineRepository private constructor(private val routineDao: RoutineDao) {
 
-    fun getRoutines(): LiveData<List<Routine>> = routineDao.getAllRoutine()
-    fun getRoutineSqlById(routineId: Long): LiveData<RoutineSql> = routineDao.getRoutineSqlById(routineId)
+    fun getAllRoutine(): LiveData<List<Routine>> = routineDao.getAllRoutine()
+    fun getRoutineSqlById(routineId: Long): LiveData<Routine> = routineDao.getRoutineSqlById(routineId)
 
-    suspend fun insertRoutine(routine: RoutineSql): Long = routineDao.insertRoutineSql(routine)
-    suspend fun update(routines: List<RoutineSql>) = routineDao.update(routines)
-    suspend fun upsert(routines: List<RoutineSql>) = routineDao.upsert(routines)
-    suspend fun deleteRoutine(routine: RoutineSql) = routineDao.deleteRoutineSql(routine)
+    suspend fun insertRoutine(routine: Routine): Long = routineDao.insertRoutineReorder(routine)
+    suspend fun update(routines: List<Routine>) = routineDao.update(routines)
+    suspend fun upsert(routines: List<Routine>) = routineDao.upsert(routines)
+    suspend fun deleteRoutine(routine: Routine) = routineDao.deleteRoutineReorder(routine)
 
     companion object {
 

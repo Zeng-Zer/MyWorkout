@@ -14,7 +14,7 @@ class RoutineAdapter(
     private val viewModel: RoutineViewModel,
     private val showRoutineDetailActivity: (Long, Boolean) -> Unit,
     private val deleteRoutineWithUndo: (RoutineViewHolder) -> Unit
-) : DraggableListAdapter<Routine>(RoutineDiffCallback()) {
+) : DraggableListAdapter<Routine>(RoutineSqlDiffCallback()) {
 
     init {
         enableDrag()
@@ -72,7 +72,7 @@ class RoutineAdapter(
 
 }
 
-class RoutineDiffCallback : DiffUtil.ItemCallback<Routine>() {
+class RoutineSqlDiffCallback : DiffUtil.ItemCallback<Routine>() {
     override fun areItemsTheSame(oldItem: Routine, newItem: Routine): Boolean {
         return oldItem.id == newItem.id
     }
