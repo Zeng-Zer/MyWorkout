@@ -27,14 +27,4 @@ abstract class WorkoutDao : BaseDao<WorkoutSql>() {
     @Query("SELECT * FROM workout WHERE routineId = :routineId ORDER BY [order] ASC")
     abstract fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>>
 
-    @Transaction
-    open suspend fun insertWorkout(workoutExerciseDao: WorkoutExerciseDao, workout: Workout): Long {
-        val workoutId = insert(workout)
-        workout.exercises.forEach {
-            it.workoutId = workoutId
-        }
-        workoutExerciseDao.insertAllWorkoutExercise(workout.exercises)
-        return workoutId
-    }
-
 }

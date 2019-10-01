@@ -19,41 +19,25 @@ class WorkoutRepository private constructor(
         userDao.update(user)
     }
 
-    fun getWorkoutSqlById(workoutId: Long): LiveData<WorkoutSql> {
-        return workoutDao.getWorkoutSqlById(workoutId)
-    }
+    fun getWorkoutSqlById(workoutId: Long): LiveData<WorkoutSql> = workoutDao.getWorkoutSqlById(workoutId)
 
-    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExercise>> {
-        return workoutDao.getAllWorkoutExerciseById(workoutId)
-    }
+    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExercise>> = workoutDao.getAllWorkoutExerciseById(workoutId)
 
-    fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>> {
-        return workoutDao.getAllWorkoutSqlByRoutineId(routineId)
-    }
+    fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>> = workoutDao.getAllWorkoutSqlByRoutineId(routineId)
 
-    suspend fun insertWorkoutSql(workout: WorkoutSql) {
-        workoutDao.insert(workout)
-    }
+    suspend fun insertWorkoutSql(workout: WorkoutSql) = workoutDao.insert(workout)
 
     suspend fun insertExercise(exercise: Exercise) {
         exercise.id = workoutExerciseDao.insertExercise(exercise)
     }
 
-    suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
-        workoutExerciseDao.insert(exercise)
-    }
+    suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.insert(exercise)
 
-    suspend fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
-        workoutExerciseDao.insert(exercises)
-    }
+    suspend fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.insert(exercises)
 
-    suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
-        workoutExerciseDao.update(exercise)
-    }
+    suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.update(exercise)
 
-    suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
-        workoutExerciseDao.update(exercises)
-    }
+    suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.update(exercises)
 
     companion object {
 
