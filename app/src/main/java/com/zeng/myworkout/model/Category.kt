@@ -1,4 +1,4 @@
-package com.zeng.myworkout.database
+package com.zeng.myworkout.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

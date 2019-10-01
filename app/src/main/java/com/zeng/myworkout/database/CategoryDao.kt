@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
+import com.zeng.myworkout.model.Category
 
 @Dao
 abstract class CategoryDao : BaseDao<Category>() {

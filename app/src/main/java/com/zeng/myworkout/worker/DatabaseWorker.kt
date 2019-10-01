@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.zeng.myworkout.database.AppDatabase
-import com.zeng.myworkout.database.Category
+import com.zeng.myworkout.model.Category
 import com.zeng.myworkout.model.*
 import kotlinx.coroutines.coroutineScope
 
