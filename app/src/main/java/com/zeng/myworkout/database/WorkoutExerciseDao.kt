@@ -6,12 +6,12 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.zeng.myworkout.model.Exercise
-import com.zeng.myworkout.model.WorkoutExerciseSql
+import com.zeng.myworkout.model.WorkoutExercise
 
 @Dao
-abstract class WorkoutExerciseDao : BaseDao<WorkoutExerciseSql>() {
+abstract class WorkoutExerciseDao : BaseDao<WorkoutExercise>() {
     @Transaction
-    @Query("SELECT * FROM exercise")
+    @Query("SELECT * FROM detail")
     abstract fun getAll(): LiveData<List<Exercise>>
 
     @Insert

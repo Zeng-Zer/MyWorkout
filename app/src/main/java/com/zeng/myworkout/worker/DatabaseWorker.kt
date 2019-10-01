@@ -44,7 +44,7 @@ class DatabaseWorker(
         exercise.id = database.exerciseDao().insert(exercise)
     }
 
-    private suspend fun insertWorkoutExercise(workoutExercise: WorkoutExerciseSql) {
+    private suspend fun insertWorkoutExercise(workoutExercise: WorkoutExercise) {
         workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
     }
 
@@ -67,16 +67,16 @@ class DatabaseWorker(
         val workout = Workout("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout
-        WorkoutExerciseSql(5, 5, 120f, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(5, 5, 120f, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
         // Add bench to workout
-        WorkoutExerciseSql(10, 10, 60f, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(10, 10, 60f, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
         // Add deadlift to workout
-        WorkoutExerciseSql(1, 5, 200f, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(1, 5, 200f, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
 
         val workout2 = Workout("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout2
-        WorkoutExerciseSql(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
 
         User(workout.id, 0).also { insertUser(it) }
 

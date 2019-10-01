@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-@Entity(tableName = "exercise")
+@Entity(tableName = "detail")
 data class Exercise(
     @ColumnInfo
     var name: String = "",

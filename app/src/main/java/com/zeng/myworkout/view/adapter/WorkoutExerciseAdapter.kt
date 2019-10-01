@@ -17,13 +17,13 @@ import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.WorkoutExercise
-import com.zeng.myworkout.model.WorkoutExerciseSql
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DraggableListAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : DraggableListAdapter<WorkoutExercise>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     init {
         enableDrag()
@@ -45,7 +45,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        viewModel.updateAllWorkoutExerciseSql(currentList)
+        viewModel.updateAllWorkoutExercise(currentList)
     }
 
 
@@ -75,7 +75,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
                     // On validation
                     { exercise ->
                         exercise.sets = nbSet
-                        viewModel.updateWorkoutExerciseSql(exercise)
+                        viewModel.updateWorkoutExercise(exercise)
                     }
                 )
             }
@@ -90,7 +90,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
                     // On validation
                     { exercise ->
                         exercise.reps = nbRep
-                        viewModel.updateWorkoutExerciseSql(exercise)
+                        viewModel.updateWorkoutExercise(exercise)
                     }
                 )
             }
@@ -100,10 +100,10 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
             }
         }
 
-        fun bind(item: WorkoutExercise) {
+        fun bind(item: WorkoutExerciseDetail) {
             binding.apply {
-                exerciseSql = item
-                exercise = item.exercise
+                exercise = item
+                detail = item.detail
                 holder = this@WorkoutExerciseViewHolder
                 executePendingBindings()
             }
@@ -112,7 +112,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
         private fun showIntegerPicker(initialValue: Int,
                                       message: String,
                                       onValueChange: (Int) -> Unit,
-                                      onValidation: (WorkoutExerciseSql) -> Unit) {
+                                      onValidation: (WorkoutExercise) -> Unit) {
             val pickerBinding = IntegerPickerBinding.inflate(inflater)
 
             pickerBinding.picker.minValue = 1
@@ -123,7 +123,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
 
             val dialog = AlertDialog.Builder(context)
                 .setMessage(message)
-                .setPositiveButton("OK") { _, _ -> binding.exerciseSql?.let(onValidation)}
+                .setPositiveButton("OK") { _, _ -> binding.exercise?.let(onValidation)}
                 .setNegativeButton("CANCEL") {  _, _ ->  }
                 .setView(pickerBinding.root)
                 .create()
@@ -133,7 +133,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
         }
 
         @SuppressLint("SetTextI18n")
-        fun weightToText(ex: WorkoutExerciseSql): String {
+        fun weightToText(ex: WorkoutExercise): String {
             return if (ex.weight.roundToInt().toFloat() == ex.weight) {
                 ex.weight.toInt().toString() + "kg"
             } else {
@@ -143,7 +143,7 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
 
         // TODO PROBABLY NEED TO REFACTOR THIS
         private fun onWeightClickListener() {
-            var weight = binding.exerciseSql?.weight ?: 0f
+            var weight = binding.exercise?.weight ?: 0f
             val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)
             numberPickerBinding.weight = weight
             numberPickerBinding.increase.setOnClickListener {
@@ -186,9 +186,9 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
             val dialog = android.app.AlertDialog.Builder(context)
                 .setMessage("Weight")
                 .setPositiveButton("OK") { _, _ ->
-                    binding.exerciseSql?.let { exercise ->
+                    binding.exercise?.let { exercise ->
                         exercise.weight = weight
-                        viewModel.updateWorkoutExerciseSql(exercise)
+                        viewModel.updateWorkoutExercise(exercise)
                     }
                 }
                 .setNegativeButton("CANCEL") {  _, _ ->  }
@@ -203,13 +203,13 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
 
 }
 
-class WorkoutExerciseDiffCallback : DiffUtil.ItemCallback<WorkoutExercise>() {
-    override fun areItemsTheSame(oldItem: WorkoutExercise, newItem: WorkoutExercise): Boolean {
+class WorkoutExerciseDiffCallback : DiffUtil.ItemCallback<WorkoutExerciseDetail>() {
+    override fun areItemsTheSame(oldItem: WorkoutExerciseDetail, newItem: WorkoutExerciseDetail): Boolean {
         return oldItem.id == newItem.id
     }
 
     @SuppressLint("DiffUtilEquals")
-    override fun areContentsTheSame(oldItem: WorkoutExercise, newItem: WorkoutExercise): Boolean {
+    override fun areContentsTheSame(oldItem: WorkoutExerciseDetail, newItem: WorkoutExerciseDetail): Boolean {
         return oldItem == newItem
     }
 

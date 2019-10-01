@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import com.zeng.myworkout.database.UserDao
 import com.zeng.myworkout.database.WorkoutDao
 import com.zeng.myworkout.database.WorkoutExerciseDao
-import com.zeng.myworkout.model.*
+import com.zeng.myworkout.model.User
+import com.zeng.myworkout.model.Workout
+import com.zeng.myworkout.model.WorkoutExercise
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 
 class WorkoutRepository private constructor(
     private val workoutDao: WorkoutDao,
@@ -20,19 +23,14 @@ class WorkoutRepository private constructor(
     }
 
     fun getWorkoutById(workoutId: Long): LiveData<Workout> = workoutDao.getWorkoutById(workoutId)
-    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExercise>> = workoutDao.getAllWorkoutExerciseById(workoutId)
+    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>> = workoutDao.getAllWorkoutExerciseById(workoutId)
     fun getAllWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>> = workoutDao.getAllWorkoutByRoutineId(routineId)
 
     suspend fun insertWorkout(workout: Workout) = workoutDao.insert(workout)
 
-    suspend fun insertExercise(exercise: Exercise) {
-        exercise.id = workoutExerciseDao.insertExercise(exercise)
-    }
-
-    suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.insert(exercise)
-    suspend fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.insert(exercises)
-    suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.update(exercise)
-    suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.update(exercises)
+    suspend fun insertWorkoutExercise(exercises: List<WorkoutExercise>) = workoutExerciseDao.insert(exercises)
+    suspend fun updateWorkoutExercise(exercise: WorkoutExercise) = workoutExerciseDao.update(exercise)
+    suspend fun updateAllWorkoutExercise(exercises: List<WorkoutExercise>) = workoutExerciseDao.update(exercises)
 
     companion object {
 

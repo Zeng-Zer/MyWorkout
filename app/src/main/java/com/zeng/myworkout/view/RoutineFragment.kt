@@ -48,12 +48,12 @@ class RoutineFragment : Fragment() {
         viewHolder.binding.routine?.let { routine ->
             // Save current list
             val oldList = adapter.currentList
-            viewModel.deleteRoutineSql(routine)
+            viewModel.deleteRoutine(routine)
 
             // Snackbar to restore old list
             val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
             snackbar.setAction("UNDO") {
-                viewModel.upsertRoutineSql(oldList)
+                viewModel.upsertRoutine(oldList)
             }
             snackbar.show()
         }
@@ -107,7 +107,7 @@ class RoutineFragment : Fragment() {
                     // default order is 0
                 )
                 viewModel.viewModelScope.launch {
-                    routine.id = viewModel.insertRoutineSqlAsync(routine)
+                    routine.id = viewModel.insertRoutineAsync(routine)
                     showRoutineDetailActivity(routine.id!!, true)
                 }
             }

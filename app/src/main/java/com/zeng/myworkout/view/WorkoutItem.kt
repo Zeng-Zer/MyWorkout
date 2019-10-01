@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.databinding.ListItemWorkoutBinding
-import com.zeng.myworkout.model.WorkoutExerciseSql
+import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
@@ -42,7 +42,7 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
     // TODO THINK OF A WAY TO HANDLE DEFAULT VALUES
     fun addExercises(exerciseIds: Array<Long>) {
         val exercises = exerciseIds.mapIndexed { i, exerciseId ->
-            WorkoutExerciseSql(
+            WorkoutExercise(
                 1,
                 0,
                 0f,
@@ -52,6 +52,6 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
                 exerciseId
             )
         }
-        viewModel.insertWorkoutExerciseSql(exercises)
+        viewModel.insertWorkoutExercise(exercises)
     }
 }

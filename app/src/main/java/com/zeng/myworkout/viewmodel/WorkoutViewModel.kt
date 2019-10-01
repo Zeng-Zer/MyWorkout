@@ -3,10 +3,9 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zeng.myworkout.model.Exercise
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExercise
-import com.zeng.myworkout.model.WorkoutExerciseSql
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
@@ -16,35 +15,24 @@ class WorkoutViewModel(
 ) : ViewModel() {
 
     val workout: LiveData<Workout> = workoutRepository.getWorkoutById(workoutId)
-    val exercises: LiveData<List<WorkoutExercise>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
+    val exercises: LiveData<List<WorkoutExerciseDetail>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
 
-    fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
+    fun updateWorkoutExercise(exercise: WorkoutExercise) {
         viewModelScope.launch {
-            workoutRepository.updateWorkoutExerciseSql(exercise)
+            workoutRepository.updateWorkoutExercise(exercise)
         }
     }
 
-    fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
+    fun updateAllWorkoutExercise(exercises: List<WorkoutExercise>) {
         viewModelScope.launch {
-            workoutRepository.updateAllWorkoutExerciseSql(exercises)
+            workoutRepository.updateAllWorkoutExercise(exercises)
         }
     }
 
-    fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) {
+    fun insertWorkoutExercise(exercises: List<WorkoutExercise>) {
         viewModelScope.launch {
-            workoutRepository.insertWorkoutExerciseSql(exercise)
+            workoutRepository.insertWorkoutExercise(exercises)
         }
     }
 
-    fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) {
-        viewModelScope.launch {
-            workoutRepository.insertWorkoutExerciseSql(exercises)
-        }
-    }
-
-    fun insertExercise(exercise: Exercise) {
-        viewModelScope.launch {
-            workoutRepository.insertExercise(exercise)
-        }
-    }
 }

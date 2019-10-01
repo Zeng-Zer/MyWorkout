@@ -191,7 +191,7 @@ class RoutineDetailActivity : AppCompatActivity() {
                 )
 
                 viewModel.viewModelScope.launch {
-                    viewModel.addWorkoutSql(workout)
+                    viewModel.insertWorkout(workout)
                     // Focus newly added view
                     onListChangeCallback = { workoutItems ->
                         binding.viewPager.setCurrentItem(workoutItems.size, true)

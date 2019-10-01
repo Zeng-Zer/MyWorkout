@@ -16,7 +16,7 @@ class RoutineDetailViewModel(
     val routine: LiveData<Routine> = routineRepo.getRoutineById(routineId)
     val workouts: LiveData<List<Workout>> = workoutRepo.getAllWorkoutByRoutineId(routineId)
 
-    suspend fun addWorkoutSql(workout: Workout) {
+    suspend fun insertWorkout(workout: Workout) {
         workoutRepo.insertWorkout(workout)
     }
 

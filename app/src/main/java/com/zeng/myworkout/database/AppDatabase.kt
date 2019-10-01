@@ -17,7 +17,7 @@ import com.zeng.myworkout.worker.DatabaseWorker
         User::class,
         Routine::class,
         Workout::class,
-        WorkoutExerciseSql::class,
+        WorkoutExercise::class,
         Exercise::class,
         Category::class
     ],
