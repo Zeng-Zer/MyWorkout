@@ -3,7 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zeng.myworkout.database.WorkoutRepository
+import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.model.Exercise
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseSql

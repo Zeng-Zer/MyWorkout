@@ -2,9 +2,9 @@ package com.zeng.myworkout.util
 
 import android.content.Context
 import com.zeng.myworkout.database.AppDatabase
-import com.zeng.myworkout.database.ExerciseRepository
-import com.zeng.myworkout.database.RoutineRepository
-import com.zeng.myworkout.database.WorkoutRepository
+import com.zeng.myworkout.repository.ExerciseRepository
+import com.zeng.myworkout.repository.RoutineRepository
+import com.zeng.myworkout.repository.WorkoutRepository
 
 object RepositoryUtils {
 

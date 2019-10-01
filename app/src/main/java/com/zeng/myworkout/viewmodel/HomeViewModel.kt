@@ -3,7 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.zeng.myworkout.database.WorkoutRepository
+import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.model.User
 
 class HomeViewModel(private val repository: WorkoutRepository) : ViewModel() {

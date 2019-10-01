@@ -1,6 +1,9 @@
-package com.zeng.myworkout.database
+package com.zeng.myworkout.repository
 
 import androidx.lifecycle.LiveData
+import com.zeng.myworkout.database.UserDao
+import com.zeng.myworkout.database.WorkoutDao
+import com.zeng.myworkout.database.WorkoutExerciseDao
 import com.zeng.myworkout.model.*
 
 class WorkoutRepository private constructor(
@@ -59,7 +62,12 @@ class WorkoutRepository private constructor(
 
         fun getInstance(workoutDao: WorkoutDao, workoutExerciseDao: WorkoutExerciseDao, userDao: UserDao) =
             instance ?: synchronized(this) {
-                instance ?: WorkoutRepository(workoutDao, workoutExerciseDao, userDao).also { instance = it }
+                instance
+                    ?: WorkoutRepository(
+                        workoutDao,
+                        workoutExerciseDao,
+                        userDao
+                    ).also { instance = it }
             }
     }
 }

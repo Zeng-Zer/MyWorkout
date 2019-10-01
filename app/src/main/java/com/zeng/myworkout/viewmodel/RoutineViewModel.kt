@@ -3,7 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zeng.myworkout.database.RoutineRepository
+import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.model.RoutineSql
 import kotlinx.coroutines.launch

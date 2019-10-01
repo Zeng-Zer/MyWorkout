@@ -1,4 +1,7 @@
-package com.zeng.myworkout.database
+package com.zeng.myworkout.repository
+
+import com.zeng.myworkout.database.CategoryDao
+import com.zeng.myworkout.database.ExerciseDao
 
 class ExerciseRepository private constructor(
     private val exerciseDao: ExerciseDao,
@@ -14,7 +17,11 @@ class ExerciseRepository private constructor(
 
         fun getInstance(exerciseDao: ExerciseDao, categoryDao: CategoryDao) =
             instance ?: synchronized(this) {
-                instance ?: ExerciseRepository(exerciseDao, categoryDao).also { instance = it }
+                instance
+                    ?: ExerciseRepository(
+                        exerciseDao,
+                        categoryDao
+                    ).also { instance = it }
             }
     }
 }

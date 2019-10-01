@@ -2,8 +2,8 @@ package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.zeng.myworkout.database.RoutineRepository
-import com.zeng.myworkout.database.WorkoutRepository
+import com.zeng.myworkout.repository.RoutineRepository
+import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.model.RoutineSql
 import com.zeng.myworkout.model.WorkoutSql
 

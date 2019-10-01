@@ -1,6 +1,7 @@
-package com.zeng.myworkout.database
+package com.zeng.myworkout.repository
 
 import androidx.lifecycle.LiveData
+import com.zeng.myworkout.database.RoutineDao
 import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.model.RoutineSql
 
@@ -21,7 +22,8 @@ class RoutineRepository private constructor(private val routineDao: RoutineDao) 
 
         fun getInstance(routineDao: RoutineDao) =
             instance ?: synchronized(this) {
-                instance ?: RoutineRepository(routineDao).also { instance = it }
+                instance
+                    ?: RoutineRepository(routineDao).also { instance = it }
             }
     }
 }
