@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ActivityRoutineDetailBinding
@@ -109,6 +108,8 @@ class RoutineDetailActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val exerciseIds = data?.extras?.getSerializable(resources.getString(R.string.intent_result_list)) as Array<Long>? ?: emptyArray()
                 adapter.currentList[binding.viewPager.currentItem].addExercises(exerciseIds)
+                // Enable fab after activity ends
+                binding.fab.isEnabled = true
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -117,24 +118,29 @@ class RoutineDetailActivity : AppCompatActivity() {
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (adapter.currentList.size >= binding.viewPager.currentItem) {
+                // Disable fab to prevent double clicks
+                binding.fab.isEnabled = false
+
+                // Start activity to get Exercises
                 val intent = Intent(this, ExerciseActivity::class.java)
                 startActivityForResult(intent, ExerciseActivity.PICK_EXERCISE_REQUEST)
             }
         }
-
-        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                when(state) {
-                    SCROLL_STATE_IDLE -> binding.fab.show()
-                    else -> binding.fab.hide()
-                }
-            }
-        })
     }
 
     private fun setupViewPager() {
         binding.viewPager.adapter = adapter
         TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
+
+        // Hide fab when changing fragment
+        binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                when(state) {
+                    ViewPager2.SCROLL_STATE_IDLE -> binding.fab.show()
+                    else -> binding.fab.hide()
+                }
+            }
+        })
     }
 
     private fun subscribeUi() {
