@@ -51,7 +51,7 @@ class WorkoutExerciseDetail(
     @Relation(parentColumn = "exerciseId", entityColumn = "id", entity = Exercise::class)
     var exercises: List<Exercise> = listOf(ex)
 
-    var detail : Exercise
+    var detail: Exercise
         get() = exercises.first()
         set(ex) { exercises = listOf(ex) }
 

@@ -106,9 +106,10 @@ class RoutineDetailActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ExerciseActivity.PICK_EXERCISE_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
+                @Suppress("UNCHECKED_CAST")
                 val exerciseIds = data?.extras?.getSerializable(resources.getString(R.string.intent_result_list)) as Array<Long>? ?: emptyArray()
                 adapter.currentList[binding.viewPager.currentItem].addExercises(exerciseIds)
-                // Enable fab after activity ends
+                // Enable fab after getting exercise activity results
                 binding.fab.isEnabled = true
             }
         }

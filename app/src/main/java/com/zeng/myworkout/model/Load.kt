@@ -10,4 +10,5 @@ class Load {
 
     lateinit var type: LoadType
     var value: Float = 0F
+    var reps: Int = 0
 }

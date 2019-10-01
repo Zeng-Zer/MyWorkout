@@ -91,7 +91,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:focusable="false"
-                        android:text="@{Integer.toString(exercise.sets)}" />
+                        android:text="@{Integer.toString(exercise.sets)}"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -107,7 +108,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:focusable="false"
-                        android:text="@{Integer.toString(exercise.reps)}" />
+                        android:text="@{Integer.toString(exercise.reps)}"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -123,7 +125,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:focusable="false"
-                        android:text="@{holder.weightToText(exercise)}" />
+                        android:text="@{holder.weightToText(exercise)}"
+                        />
 
                 </LinearLayout>
 

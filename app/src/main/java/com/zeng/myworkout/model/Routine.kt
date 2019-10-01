@@ -3,7 +3,6 @@ package com.zeng.myworkout.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 @Entity(tableName = "routine")
 open class Routine(
@@ -19,4 +18,4 @@ open class Routine(
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 
-) : Serializable
+)
