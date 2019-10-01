@@ -19,24 +19,19 @@ class WorkoutRepository private constructor(
         userDao.update(user)
     }
 
-    fun getWorkoutSqlById(workoutId: Long): LiveData<WorkoutSql> = workoutDao.getWorkoutSqlById(workoutId)
-
+    fun getWorkoutById(workoutId: Long): LiveData<Workout> = workoutDao.getWorkoutById(workoutId)
     fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExercise>> = workoutDao.getAllWorkoutExerciseById(workoutId)
+    fun getAllWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>> = workoutDao.getAllWorkoutByRoutineId(routineId)
 
-    fun getAllWorkoutSqlByRoutineId(routineId: Long): LiveData<List<WorkoutSql>> = workoutDao.getAllWorkoutSqlByRoutineId(routineId)
-
-    suspend fun insertWorkoutSql(workout: WorkoutSql) = workoutDao.insert(workout)
+    suspend fun insertWorkout(workout: Workout) = workoutDao.insert(workout)
 
     suspend fun insertExercise(exercise: Exercise) {
         exercise.id = workoutExerciseDao.insertExercise(exercise)
     }
 
     suspend fun insertWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.insert(exercise)
-
     suspend fun insertWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.insert(exercises)
-
     suspend fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) = workoutExerciseDao.update(exercise)
-
     suspend fun updateAllWorkoutExerciseSql(exercises: List<WorkoutExerciseSql>) = workoutExerciseDao.update(exercises)
 
     companion object {

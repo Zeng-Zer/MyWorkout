@@ -3,11 +3,11 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseSql
-import com.zeng.myworkout.model.WorkoutSql
+import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
 class WorkoutViewModel(
@@ -15,7 +15,7 @@ class WorkoutViewModel(
     val workoutId: Long
 ) : ViewModel() {
 
-    val workout: LiveData<WorkoutSql> = workoutRepository.getWorkoutSqlById(workoutId)
+    val workout: LiveData<Workout> = workoutRepository.getWorkoutById(workoutId)
     val exercises: LiveData<List<WorkoutExercise>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
 
     fun updateWorkoutExerciseSql(exercise: WorkoutExerciseSql) {

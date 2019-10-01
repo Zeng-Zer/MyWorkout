@@ -11,7 +11,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
     @Query("SELECT * FROM routine WHERE id =:id")
-    abstract fun getRoutineSqlById(id: Long): LiveData<Routine>
+    abstract fun getRoutineById(id: Long): LiveData<Routine>
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
@@ -19,11 +19,11 @@ abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
-    abstract fun allRoutineSql(): List<Routine>
+    abstract fun allRoutine(): List<Routine>
 
     @Transaction
     open suspend fun insertRoutineReorder(routine: Routine): Long {
-        val routines = allRoutineSql()
+        val routines = allRoutine()
         val updateList = routines
             .filter { r -> r.order >= routine.order }
             .map { r -> r.order += 1; r }
@@ -37,7 +37,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
      */
     @Transaction
     open suspend fun deleteRoutineReorder(routine: Routine) {
-        val routines = allRoutineSql()
+        val routines = allRoutine()
         val updateList = routines
             .filter { r -> r.order > routine.order }
             .map { r -> r.order -= 1; r }

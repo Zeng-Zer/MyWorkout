@@ -2,10 +2,10 @@ package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.zeng.myworkout.model.Routine
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
-import com.zeng.myworkout.model.Routine
-import com.zeng.myworkout.model.WorkoutSql
 
 class RoutineDetailViewModel(
     private val routineRepo: RoutineRepository,
@@ -13,11 +13,11 @@ class RoutineDetailViewModel(
     routineId: Long
 ) : ViewModel() {
 
-    val routine: LiveData<Routine> = routineRepo.getRoutineSqlById(routineId)
-    val workouts: LiveData<List<WorkoutSql>> = workoutRepo.getAllWorkoutSqlByRoutineId(routineId)
+    val routine: LiveData<Routine> = routineRepo.getRoutineById(routineId)
+    val workouts: LiveData<List<Workout>> = workoutRepo.getAllWorkoutByRoutineId(routineId)
 
-    suspend fun addWorkoutSql(workout: WorkoutSql) {
-        workoutRepo.insertWorkoutSql(workout)
+    suspend fun addWorkoutSql(workout: Workout) {
+        workoutRepo.insertWorkout(workout)
     }
 
 }

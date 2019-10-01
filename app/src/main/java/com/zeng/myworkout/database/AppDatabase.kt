@@ -16,7 +16,7 @@ import com.zeng.myworkout.worker.DatabaseWorker
     entities = [
         User::class,
         Routine::class,
-        WorkoutSql::class,
+        Workout::class,
         WorkoutExerciseSql::class,
         Exercise::class,
         Category::class

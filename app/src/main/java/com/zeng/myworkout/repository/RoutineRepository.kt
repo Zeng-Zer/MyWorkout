@@ -7,7 +7,7 @@ import com.zeng.myworkout.model.Routine
 class RoutineRepository private constructor(private val routineDao: RoutineDao) {
 
     fun getAllRoutine(): LiveData<List<Routine>> = routineDao.getAllRoutine()
-    fun getRoutineSqlById(routineId: Long): LiveData<Routine> = routineDao.getRoutineSqlById(routineId)
+    fun getRoutineById(routineId: Long): LiveData<Routine> = routineDao.getRoutineById(routineId)
 
     suspend fun insertRoutine(routine: Routine): Long = routineDao.insertRoutineReorder(routine)
     suspend fun update(routines: List<Routine>) = routineDao.update(routines)

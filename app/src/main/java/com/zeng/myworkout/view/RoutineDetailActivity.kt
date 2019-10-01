@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ActivityRoutineDetailBinding
 import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
-import com.zeng.myworkout.model.WorkoutSql
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.RoutineDetailAdapter
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
@@ -184,7 +184,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             .setMessage("New workout")
             .setPositiveButton("CREATE") { _, _ ->
                 // Add workout to the end
-                val workout = WorkoutSql(
+                val workout = Workout(
                     form.workoutName.text.toString(),
                     "",
                     adapter.itemCount, routineId

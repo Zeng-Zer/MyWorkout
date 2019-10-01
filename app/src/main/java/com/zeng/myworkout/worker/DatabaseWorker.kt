@@ -32,7 +32,7 @@ class DatabaseWorker(
         routine.id = database.routineDao().insert(routine)
     }
 
-    private suspend fun insertWorkout(workout: WorkoutSql) {
+    private suspend fun insertWorkout(workout: Workout) {
         workout.id = database.workoutDao().insert(workout)
     }
 
@@ -64,7 +64,7 @@ class DatabaseWorker(
 
         val routine = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
 
-        val workout = WorkoutSql("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
+        val workout = Workout("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout
         WorkoutExerciseSql(5, 5, 120f, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
@@ -73,7 +73,7 @@ class DatabaseWorker(
         // Add deadlift to workout
         WorkoutExerciseSql(1, 5, 200f, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
 
-        val workout2 = WorkoutSql("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
+        val workout2 = Workout("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout2
         WorkoutExerciseSql(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
