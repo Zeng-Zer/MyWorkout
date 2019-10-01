@@ -3,17 +3,14 @@ package com.zeng.myworkout.view.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemExerciseBinding
 import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.viewmodel.ExerciseViewModel
 
-class ExerciseAdapter : ListAdapter<Exercise, RecyclerView.ViewHolder>(ExerciseDiffCallback()) {
-
-    var checkedList: MutableList<Exercise> = mutableListOf()
-    val hasChecked: MutableLiveData<Boolean> = MutableLiveData(false)
+class ExerciseAdapter(private val viewModel: ExerciseViewModel) : ListAdapter<Exercise, RecyclerView.ViewHolder>(ExerciseDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ExerciseViewHolder(
@@ -35,13 +32,13 @@ class ExerciseAdapter : ListAdapter<Exercise, RecyclerView.ViewHolder>(ExerciseD
                 // added checked element to checkedlist
                 checkbox.setOnCheckedChangeListener{ _, checked ->
                     if (checked) {
-                        checkedList.add(item)
+                        viewModel.checkedList.add(item)
                     } else {
-                        checkedList.remove(item)
+                        viewModel.checkedList.remove(item)
                     }
                     // update livedata if has checked or not
-                    if (hasChecked.value!! != checkedList.isNotEmpty()) {
-                        hasChecked.value = checkedList.isNotEmpty()
+                    if (viewModel.hasChecked.value!! != viewModel.checkedList.isNotEmpty()) {
+                        viewModel.hasChecked.value = viewModel.checkedList.isNotEmpty()
                     }
                 }
             }

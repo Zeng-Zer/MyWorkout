@@ -21,12 +21,12 @@ class ExerciseActivity : AppCompatActivity() {
         DataBindingUtil.setContentView<ActivityExerciseBinding>(this, R.layout.activity_exercise)
     }
 
-    private val adapter by lazy {
-        ExerciseAdapter()
-    }
-
     private val viewModel by lazy {
         getViewModel({ExerciseViewModel(RepositoryUtils.getExerciseRepository(this))})
+    }
+
+    private val adapter by lazy {
+        ExerciseAdapter(viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +52,7 @@ class ExerciseActivity : AppCompatActivity() {
     }
 
     private fun finishWithResult() {
-        val exercises = adapter.checkedList.map { exercise ->
+        val exercises = viewModel.checkedList.map { exercise ->
             exercise.id
         }.toTypedArray()
 
@@ -83,7 +83,7 @@ class ExerciseActivity : AppCompatActivity() {
 
         // TODO ANIMATION WITH TOOLBAR
         // Change toolbar icon
-        adapter.hasChecked.observe(this, Observer { hasChecked ->
+        viewModel.hasChecked.observe(this, Observer { hasChecked ->
             if (hasChecked) {
                 supportActionBar?.setHomeAsUpIndicator(resources.getDrawable(R.drawable.ic_check_white_24dp))
             } else {
