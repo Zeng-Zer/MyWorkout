@@ -1,8 +1,6 @@
 package com.zeng.myworkout.view
 
 import android.content.Context
-import android.view.LayoutInflater
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
@@ -13,14 +11,13 @@ import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 
 class WorkoutExerciseViewHolder(
-    private val viewModel: WorkoutViewModel,
-    private val lifecycleOwner: LifecycleOwner,
+    viewModel: WorkoutViewModel,
     private val context: Context,
     private val binding: ListItemWorkoutExerciseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val adapter = LoadAdapter(viewModel)
+    private val exercise by lazy { binding.exercise }
+    private val adapter by lazy { LoadAdapter(viewModel, exercise!!) }
 
     init {
 //            binding.numberSet.setOnClickListener {

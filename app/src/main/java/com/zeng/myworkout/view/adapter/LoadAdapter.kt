@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class LoadAdapter(private val viewModel: WorkoutViewModel) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
+class LoadAdapter(
+    private val viewModel: WorkoutViewModel,
+    private val exercise: WorkoutExerciseDetail
+) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
@@ -31,6 +35,11 @@ class LoadAdapter(private val viewModel: WorkoutViewModel) : ListAdapter<Load, R
                 load = item
                 holder = this@LoadViewHolder
                 executePendingBindings()
+            }
+
+            binding.button.setOnClickListener {
+                exercise.sets[item.order].reps -= 1
+                viewModel.updateWorkoutExercise(exercise)
             }
         }
 
