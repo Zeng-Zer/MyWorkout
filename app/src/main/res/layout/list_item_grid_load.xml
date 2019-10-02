@@ -21,8 +21,8 @@
         <!--  TODO Timer icon for duration value  -->
         <Button
             android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/grid_item_button_size"
+            android:layout_height="@dimen/grid_item_button_size"
             android:background="@drawable/my_button_ripple"
             android:textColor="@android:color/white"
             android:clickable="true"

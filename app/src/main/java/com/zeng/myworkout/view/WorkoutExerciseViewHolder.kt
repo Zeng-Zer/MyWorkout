@@ -1,31 +1,15 @@
 package com.zeng.myworkout.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
-import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
-import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
-import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
-import com.zeng.myworkout.databinding.NumberPickerBinding
-import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.LoadType
-import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.view.adapter.LoadAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
-import java.text.DecimalFormat
-import kotlin.math.roundToInt
 
 
 class WorkoutExerciseViewHolder(
@@ -38,14 +22,7 @@ class WorkoutExerciseViewHolder(
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val adapter = LoadAdapter(viewModel)
 
-    private val loads = MutableLiveData(listOf(
-        Load(LoadType.WEIGHT, 50f, 5, 0),
-        Load(LoadType.WEIGHT, 45f, 5, 1)
-    ))
-
     init {
-        setupRecyclerView()
-        subscribeUi()
 //            binding.numberSet.setOnClickListener {
 //                var nbSet = binding.numberSet.text.toString().toInt()
 //                showIntegerPicker(nbSet, "Number of sets:",
@@ -88,107 +65,104 @@ class WorkoutExerciseViewHolder(
             holder = this@WorkoutExerciseViewHolder
             executePendingBindings()
         }
+
+        setupRecyclerView()
+        adapter.submitList(item.sets)
     }
 
-    private fun showIntegerPicker(initialValue: Int,
-                                  message: String,
-                                  onValueChange: (Int) -> Unit,
-                                  onValidation: (WorkoutExercise) -> Unit) {
-        val pickerBinding = IntegerPickerBinding.inflate(inflater)
-
-        pickerBinding.picker.minValue = 1
-        pickerBinding.picker.maxValue = 100
-        pickerBinding.picker.value = initialValue
-        pickerBinding.picker.wrapSelectorWheel = true
-        pickerBinding.picker.setOnValueChangedListener { _, _, new -> onValueChange(new) }
-
-        val dialog = AlertDialog.Builder(context)
-            .setMessage(message)
-            .setPositiveButton("OK") { _, _ -> binding.exercise?.let(onValidation)}
-            .setNegativeButton("CANCEL") {  _, _ ->  }
-            .setView(pickerBinding.root)
-            .create()
-
-        dialog.window?.setDimAmount(0.1f)
-        dialog.show()
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun weightToText(ex: WorkoutExercise): String {
-        return if (ex.weight.roundToInt().toFloat() == ex.weight) {
-            ex.weight.toInt().toString() + "kg"
-        } else {
-            DecimalFormat("#.##").format(ex.weight) + "kg"
-        }
-    }
-
-    // TODO PROBABLY NEED TO REFACTOR THIS
-    private fun onWeightClickListener() {
-        var weight = binding.exercise?.weight ?: 0f
-        val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)
-        numberPickerBinding.weight = weight
-        numberPickerBinding.increase.setOnClickListener {
-            weight += 0.5f
-            if (weight > 1000f) {
-                weight = 1000f
-            }
-            numberPickerBinding.weight = weight
-        }
-        numberPickerBinding.decrease.setOnClickListener {
-            weight -= 0.5f
-            if (weight < 0f) {
-                weight = 0f
-            }
-            numberPickerBinding.weight = weight
-        }
-        numberPickerBinding.number.keyListener = DigitsKeyListener.getInstance(false, true)
-        numberPickerBinding.number.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (s.isNullOrEmpty()) {
-                    weight = 0f
-                } else {
-                    if (s.startsWith(".")) {
-                        s.insert(0, "0")
-                    }
-                    weight = s.toString().toFloat()
-                    if (weight > 1000f) {
-                        weight = 1000f
-                    }
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        val dialog = android.app.AlertDialog.Builder(context)
-            .setMessage("Weight")
-            .setPositiveButton("OK") { _, _ ->
-                binding.exercise?.let { exercise ->
-                    exercise.weight = weight
-                    viewModel.updateWorkoutExercise(exercise)
-                }
-            }
-            .setNegativeButton("CANCEL") {  _, _ ->  }
-            .setView(numberPickerBinding.root)
-            .create()
-
-        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.window?.setDimAmount(0.1f)
-        dialog.show()
-    }
+//    private fun showIntegerPicker(initialValue: Int,
+//                                  message: String,
+//                                  onValueChange: (Int) -> Unit,
+//                                  onValidation: (WorkoutExercise) -> Unit) {
+//        val pickerBinding = IntegerPickerBinding.inflate(inflater)
+//
+//        pickerBinding.picker.minValue = 1
+//        pickerBinding.picker.maxValue = 100
+//        pickerBinding.picker.value = initialValue
+//        pickerBinding.picker.wrapSelectorWheel = true
+//        pickerBinding.picker.setOnValueChangedListener { _, _, new -> onValueChange(new) }
+//
+//        val dialog = AlertDialog.Builder(context)
+//            .setMessage(message)
+//            .setPositiveButton("OK") { _, _ -> binding.exercise?.let(onValidation)}
+//            .setNegativeButton("CANCEL") {  _, _ ->  }
+//            .setView(pickerBinding.root)
+//            .create()
+//
+//        dialog.window?.setDimAmount(0.1f)
+//        dialog.show()
+//    }
+//
+//    @SuppressLint("SetTextI18n")
+//    fun weightToText(ex: WorkoutExercise): String {
+//        return if (ex.weight.roundToInt().toFloat() == ex.weight) {
+//            ex.weight.toInt().toString() + "kg"
+//        } else {
+//            DecimalFormat("#.##").format(ex.weight) + "kg"
+//        }
+//    }
+//
+//    // TODO PROBABLY NEED TO REFACTOR THIS
+//    private fun onWeightClickListener() {
+//        var weight = binding.exercise?.weight ?: 0f
+//        val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)
+//        numberPickerBinding.weight = weight
+//        numberPickerBinding.increase.setOnClickListener {
+//            weight += 0.5f
+//            if (weight > 1000f) {
+//                weight = 1000f
+//            }
+//            numberPickerBinding.weight = weight
+//        }
+//        numberPickerBinding.decrease.setOnClickListener {
+//            weight -= 0.5f
+//            if (weight < 0f) {
+//                weight = 0f
+//            }
+//            numberPickerBinding.weight = weight
+//        }
+//        numberPickerBinding.number.keyListener = DigitsKeyListener.getInstance(false, true)
+//        numberPickerBinding.number.addTextChangedListener(object : TextWatcher {
+//            override fun afterTextChanged(s: Editable?) {
+//                if (s.isNullOrEmpty()) {
+//                    weight = 0f
+//                } else {
+//                    if (s.startsWith(".")) {
+//                        s.insert(0, "0")
+//                    }
+//                    weight = s.toString().toFloat()
+//                    if (weight > 1000f) {
+//                        weight = 1000f
+//                    }
+//                }
+//            }
+//
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//            }
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//            }
+//        })
+//
+//        val dialog = android.app.AlertDialog.Builder(context)
+//            .setMessage("Weight")
+//            .setPositiveButton("OK") { _, _ ->
+//                binding.exercise?.let { exercise ->
+//                    exercise.weight = weight
+//                    viewModel.updateWorkoutExercise(exercise)
+//                }
+//            }
+//            .setNegativeButton("CANCEL") {  _, _ ->  }
+//            .setView(numberPickerBinding.root)
+//            .create()
+//
+//        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+//        dialog.window?.setDimAmount(0.1f)
+//        dialog.show()
+//    }
 
     private fun setupRecyclerView() {
         binding.list.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.grid_load_row_count))
         binding.list.adapter = adapter
-    }
-
-    private fun subscribeUi() {
-        loads.observe(lifecycleOwner, Observer { loads ->
-            adapter.submitList(loads)
-        })
     }
 }

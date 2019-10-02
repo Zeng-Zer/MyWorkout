@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.zeng.myworkout.database.AppDatabase
-import com.zeng.myworkout.model.Category
 import com.zeng.myworkout.model.*
 import kotlinx.coroutines.coroutineScope
 
@@ -66,17 +65,22 @@ class DatabaseWorker(
 
         val workout = Workout("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
+        val squatSets = (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it) }
         // Add squat to workout
-        WorkoutExercise(5, 5, 120f, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(squatSets, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+
+        val benchSets = (0..9).map { Load(LoadType.WEIGHT, 60f, 10, it) }
         // Add bench to workout
-        WorkoutExercise(10, 10, 60f, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(benchSets, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+
+        val deadliftSets = (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it) }
         // Add deadlift to workout
-        WorkoutExercise(1, 5, 200f, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(deadliftSets, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
 
         val workout2 = Workout("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout2
-        WorkoutExercise(5, 5, 120f, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        WorkoutExercise(squatSets, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
 
         User(workout.id, 0).also { insertUser(it) }
 
