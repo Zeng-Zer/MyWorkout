@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="load"
+            type="com.zeng.myworkout.model.Load" />
+
+        <variable
+            name="holder"
+            type="com.zeng.myworkout.view.adapter.LoadAdapter.LoadViewHolder" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!--  TODO Timer icon for duration value  -->
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/my_button_ripple"
+            android:textColor="@android:color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@{Integer.toString(load.reps)}"/>
+
+        <TextView
+            android:id="@+id/value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{holder.weightToText(load.value)}" />
+
+
+    </LinearLayout>
+</layout>
