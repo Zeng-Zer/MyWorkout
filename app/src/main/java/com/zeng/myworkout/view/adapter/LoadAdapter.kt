@@ -38,7 +38,9 @@ class LoadAdapter(
             }
 
             binding.button.setOnClickListener {
-                viewModel.updateLoad(item.copy(reps = item.reps - 1))
+                item.reps -= 1
+                binding.button.text = item.reps.toString()
+                viewModel.updateLoad(item)
             }
         }
 
