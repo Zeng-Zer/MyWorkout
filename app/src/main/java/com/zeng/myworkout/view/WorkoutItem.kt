@@ -5,6 +5,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.databinding.ListItemWorkoutBinding
+import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
@@ -43,9 +45,7 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
     fun addExercises(exerciseIds: Array<Long>) {
         val exercises = exerciseIds.mapIndexed { i, exerciseId ->
             WorkoutExercise(
-                1,
-                0,
-                0f,
+                listOf(Load(LoadType.WEIGHT, 0F, 0, 0)),
                 // Add element at the end with its order in the list of ids
                 i + adapter.itemCount,
                 workoutId,
