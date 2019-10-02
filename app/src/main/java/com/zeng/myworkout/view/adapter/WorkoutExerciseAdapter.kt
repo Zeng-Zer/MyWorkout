@@ -3,7 +3,6 @@ package com.zeng.myworkout.view.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
@@ -12,10 +11,7 @@ import com.zeng.myworkout.util.DraggableListAdapter
 import com.zeng.myworkout.view.WorkoutExerciseViewHolder
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
-class WorkoutExerciseAdapter(
-    private val viewModel: WorkoutViewModel,
-    private val lifecycleOwner: LifecycleOwner
-) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     init {
         enableDrag()
@@ -42,7 +38,7 @@ class WorkoutExerciseAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
-        return WorkoutExerciseViewHolder(viewModel, lifecycleOwner, context, ListItemWorkoutExerciseBinding.inflate(
+        return WorkoutExerciseViewHolder(viewModel, context, ListItemWorkoutExerciseBinding.inflate(
             LayoutInflater.from(context), parent, false))
     }
 

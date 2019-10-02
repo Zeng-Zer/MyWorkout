@@ -15,9 +15,7 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
 
     lateinit var binding: ListItemWorkoutBinding
 
-    private val adapter: WorkoutExerciseAdapter by lazy {
-        WorkoutExerciseAdapter(viewModel, lifecycleOwner)
-    }
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(viewModel) }
 
     fun init() {
         setupRecyclerView()
