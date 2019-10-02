@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
-import com.zeng.myworkout.viewmodel.WorkoutViewModel
+import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class LoadAdapter(
-    private val viewModel: WorkoutViewModel,
+    private val viewModel: WorkoutExerciseViewModel,
     private val exercise: WorkoutExerciseDetail
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
@@ -38,8 +38,7 @@ class LoadAdapter(
             }
 
             binding.button.setOnClickListener {
-                exercise.sets[item.order].reps -= 1
-                viewModel.updateWorkoutExercise(exercise)
+                viewModel.updateLoad(item.copy(reps = item.reps - 1))
             }
         }
 
@@ -57,7 +56,7 @@ class LoadAdapter(
 
 class LoadDiffCallback : DiffUtil.ItemCallback<Load>() {
     override fun areItemsTheSame(oldItem: Load, newItem: Load): Boolean {
-        return oldItem.order == newItem.order
+        return oldItem.id == newItem.id
     }
 
     @SuppressLint("DiffUtilEquals")

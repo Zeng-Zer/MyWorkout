@@ -41,15 +41,18 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
 
     // TODO THINK OF A WAY TO HANDLE DEFAULT VALUES
     fun addExercises(exerciseIds: Array<Long>) {
-        val exercises = exerciseIds.mapIndexed { i, exerciseId ->
-            WorkoutExercise(
-                listOf(Load(LoadType.WEIGHT, 0F, 0, 0)),
-                // Add element at the end with its order in the list of ids
-                i + adapter.itemCount,
-                workoutId,
-                exerciseId
+        val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
+            // Make a pair of exercise and their load list
+            Pair(
+                WorkoutExercise(
+                    // Add element at the end with its order in the list of ids
+                    i + adapter.itemCount,
+                    workoutId,
+                    exerciseId
+                ),
+                listOf(Load(LoadType.WEIGHT, 0F, 0, 0))
             )
         }
-        viewModel.insertWorkoutExercise(exercises)
+        viewModel.insertWorkoutExerciseWithLoads(exercisesWithLoads)
     }
 }

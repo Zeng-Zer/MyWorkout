@@ -1,15 +1,13 @@
 package com.zeng.myworkout.model
 
-import androidx.room.*
-import com.zeng.myworkout.util.DataConverter
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 import java.io.Serializable
 
 @Entity(tableName = "workout_exercise")
 open class WorkoutExercise(
-    @ColumnInfo
-    @TypeConverters(DataConverter::class)
-    var sets: List<Load> = listOf(),
-
     @ColumnInfo
     var order: Int = 0,
 
@@ -28,12 +26,11 @@ open class WorkoutExercise(
 
 class WorkoutExerciseDetail(
     ex: Exercise = Exercise(),
-    sets: List<Load> = emptyList(),
     order: Int = 0,
     workoutId: Long? = null,
     exerciseId: Long? = null,
     id: Long? = null
-) : WorkoutExercise(sets, order, workoutId, exerciseId, id) {
+) : WorkoutExercise(order, workoutId, exerciseId, id) {
 
     @Relation(parentColumn = "exerciseId", entityColumn = "id", entity = Exercise::class)
     var exercises: List<Exercise> = listOf(ex)

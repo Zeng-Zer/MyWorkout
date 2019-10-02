@@ -13,6 +13,7 @@ object RepositoryUtils {
         return WorkoutRepository.getInstance(
             database.workoutDao(),
             database.workoutExerciseDao(),
+            database.loadDao(),
             database.userDao()
         )
     }

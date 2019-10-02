@@ -1,23 +1,27 @@
 package com.zeng.myworkout.view
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.LoadAdapter
-import com.zeng.myworkout.viewmodel.WorkoutViewModel
+import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
+import com.zeng.myworkout.viewmodel.getViewModel
 
 
 class WorkoutExerciseViewHolder(
-    viewModel: WorkoutViewModel,
     private val context: Context,
     private val binding: ListItemWorkoutExerciseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val exercise by lazy { binding.exercise }
-    private val adapter by lazy { LoadAdapter(viewModel, exercise!!) }
+    private lateinit var viewModel: WorkoutExerciseViewModel
+    private lateinit var adapter: LoadAdapter
 
     init {
 //            binding.numberSet.setOnClickListener {
@@ -56,15 +60,16 @@ class WorkoutExerciseViewHolder(
     }
 
     fun bind(item: WorkoutExerciseDetail) {
+        viewModel = getWorkoutExerciseViewModel(item.id!!)
+        adapter = LoadAdapter(viewModel, item)
+
         binding.apply {
-            exercise = item
-            detail = item.detail
-            holder = this@WorkoutExerciseViewHolder
+            exercise = item.detail
             executePendingBindings()
         }
 
         setupRecyclerView()
-        adapter.submitList(item.sets)
+        subscribeUi()
     }
 
 //    private fun showIntegerPicker(initialValue: Int,
@@ -161,5 +166,21 @@ class WorkoutExerciseViewHolder(
     private fun setupRecyclerView() {
         binding.list.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.grid_load_row_count))
         binding.list.adapter = adapter
+    }
+
+    private fun subscribeUi() {
+        viewModel.loads.observe(context as LifecycleOwner, Observer { loads ->
+            adapter.submitList(loads)
+        })
+    }
+
+    private fun getWorkoutExerciseViewModel(workoutExerciseId: Long): WorkoutExerciseViewModel {
+        val workoutRepo = RepositoryUtils.getWorkoutRepository(context)
+        return (context as AppCompatActivity).getViewModel({
+            WorkoutExerciseViewModel(
+                workoutRepo,
+                workoutExerciseId
+            )
+        }, workoutExerciseId.toString())
     }
 }
