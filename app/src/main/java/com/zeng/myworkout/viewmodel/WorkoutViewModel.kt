@@ -3,6 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseDetail
@@ -29,9 +30,23 @@ class WorkoutViewModel(
         }
     }
 
-    fun insertWorkoutExercise(exercises: List<WorkoutExercise>) {
+    fun insertWorkoutExerciseWithLoads(exercisesWithLoads: List<Pair<WorkoutExercise, List<Load>>>) {
         viewModelScope.launch {
-            workoutRepository.insertWorkoutExercise(exercises)
+            val exercises = exercisesWithLoads.map { it.first }
+            val loadsWithoutIds = exercisesWithLoads.map { it.second }
+
+            val ids = workoutRepository.insertWorkoutExercise(exercises)
+
+            // Add workout exercise id to loads
+            val loads = loadsWithoutIds
+                .zip(ids)
+                .flatMap { (loads, id) ->
+                    loads.map { load ->
+                        load.workoutExerciseId = id
+                        load
+                    }
+                }
+            workoutRepository.insertLoads(loads)
         }
     }
 

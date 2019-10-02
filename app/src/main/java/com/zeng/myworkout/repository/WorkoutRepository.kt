@@ -1,17 +1,16 @@
 package com.zeng.myworkout.repository
 
 import androidx.lifecycle.LiveData
+import com.zeng.myworkout.database.LoadDao
 import com.zeng.myworkout.database.UserDao
 import com.zeng.myworkout.database.WorkoutDao
 import com.zeng.myworkout.database.WorkoutExerciseDao
-import com.zeng.myworkout.model.User
-import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.model.WorkoutExercise
-import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.model.*
 
 class WorkoutRepository private constructor(
     private val workoutDao: WorkoutDao,
     private val workoutExerciseDao: WorkoutExerciseDao,
+    private val loadDao: LoadDao,
     private val userDao: UserDao
 ) {
     val currentUser: LiveData<User> = userDao.getCurrentUser()
@@ -32,17 +31,23 @@ class WorkoutRepository private constructor(
     suspend fun updateWorkoutExercise(exercise: WorkoutExercise) = workoutExerciseDao.update(exercise)
     suspend fun updateAllWorkoutExercise(exercises: List<WorkoutExercise>) = workoutExerciseDao.update(exercises)
 
+
+    fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
+    suspend fun insertLoads(loads: List<Load>) = loadDao.insert(loads)
+    suspend fun updateLoad(load: Load) = loadDao.update(load)
+
     companion object {
 
         // For Singleton instantiation
         @Volatile private var instance: WorkoutRepository? = null
 
-        fun getInstance(workoutDao: WorkoutDao, workoutExerciseDao: WorkoutExerciseDao, userDao: UserDao) =
+        fun getInstance(workoutDao: WorkoutDao, workoutExerciseDao: WorkoutExerciseDao, loadDao: LoadDao, userDao: UserDao) =
             instance ?: synchronized(this) {
                 instance
                     ?: WorkoutRepository(
                         workoutDao,
                         workoutExerciseDao,
+                        loadDao,
                         userDao
                     ).also { instance = it }
             }

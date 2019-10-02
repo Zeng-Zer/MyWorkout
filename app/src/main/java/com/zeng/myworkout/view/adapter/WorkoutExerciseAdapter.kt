@@ -38,8 +38,10 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
-        return WorkoutExerciseViewHolder(viewModel, context, ListItemWorkoutExerciseBinding.inflate(
-            LayoutInflater.from(context), parent, false))
+        return WorkoutExerciseViewHolder(
+            context, ListItemWorkoutExerciseBinding.inflate(
+                LayoutInflater.from(context), parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

@@ -47,6 +47,10 @@ class DatabaseWorker(
         workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
     }
 
+    private suspend fun insertLoads(loads: List<Load>) {
+        database.loadDao().insert(loads)
+    }
+
     private suspend fun insertUser(user: User) {
         user.id = database.userDao().insert(user)
     }
@@ -65,22 +69,23 @@ class DatabaseWorker(
 
         val workout = Workout("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
 
-        val squatSets = (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it) }
         // Add squat to workout
-        WorkoutExercise(squatSets, 0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        val squat = WorkoutExercise(0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it, squat.id) }.also { insertLoads(it) }
 
-        val benchSets = (0..9).map { Load(LoadType.WEIGHT, 60f, 10, it) }
         // Add bench to workout
-        WorkoutExercise(benchSets, 1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+        val bench = WorkoutExercise(1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
+        (0..9).map { Load(LoadType.WEIGHT, 60f, 10, it, bench.id) }.also { insertLoads(it) }
 
-        val deadliftSets = (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it) }
         // Add deadlift to workout
-        WorkoutExercise(deadliftSets, 2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
+        val deadlift = WorkoutExercise(2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
+        (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it, deadlift.id) }.also { insertLoads(it) }
 
         val workout2 = Workout("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
 
         // Add squat to workout2
-        WorkoutExercise(squatSets, 0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        val squat2 = WorkoutExercise(0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
+        (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it, squat2.id) }.also { insertLoads(it) }
 
         User(workout.id, 0).also { insertUser(it) }
 
