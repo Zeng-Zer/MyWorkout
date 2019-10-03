@@ -1,12 +1,22 @@
 package com.zeng.myworkout.view.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.zeng.myworkout.R
+import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
+import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
@@ -14,14 +24,15 @@ import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class LoadAdapter(
+    private val context: Context,
     private val viewModel: WorkoutExerciseViewModel,
     private val exercise: WorkoutExerciseDetail
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
+    private val inflater = LayoutInflater.from(context)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val context = parent.context
-        return LoadViewHolder(ListItemGridLoadBinding.inflate(
-            LayoutInflater.from(context), parent, false))
+        return LoadViewHolder(ListItemGridLoadBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -30,19 +41,116 @@ class LoadAdapter(
     }
 
     inner class LoadViewHolder(private val binding: ListItemGridLoadBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        private lateinit var load: Load
+
         fun bind(item: Load) {
+            load = item
             binding.apply {
                 load = item
                 holder = this@LoadViewHolder
                 executePendingBindings()
             }
 
+            setButtonEditReps()
+            setTextEditLoad()
+        }
+
+        private fun setButtonEditReps() {
             binding.button.setOnClickListener {
-                item.reps -= 1
-                binding.button.text = item.reps.toString()
-                viewModel.updateLoad(item)
+                val pickerBinding = IntegerPickerBinding.inflate(inflater)
+
+                pickerBinding.picker.minValue = 1
+                pickerBinding.picker.maxValue = 100
+                pickerBinding.picker.value = load.reps
+                pickerBinding.picker.wrapSelectorWheel = true
+                pickerBinding.picker.setOnValueChangedListener { _, _, new ->
+                    load.reps = new
+                }
+
+                val dialog = AlertDialog.Builder(context)
+                    .setMessage("Number of reps:")
+                    .setPositiveButton("OK") { _, _ ->
+                        binding.button.text = load.reps.toString()
+                        viewModel.updateLoad(load)
+                    }
+                    .setNegativeButton("CANCEL") {  _, _ ->  }
+                    .setView(pickerBinding.root)
+                    .create()
+
+                dialog.window?.setDimAmount(0.1f)
+                dialog.show()
             }
         }
+
+        // TODO REFACTOR THIS
+        private fun setTextEditLoad() {
+            binding.value.setOnClickListener {
+                var weight = load.value
+                val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)
+                numberPickerBinding.weight = weight
+                numberPickerBinding.increase.setOnClickListener {
+                    weight += 0.5f
+                    if (weight > 1000f) {
+                        weight = 1000f
+                    }
+                    numberPickerBinding.weight = weight
+                }
+                numberPickerBinding.decrease.setOnClickListener {
+                    weight -= 0.5f
+                    if (weight < 0f) {
+                        weight = 0f
+                    }
+                    numberPickerBinding.weight = weight
+                }
+                numberPickerBinding.number.keyListener = DigitsKeyListener.getInstance(false, true)
+                numberPickerBinding.number.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                        if (s.isNullOrEmpty()) {
+                            weight = 0f
+                        } else {
+                            if (s.startsWith(".")) {
+                                s.insert(0, "0")
+                            }
+                            weight = s.toString().toFloat()
+                            if (weight > 1000f) {
+                                weight = 1000f
+                            }
+                        }
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    }
+                })
+
+                val dialog = android.app.AlertDialog.Builder(context)
+                    .setMessage("Weight")
+                    .setPositiveButton("OK") { _, _ ->
+                        load.value = weight
+                        binding.value.setText(weightToText(weight))
+                        viewModel.updateLoad(load)
+                    }
+                    .setNegativeButton("CANCEL") {  _, _ ->  }
+                    .setView(numberPickerBinding.root)
+                    .create()
+
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                dialog.window?.setDimAmount(0.1f)
+                dialog.show()
+            }
+        }
+
+        // TODO SET OTHER TYPE
+//        private fun setButtonReps(item: Load) {
+//            binding.button.setOnClickListener {
+//                item.reps -= 1
+//                binding.button.text = item.reps.toString()
+//                viewModel.updateLoad(item)
+//            }
+//        }
 
         @SuppressLint("SetTextI18n")
         fun weightToText(weight: Float): String {
