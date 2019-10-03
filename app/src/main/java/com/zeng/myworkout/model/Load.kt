@@ -22,7 +22,7 @@ enum class LoadType(val value: Int) {
         ForeignKey(
             entity = WorkoutExercise::class,
             parentColumns = ["id"],
-            childColumns = ["workout_exercise_id"],
+            childColumns = ["workoutExerciseId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE)
     ]
@@ -40,7 +40,7 @@ data class Load(
     @ColumnInfo
     var order: Int = 0,
 
-    @ColumnInfo(name = "workout_exercise_id")
+    @ColumnInfo
     var workoutExerciseId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)

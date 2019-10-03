@@ -17,5 +17,4 @@ open class Routine(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-
 )

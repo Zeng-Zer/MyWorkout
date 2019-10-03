@@ -16,7 +16,6 @@ open class Workout(
     var order: Int = 0,
     // TODO ADD BOOLEAN FOR REFERENCE WORKOUT OR ACTUAL SESSION
 
-    // TODO SETUP FOREIGN KEY - DELETE CASCADE ?
     @ColumnInfo
     var routineId: Long? = null,
 

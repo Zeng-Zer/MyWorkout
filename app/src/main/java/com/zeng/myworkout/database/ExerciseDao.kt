@@ -10,10 +10,10 @@ import com.zeng.myworkout.model.Exercise
 abstract class ExerciseDao : BaseDao<Exercise>() {
 
     @Transaction
-    @Query("SELECT * FROM detail WHERE id = :id")
+    @Query("SELECT * FROM exercise WHERE id = :id")
     abstract fun getExerciseById(id: Long): LiveData<Exercise>
 
     @Transaction
-    @Query("SELECT * FROM detail ORDER BY [name] ASC")
+    @Query("SELECT * FROM exercise ORDER BY [name] ASC")
     abstract fun getAllExercise(): LiveData<List<Exercise>>
 }

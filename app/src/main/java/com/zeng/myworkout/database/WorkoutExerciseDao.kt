@@ -11,7 +11,7 @@ import com.zeng.myworkout.model.WorkoutExercise
 @Dao
 abstract class WorkoutExerciseDao : BaseDao<WorkoutExercise>() {
     @Transaction
-    @Query("SELECT * FROM detail")
+    @Query("SELECT * FROM exercise")
     abstract fun getAll(): LiveData<List<Exercise>>
 
     @Insert

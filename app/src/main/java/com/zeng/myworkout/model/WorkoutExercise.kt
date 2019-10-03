@@ -11,11 +11,9 @@ open class WorkoutExercise(
     @ColumnInfo
     var order: Int = 0,
 
-    // TODO FOREIGN KEY - DELETE CASCADE ?
     @ColumnInfo
     var workoutId: Long? = null,
 
-    // TODO FOREIGN KEY - DELETE DO NOTHING ?
     @ColumnInfo
     var exerciseId: Long? = null,
 
