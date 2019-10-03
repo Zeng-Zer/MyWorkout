@@ -18,4 +18,16 @@ class WorkoutExerciseViewModel(
             workoutRepository.updateLoad(load)
         }
     }
+
+    fun insertLoad(load: Load) {
+        viewModelScope.launch {
+            workoutRepository.insertLoad(load)
+        }
+    }
+
+    fun deleteLoad(load: Load) {
+        viewModelScope.launch {
+            workoutRepository.deleteLoad(load)
+        }
+    }
 }

@@ -24,7 +24,6 @@ class RoutineAdapter(
         val from = viewHolder.adapterPosition
         val to = target.adapterPosition
 
-        // IS THERE A BETTER SOLUTION ?
         val updatedList = currentList.toMutableList()
 
         updatedList[from].order = to

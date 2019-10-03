@@ -14,14 +14,15 @@ import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class WorkoutItem(
     private val lifecycleOwner: LifecycleOwner,
-    private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val workoutRecycledViewPool: RecyclerView.RecycledViewPool,
+    private val workoutExerciseRecycledViewPool: RecyclerView.RecycledViewPool,
     val workoutId: Long,
     val viewModel: WorkoutViewModel
 ) {
 
     lateinit var binding: ListItemWorkoutBinding
 
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, viewModel) }
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(workoutExerciseRecycledViewPool, viewModel) }
 
     fun init() {
         setupRecyclerView()
@@ -29,7 +30,7 @@ class WorkoutItem(
     }
 
     private fun setupRecyclerView() {
-        binding.list.setRecycledViewPool(recycledViewPool)
+        binding.list.setRecycledViewPool(workoutRecycledViewPool)
         binding.list.adapter = adapter
 
         // prevent RecyclerView blinking on submitList

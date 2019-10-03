@@ -46,7 +46,7 @@ class WorkoutViewModel(
                         load
                     }
                 }
-            workoutRepository.insertLoads(loads)
+            workoutRepository.insertLoad(loads)
         }
     }
 

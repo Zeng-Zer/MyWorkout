@@ -11,7 +11,7 @@ import com.zeng.myworkout.util.DraggableListAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class WorkoutExerciseAdapter(
-    private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val workoutExerciseRecycledViewPool: RecyclerView.RecycledViewPool,
     private val viewModel: WorkoutViewModel
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
@@ -23,7 +23,6 @@ class WorkoutExerciseAdapter(
         val from = viewHolder.adapterPosition
         val to = target.adapterPosition
 
-        // TODO IS THERE A BETTER SOLUTION ?
         val updatedList = currentList.toMutableList()
 
         updatedList[from].order = to
@@ -42,7 +41,7 @@ class WorkoutExerciseAdapter(
         val context = parent.context
         return WorkoutExerciseViewHolder(
             context,
-            recycledViewPool,
+            workoutExerciseRecycledViewPool,
             ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }

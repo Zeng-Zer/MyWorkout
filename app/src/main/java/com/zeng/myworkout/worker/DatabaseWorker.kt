@@ -75,7 +75,7 @@ class DatabaseWorker(
 
         // Add bench to workout
         val bench = WorkoutExercise(1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
-        (0..9).map { Load(LoadType.WEIGHT, 60f, 10, it, bench.id) }.also { insertLoads(it) }
+        (0..4).map { Load(LoadType.WEIGHT, 60f, 10, it, bench.id) }.also { insertLoads(it) }
 
         // Add deadlift to workout
         val deadlift = WorkoutExercise(2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }

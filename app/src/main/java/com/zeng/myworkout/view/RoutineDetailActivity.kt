@@ -42,7 +42,8 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private val adapter = RoutineDetailAdapter()
 
-    private val recycledViewPool = RecyclerView.RecycledViewPool()
+    private val workoutRecycledViewPool = RecyclerView.RecycledViewPool()
+    private val workoutExerciseRecycledViewPool = RecyclerView.RecycledViewPool()
 
     private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
 
@@ -185,7 +186,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             workoutRepo,
             workoutId
         )}, workoutId.toString())
-        return WorkoutItem(this, recycledViewPool, workoutId, workoutViewModel)
+        return WorkoutItem(this, workoutRecycledViewPool, workoutExerciseRecycledViewPool, workoutId, workoutViewModel)
     }
 
     private fun addNewWorkout() {

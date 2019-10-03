@@ -52,9 +52,19 @@ class WorkoutExerciseViewHolder(
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.add_set -> {
+                    viewModel.loads.value?.let { loads ->
+                        val last = loads.last()
+                        val newLoad = last.copy(id = null, order = last.order + 1)
+                        viewModel.insertLoad(newLoad)
+                    }
                     true
                 }
                 R.id.remove_set -> {
+                    viewModel.loads.value?.let { loads ->
+                        if (loads.size > 1) {
+                            viewModel.deleteLoad(loads.last())
+                        }
+                    }
                     true
                 }
                 R.id.remove_exercise -> {

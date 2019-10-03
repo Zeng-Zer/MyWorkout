@@ -33,8 +33,10 @@ class WorkoutRepository private constructor(
 
 
     fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
-    suspend fun insertLoads(loads: List<Load>) = loadDao.insert(loads)
+    suspend fun insertLoad(loads: List<Load>) = loadDao.insert(loads)
+    suspend fun insertLoad(load: Load) = loadDao.insert(load)
     suspend fun updateLoad(load: Load) = loadDao.update(load)
+    suspend fun deleteLoad(load: Load) = loadDao.delete(load)
 
     companion object {
 
