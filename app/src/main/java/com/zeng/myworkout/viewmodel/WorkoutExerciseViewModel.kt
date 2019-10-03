@@ -3,6 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,12 @@ class WorkoutExerciseViewModel(
     fun deleteLoad(load: Load) {
         viewModelScope.launch {
             workoutRepository.deleteLoad(load)
+        }
+    }
+
+    fun deleteWorkoutExercise(exercise: WorkoutExercise) {
+        viewModelScope.launch {
+            workoutRepository.deleteWorkoutExercise(exercise)
         }
     }
 }

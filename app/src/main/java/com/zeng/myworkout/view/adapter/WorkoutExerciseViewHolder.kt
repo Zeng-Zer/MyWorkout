@@ -68,6 +68,7 @@ class WorkoutExerciseViewHolder(
                     true
                 }
                 R.id.remove_exercise -> {
+                    viewModel.deleteWorkoutExercise(exercise)
                     true
                 }
                 else -> false
