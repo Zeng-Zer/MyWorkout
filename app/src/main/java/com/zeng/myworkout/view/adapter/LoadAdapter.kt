@@ -88,20 +88,20 @@ class LoadAdapter(
             binding.value.setOnClickListener {
                 var weight = load.value
                 val numberPickerBinding = DataBindingUtil.inflate<NumberPickerBinding>(inflater, R.layout.number_picker, null, false)
-                numberPickerBinding.weight = weight
+                numberPickerBinding.value = weight
                 numberPickerBinding.increase.setOnClickListener {
                     weight += 0.5f
                     if (weight > 1000f) {
                         weight = 1000f
                     }
-                    numberPickerBinding.weight = weight
+                    numberPickerBinding.value = weight
                 }
                 numberPickerBinding.decrease.setOnClickListener {
                     weight -= 0.5f
                     if (weight < 0f) {
                         weight = 0f
                     }
-                    numberPickerBinding.weight = weight
+                    numberPickerBinding.value = weight
                 }
                 numberPickerBinding.number.keyListener = DigitsKeyListener.getInstance(false, true)
                 numberPickerBinding.number.addTextChangedListener(object : TextWatcher {

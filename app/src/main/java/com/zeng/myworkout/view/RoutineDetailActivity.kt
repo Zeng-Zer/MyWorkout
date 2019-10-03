@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
@@ -40,6 +41,8 @@ class RoutineDetailActivity : AppCompatActivity() {
     }
 
     private val adapter = RoutineDetailAdapter()
+
+    private val recycledViewPool = RecyclerView.RecycledViewPool()
 
     private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
 
@@ -182,7 +185,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             workoutRepo,
             workoutId
         )}, workoutId.toString())
-        return WorkoutItem(this, workoutId, workoutViewModel)
+        return WorkoutItem(this, recycledViewPool, workoutId, workoutViewModel)
     }
 
     private fun addNewWorkout() {

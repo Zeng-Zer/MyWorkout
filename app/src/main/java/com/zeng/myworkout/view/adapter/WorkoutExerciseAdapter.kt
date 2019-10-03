@@ -11,7 +11,10 @@ import com.zeng.myworkout.util.DraggableListAdapter
 import com.zeng.myworkout.view.WorkoutExerciseViewHolder
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
-class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(
+    private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val viewModel: WorkoutViewModel
+) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     init {
         enableDrag()
@@ -39,8 +42,9 @@ class WorkoutExerciseAdapter(private val viewModel: WorkoutViewModel) : Draggabl
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
         return WorkoutExerciseViewHolder(
-            context, ListItemWorkoutExerciseBinding.inflate(
-                LayoutInflater.from(context), parent, false)
+            context,
+            recycledViewPool,
+            ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 

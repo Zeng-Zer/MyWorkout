@@ -17,6 +17,7 @@ import com.zeng.myworkout.viewmodel.getViewModel
 
 class WorkoutExerciseViewHolder(
     private val context: Context,
+    private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val binding: ListItemWorkoutExerciseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -37,6 +38,7 @@ class WorkoutExerciseViewHolder(
     }
 
     private fun setupRecyclerView() {
+        binding.list.setRecycledViewPool(recycledViewPool)
         binding.list.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.grid_load_row_count))
         binding.list.adapter = adapter
     }

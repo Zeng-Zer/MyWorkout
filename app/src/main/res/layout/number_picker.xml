@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="weight"
+            name="value"
             type="Float" />
     </data>
 
@@ -30,7 +30,7 @@
             android:inputType="number|numberDecimal"
             android:digits="0123456789."
             android:selectAllOnFocus="true"
-            android:text="@{weight.toString()}" />
+            android:text="@{value.toString()}" />
 
         <ImageButton
             android:id="@+id/increase"

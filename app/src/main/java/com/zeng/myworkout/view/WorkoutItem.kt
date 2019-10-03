@@ -3,6 +3,7 @@ package com.zeng.myworkout.view
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.databinding.ListItemWorkoutBinding
 import com.zeng.myworkout.model.Load
@@ -11,11 +12,16 @@ import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
-class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Long, val viewModel: WorkoutViewModel) {
+class WorkoutItem(
+    private val lifecycleOwner: LifecycleOwner,
+    private val recycledViewPool: RecyclerView.RecycledViewPool,
+    val workoutId: Long,
+    val viewModel: WorkoutViewModel
+) {
 
     lateinit var binding: ListItemWorkoutBinding
 
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(viewModel) }
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, viewModel) }
 
     fun init() {
         setupRecyclerView()
@@ -23,6 +29,7 @@ class WorkoutItem(private val lifecycleOwner: LifecycleOwner, val workoutId: Lon
     }
 
     private fun setupRecyclerView() {
+        binding.list.setRecycledViewPool(recycledViewPool)
         binding.list.adapter = adapter
 
         // prevent RecyclerView blinking on submitList
