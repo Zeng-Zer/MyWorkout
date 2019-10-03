@@ -20,4 +20,7 @@
     <string name="action_edit_workout">Edit workout</string>
     <string name="action_move_left_workout">Move left</string>
     <string name="action_move_right_workout">Move right</string>
+    <string name="workout_exercise_add_set">Add set</string>
+    <string name="workout_exercise_remove_set">Remove set</string>
+    <string name="workout_exercise_remove_exercise">Remove exercise</string>
 </resources>

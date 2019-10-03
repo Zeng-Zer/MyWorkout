@@ -45,17 +45,25 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
                     app:cardBackgroundColor="@color/colorPrimaryLight">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="2dp"
-                        android:gravity="end"
                         android:textColor="@android:color/white"
                         android:text="@{exercise.category}"/>
 
                 </androidx.cardview.widget.CardView>
+
+                <ImageButton
+                    android:id="@+id/button_menu"
+                    android:layout_gravity="center|end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_more_vert_black_24dp"
+                    android:background="@null"/>
 
             </LinearLayout>
 
