@@ -9,7 +9,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,7 +21,6 @@ import com.zeng.myworkout.view.adapter.RoutineDetailAdapter
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import com.zeng.myworkout.viewmodel.getViewModel
-import kotlinx.coroutines.launch
 
 class RoutineDetailActivity : AppCompatActivity() {
 
@@ -46,6 +44,9 @@ class RoutineDetailActivity : AppCompatActivity() {
     private val workoutExerciseRecycledViewPool = RecyclerView.RecycledViewPool()
 
     private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
+
+    private fun currentItemIdx(): Int = binding.viewPager.currentItem
+    private fun currentWorkoutItem(): WorkoutItem = adapter.currentList[currentItemIdx()]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,25 +82,27 @@ class RoutineDetailActivity : AppCompatActivity() {
                 return true
             }
 
-            // TODO
-//
-//            R.id.action_delete_workout -> {
-//                sectionsPagerAdapter.removeTab(viewPager.currentItem)
-//                return true
-//            }
+            R.id.action_delete_workout -> {
+                if (adapter.itemCount > 0) {
+                    // ACTUALLY THERE IS A BUG WHEN DELETING LAST VIEW
+                    // IT WILL BE FIXED IN THE NEXT MATERIAL COMPONENTS VERSION
+                    viewModel.deleteWorkoutById(currentWorkoutItem().workoutId)
+                }
+                return true
+            }
 //
 //            R.id.action_move_right_workout -> {
-//                if (viewPager.currentItem + 1 < sectionsPagerAdapter.fragments.size) {
-//                    sectionsPagerAdapter.swapTab(viewPager.currentItem, viewPager.currentItem + 1)
-//                    viewPager.setCurrentItem(viewPager.currentItem + 1, true)
+//                if (viewPager.currentItemIdx + 1 < sectionsPagerAdapter.fragments.size) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx + 1)
+//                    viewPager.setCurrentItem(viewPager.currentItemIdx + 1, true)
 //                }
 //                return true
 //            }
 //
 //            R.id.action_move_left_workout -> {
-//                if (viewPager.currentItem - 1 >= 0) {
-//                    sectionsPagerAdapter.swapTab(viewPager.currentItem, viewPager.currentItem - 1)
-//                    viewPager.setCurrentItem(viewPager.currentItem - 1, true)
+//                if (viewPager.currentItemIdx - 1 >= 0) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx - 1)
+//                    viewPager.setCurrentItem(viewPager.currentItemIdx - 1, true)
 //                }
 //                return true
 //            }
@@ -113,7 +116,7 @@ class RoutineDetailActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 @Suppress("UNCHECKED_CAST")
                 val exerciseIds = data?.extras?.getSerializable(resources.getString(R.string.intent_result_list)) as Array<Long>? ?: emptyArray()
-                adapter.currentList[binding.viewPager.currentItem].addExercises(exerciseIds)
+                currentWorkoutItem().addExercises(exerciseIds)
                 // Enable fab after getting exercise activity results
             }
         }
@@ -203,13 +206,12 @@ class RoutineDetailActivity : AppCompatActivity() {
                     true
                 )
 
-                viewModel.viewModelScope.launch {
-                    viewModel.insertWorkout(workout)
-                    // Focus newly added view
-                    onListChangeCallback = { workoutItems ->
-                        binding.viewPager.setCurrentItem(workoutItems.size, true)
-                        onListChangeCallback = null
-                    }
+                viewModel.insertWorkout(workout)
+
+                // Focus newly added view
+                onListChangeCallback = { workoutItems ->
+                    binding.viewPager.setCurrentItem(workoutItems.size, true)
+                    onListChangeCallback = null
                 }
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }

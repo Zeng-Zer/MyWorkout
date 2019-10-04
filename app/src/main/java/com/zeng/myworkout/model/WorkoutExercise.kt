@@ -1,12 +1,19 @@
 package com.zeng.myworkout.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 import java.io.Serializable
 
-@Entity(tableName = "workout_exercise")
+@Entity(
+    tableName = "workout_exercise",
+    foreignKeys = [
+        ForeignKey(
+            entity = WorkoutExercise::class,
+            parentColumns = ["id"],
+            childColumns = ["workoutId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE)
+    ]
+)
 open class WorkoutExercise(
     @ColumnInfo
     var order: Int = 0,
