@@ -12,11 +12,11 @@ class HomeViewModel(
 
     val user = workoutRepo.getCurrentUser()
 
-    val workout = Transformations.switchMap(user) { user ->
-        user?.workoutId?.let { workoutRepo.getWorkoutById(it) }
+    val workoutReference = Transformations.switchMap(user) { user ->
+        user?.workoutReferenceId?.let { workoutRepo.getWorkoutById(it) }
     }
 
-    val routine = Transformations.switchMap(workout) { workout ->
+    val routine = Transformations.switchMap(workoutReference) { workout ->
         workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
 

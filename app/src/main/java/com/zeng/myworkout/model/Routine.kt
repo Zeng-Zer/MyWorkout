@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "routine")
-open class Routine(
+data class Routine(
     @ColumnInfo
     var name: String = "",
 

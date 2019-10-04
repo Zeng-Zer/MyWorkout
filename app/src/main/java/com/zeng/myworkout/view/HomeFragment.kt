@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.HomeViewModel
@@ -27,13 +29,14 @@ class HomeFragment : Fragment() {
         binding.viewModel = viewModel
 
         subscribeUi()
+        setupButtons()
         return binding.root
     }
 
     private fun subscribeUi() {
         viewModel.user.observe(viewLifecycleOwner, Observer { it?.let { user ->
             binding.apply {
-                if (user.workoutId != null) {
+                if (user.workoutReferenceId != null) {
                     currentProgramLayout.visibility = View.VISIBLE
                     continueRoutine.visibility = View.VISIBLE
                 } else {
@@ -42,5 +45,15 @@ class HomeFragment : Fragment() {
                 }
             }
         }})
+    }
+
+    private fun setupButtons() {
+        val navController = requireActivity().findNavController(R.id.nav_host_fragment)
+
+        binding.apply {
+            changeRoutine.setOnClickListener {
+                navController.navigate(R.id.navigation_routine)
+            }
+        }
     }
 }
