@@ -90,6 +90,8 @@ class RoutineDetailActivity : AppCompatActivity() {
                 }
                 return true
             }
+
+            // TODO
 //
 //            R.id.action_move_right_workout -> {
 //                if (viewPager.currentItemIdx + 1 < sectionsPagerAdapter.fragments.size) {
@@ -143,9 +145,11 @@ class RoutineDetailActivity : AppCompatActivity() {
         // Hide fab when changing fragment
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
-                when(state) {
-                    ViewPager2.SCROLL_STATE_IDLE -> binding.fab.show()
-                    else -> binding.fab.hide()
+                if (adapter.itemCount > 0) {
+                    when(state) {
+                        ViewPager2.SCROLL_STATE_IDLE -> binding.fab.show()
+                        else -> binding.fab.hide()
+                    }
                 }
             }
         })
