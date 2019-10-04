@@ -42,6 +42,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
             .filter { r -> r.order > routine.order }
             .map { r -> r.order -= 1; r }
 
+        // TODO DELETE REFERENCE WORKOUTS
         delete(routine)
         update(updateList)
     }

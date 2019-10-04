@@ -14,12 +14,13 @@ open class Workout(
 
     @ColumnInfo
     var order: Int = 0,
-    // TODO ADD BOOLEAN FOR REFERENCE WORKOUT OR ACTUAL SESSION
 
     @ColumnInfo
     var routineId: Long? = null,
 
+    @ColumnInfo
+    var reference: Boolean = false,
+
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-
 )

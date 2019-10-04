@@ -1,6 +1,5 @@
 package com.zeng.myworkout.worker
 
-
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
@@ -67,7 +66,7 @@ class DatabaseWorker(
 
         val routine = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
 
-        val workout = Workout("Workout A", "test", 0, routine.id!!).also { insertWorkout(it) }
+        val workout = Workout("Workout A", "test", 0, routine.id!!, true).also { insertWorkout(it) }
 
         // Add squat to workout
         val squat = WorkoutExercise(0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
@@ -81,7 +80,7 @@ class DatabaseWorker(
         val deadlift = WorkoutExercise(2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
         (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it, deadlift.id) }.also { insertLoads(it) }
 
-        val workout2 = Workout("Workout B", "test", 1, routine.id!!).also { insertWorkout(it) }
+        val workout2 = Workout("Workout B", "test", 1, routine.id!!, true).also { insertWorkout(it) }
 
         // Add squat to workout2
         val squat2 = WorkoutExercise(0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }

@@ -198,7 +198,9 @@ class RoutineDetailActivity : AppCompatActivity() {
                 val workout = Workout(
                     form.workoutName.text.toString(),
                     "",
-                    adapter.itemCount, routineId
+                    adapter.itemCount,
+                    routineId,
+                    true
                 )
 
                 viewModel.viewModelScope.launch {

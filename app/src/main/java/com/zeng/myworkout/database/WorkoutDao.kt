@@ -19,7 +19,7 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     abstract fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>>
 
     @Transaction
-    @Query("SELECT * FROM workout WHERE routineId = :routineId ORDER BY [order] ASC")
-    abstract fun getAllWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
+    @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
+    abstract fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
 
 }
