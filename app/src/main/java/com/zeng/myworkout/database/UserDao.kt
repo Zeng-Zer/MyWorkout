@@ -8,15 +8,8 @@ import com.zeng.myworkout.model.User
 
 @Dao
 abstract class UserDao : BaseDao<User>() {
-    @Transaction
-    @Query("SELECT * FROM user")
-    abstract fun getAll(): LiveData<List<User>>
 
-    /**
-     * TODO probable need to change this ?
-     * id 0 = user
-     */
     @Transaction
-    @Query("SELECT * FROM user where id = 0")
+    @Query("SELECT * FROM user where current = 1")
     abstract fun getCurrentUser() : LiveData<User>
 }

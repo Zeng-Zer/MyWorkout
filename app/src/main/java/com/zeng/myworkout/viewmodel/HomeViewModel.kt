@@ -1,22 +1,23 @@
 package com.zeng.myworkout.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
-import com.zeng.myworkout.model.User
 
-class HomeViewModel(private val repository: WorkoutRepository) : ViewModel() {
+class HomeViewModel(
+    private val routineRepo: RoutineRepository,
+    private val workoutRepo: WorkoutRepository
+) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    val user = workoutRepo.getCurrentUser()
+
+    val workout = Transformations.switchMap(user) { user ->
+        user?.workoutId?.let { workoutRepo.getWorkoutById(it) }
     }
 
-    val text: LiveData<String> = _text
-    val workout: LiveData<User> = repository.currentUser
-
-    suspend fun changeWorkout(workoutId: Long) {
-        repository.changeWorkout(workoutId)
+    val routine = Transformations.switchMap(workout) { workout ->
+        workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
 
 }

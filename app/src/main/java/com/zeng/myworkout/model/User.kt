@@ -9,6 +9,9 @@ open class User(
     @ColumnInfo
     var workoutId: Long? = null,
 
+    @ColumnInfo
+    var current: Boolean = false,
+
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 )

@@ -146,7 +146,7 @@ class RoutineDetailActivity : AppCompatActivity() {
         binding.viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 if (adapter.itemCount > 0) {
-                    when(state) {
+                    when (state) {
                         ViewPager2.SCROLL_STATE_IDLE -> binding.fab.show()
                         else -> binding.fab.hide()
                     }
