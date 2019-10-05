@@ -2,6 +2,7 @@ package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -18,13 +19,13 @@ class HomeViewModel(
         user?.workoutReferenceId?.let { workoutRepo.getWorkoutById(it) }
     }
 
-    val sessionWorkout = Transformations.switchMap(user) { user ->
-        user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
-    }
-
     val routine = Transformations.switchMap(workoutReference) { workout ->
         workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
+
+    val sessionWorkout = Transformations.switchMap(user) { user ->
+        user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
+    }.distinctUntilChanged()
 
     fun updateUserSessionWorkout(sessionWorkoutId: Long?) {
         viewModelScope.launch {
@@ -32,20 +33,33 @@ class HomeViewModel(
         }
     }
 
+    // Create a Workout that will be the session workout
     fun continueRoutineWorkout() {
         viewModelScope.launch {
             val newWorkout = workoutReference.value?.copy(id = null, reference = false)!!
             newWorkout.id = workoutRepo.insertWorkout(newWorkout)
 
-            val newWorkoutExercises =
-                workoutRepo.allWorkoutExerciseById(user.value?.workoutReferenceId!!)
+            val referenceExercises = workoutRepo.allWorkoutExerciseById(user.value?.workoutReferenceId!!)
+
+            val referenceExerciseIds = referenceExercises.map { it.id!! }
+
+            val newWorkoutExercises = referenceExercises
                     .map { ex ->
                         ex.id = null
                         ex.workoutId = newWorkout.id
                         ex
                     }
 
-            workoutRepo.insertWorkoutExercise(newWorkoutExercises)
+            val exerciseIds = workoutRepo.insertWorkoutExercise(newWorkoutExercises)
+
+            // Insert loads
+            val loads = referenceExerciseIds.zip(exerciseIds)
+                .flatMap { (referenceId, newId) ->
+                    workoutRepo.allLoadById(referenceId)
+                        .map { it.copy(id = null, workoutExerciseId = newId) }
+                }
+            workoutRepo.insertLoad(loads)
+
             workoutRepo.updateUserSessionWorkout(newWorkout.id)
         }
     }

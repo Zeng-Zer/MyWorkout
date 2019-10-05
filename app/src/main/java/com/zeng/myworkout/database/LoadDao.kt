@@ -15,4 +15,8 @@ abstract class LoadDao : BaseDao<Load>() {
     protected abstract fun getAllLoadByIdNotDistinct(workoutExerciseId: Long): LiveData<List<Load>>
 
     fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = getAllLoadByIdNotDistinct(workoutExerciseId).distinctUntilChanged()
+
+    @Transaction
+    @Query("SELECT * FROM load WHERE workoutExerciseId = :workoutExerciseId ORDER BY [order] ASC")
+    abstract suspend fun allLoadById(workoutExerciseId: Long): List<Load>
 }

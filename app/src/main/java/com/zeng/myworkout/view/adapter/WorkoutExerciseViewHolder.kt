@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
+import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
@@ -52,7 +54,7 @@ class WorkoutExerciseViewHolder(
             when (menuItem.itemId) {
                 R.id.add_set -> {
                     viewModel.loads.value?.let { loads ->
-                        val last = loads.last()
+                        val last = loads.lastOrNull() ?: Load(LoadType.WEIGHT, 0F, 0, 0, exercise.id)
                         val newLoad = last.copy(id = null, order = last.order + 1)
                         viewModel.insertLoad(newLoad)
                     }

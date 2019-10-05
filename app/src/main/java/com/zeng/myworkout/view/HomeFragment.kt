@@ -38,6 +38,8 @@ class HomeFragment : Fragment() {
                 transaction.replace(R.id.frame, HomeWorkoutFragment())
                 transaction.commit()
             } else {
+                (requireActivity() as MainActivity).supportActionBar?.title =
+                    resources.getString(R.string.title_home)
                 transaction.replace(R.id.frame, HomeMenuFragment())
                 transaction.commit()
             }
