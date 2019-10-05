@@ -2,11 +2,11 @@ package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
 class HomeViewModel(
     private val routineRepo: RoutineRepository,
@@ -25,21 +25,6 @@ class HomeViewModel(
 
     val sessionWorkout = Transformations.switchMap(user) { user ->
         user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
-    }.distinctUntilChanged()
-
-    // TODO Probably need to refactor this
-    fun updateToNextWorkout() {
-        viewModelScope.launch {
-            val routineId = sessionWorkout.value?.routineId!!
-            val sessionWorkout = sessionWorkout.value!!
-            val count = routineRepo.getReferenceWorkoutCount(routineId)
-            var newWorkoutOrderId = 0
-            if (sessionWorkout.order.toLong() < count - 1) {
-                newWorkoutOrderId = sessionWorkout.order + 1
-            }
-            val newWorkout = workoutRepo.getWorkoutByRoutineOrder(routineId, newWorkoutOrderId)
-            workoutRepo.updateUserWorkout(newWorkout.id!!)
-        }
     }
 
     fun deleteSessionWorkout() {
@@ -54,10 +39,35 @@ class HomeViewModel(
         }
     }
 
+    fun finishCurrentSessionWorkout() {
+        sessionWorkout.value?.let { workout ->
+            workout.finishDate = Date()
+            viewModelScope.launch {
+                workoutRepo.updateWorkout(workout)
+            }
+        }
+    }
+
+    // TODO Probably need to refactor this
+    fun updateToNextWorkout() {
+        sessionWorkout.value?.let { sessionWorkout ->
+            viewModelScope.launch {
+                val routineId = sessionWorkout.routineId!!
+                val count = routineRepo.getReferenceWorkoutCount(routineId)
+                var newWorkoutOrderId = 0
+                if (sessionWorkout.order.toLong() < count - 1) {
+                    newWorkoutOrderId = sessionWorkout.order + 1
+                }
+                val newWorkout = workoutRepo.getWorkoutByRoutineOrder(routineId, newWorkoutOrderId)
+                workoutRepo.updateUserWorkout(newWorkout.id!!)
+            }
+        }
+    }
+
     // Create a Workout that will be the session workout
     fun continueRoutineWorkout() {
         viewModelScope.launch {
-            val newWorkout = workoutReference.value?.copy(id = null, reference = false)!!
+            val newWorkout = workoutReference.value?.copy(id = null, reference = false, startDate = Date())!!
             newWorkout.id = workoutRepo.insertWorkout(newWorkout)
 
             val referenceExercises = workoutRepo.allWorkoutExerciseById(user.value?.workoutReferenceId!!)

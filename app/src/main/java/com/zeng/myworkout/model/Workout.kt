@@ -3,6 +3,7 @@ package com.zeng.myworkout.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "workout")
 data class Workout(
@@ -20,6 +21,12 @@ data class Workout(
 
     @ColumnInfo
     var reference: Boolean = false,
+
+    @ColumnInfo
+    var startDate: Date? = null,
+
+    @ColumnInfo
+    var finishDate: Date? = null,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

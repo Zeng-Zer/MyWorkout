@@ -24,6 +24,7 @@ class WorkoutRepository private constructor(
     fun getAllWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>> = workoutDao.getAllReferenceWorkoutByRoutineId(routineId)
 
     suspend fun insertWorkout(workout: Workout) = workoutDao.insert(workout)
+    suspend fun updateWorkout(workout: Workout) = workoutDao.update(workout)
     suspend fun deleteWorkoutReorderById(workoutId: Long) = workoutDao.deleteWorkoutReorderById(workoutId)
     suspend fun deleteWorkout(workout: Workout) = workoutDao.delete(workout)
 
