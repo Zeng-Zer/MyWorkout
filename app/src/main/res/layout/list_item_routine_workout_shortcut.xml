@@ -15,10 +15,12 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cornerRadius="4dp"
             android:text="@{workout.name}"/>
 
     </LinearLayout>
+
 </layout>

@@ -17,14 +17,16 @@ import androidx.room.PrimaryKey
     ]
 )
 data class User(
+    // Id of the workout reference from the routine
     @ColumnInfo
     var workoutReferenceId: Long? = null,
 
     @ColumnInfo
     var current: Boolean = false,
 
+    // Id of current session
     @ColumnInfo
-    var runningWorkoutId: Long? = null,
+    var sessionWorkoutId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

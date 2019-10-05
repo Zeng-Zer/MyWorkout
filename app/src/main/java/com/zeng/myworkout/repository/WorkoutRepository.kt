@@ -14,6 +14,7 @@ class WorkoutRepository private constructor(
     private val userDao: UserDao
 ) {
     fun getCurrentUser(): LiveData<User> = userDao.getCurrentUser()
+    suspend fun updateUserWorkout(workoutId: Long) = userDao.updateUserWorkout(workoutId)
 
     fun getWorkoutById(workoutId: Long): LiveData<Workout> = workoutDao.getWorkoutById(workoutId)
     fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>> = workoutDao.getAllWorkoutExerciseById(workoutId)

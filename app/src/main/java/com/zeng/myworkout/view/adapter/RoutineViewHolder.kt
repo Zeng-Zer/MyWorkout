@@ -29,7 +29,7 @@ class RoutineViewHolder(
 
     fun bind(item: Routine) {
         viewModel = getRoutineWorkoutShortcutViewModel(item.id!!)
-        adapter = RoutineWorkoutShortcutAdapter()
+        adapter = RoutineWorkoutShortcutAdapter(context, viewModel)
         routine = item
 
         binding.apply {
@@ -72,6 +72,7 @@ class RoutineViewHolder(
                     deleteRoutine(routine)
                     true
                 }
+                // TODO Stats/History ?
                 else -> false
             }
         }

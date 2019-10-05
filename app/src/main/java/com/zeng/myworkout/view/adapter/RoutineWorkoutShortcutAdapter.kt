@@ -1,14 +1,23 @@
 package com.zeng.myworkout.view.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
 import com.zeng.myworkout.model.Workout
+import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
 
-class RoutineWorkoutShortcutAdapter : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
+class RoutineWorkoutShortcutAdapter(
+    private val context: Context,
+    private val viewModel: RoutineWorkoutShortcutViewModel
+) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RoutineWorkoutShortcutViewHolder(ListItemRoutineWorkoutShortcutBinding.inflate(
             LayoutInflater.from(parent.context), parent, false))
@@ -23,6 +32,12 @@ class RoutineWorkoutShortcutAdapter : ListAdapter<Workout, RecyclerView.ViewHold
         fun bind(item: Workout) {
             binding.apply {
                 workout = item
+
+                button.setOnClickListener {
+                    viewModel.updateUserWorkout(item.id!!)
+                    val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
+                    navController.navigate(R.id.navigation_home)
+                }
             }
         }
     }
