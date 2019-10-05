@@ -36,6 +36,7 @@ class RoutineWorkoutShortcutAdapter(
                 button.setOnClickListener {
                     viewModel.updateUserWorkout(item.id!!)
                     val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
+                    navController.popBackStack(R.id.navigation_home, true)
                     navController.navigate(R.id.navigation_home)
                 }
             }
