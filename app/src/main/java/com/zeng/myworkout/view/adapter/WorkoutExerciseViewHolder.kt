@@ -21,6 +21,7 @@ import com.zeng.myworkout.viewmodel.getViewModel
 class WorkoutExerciseViewHolder(
     private val context: Context,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val isSession: Boolean,
     private val binding: ListItemWorkoutExerciseBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -31,7 +32,7 @@ class WorkoutExerciseViewHolder(
     fun bind(item: WorkoutExerciseDetail) {
         exercise = item
         viewModel = getWorkoutExerciseViewModel(item.id!!)
-        adapter = LoadAdapter(context, viewModel, item)
+        adapter = LoadAdapter(context, viewModel, item, isSession)
 
         binding.apply {
             exercise = item.detail

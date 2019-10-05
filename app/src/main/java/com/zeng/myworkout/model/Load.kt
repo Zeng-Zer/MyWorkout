@@ -34,6 +34,7 @@ data class Load(
     @ColumnInfo
     var value: Float = 0F,
 
+    // Reference rep for routine
     @ColumnInfo
     var reps: Int = 0,
 
@@ -42,6 +43,10 @@ data class Load(
 
     @ColumnInfo
     var workoutExerciseId: Long? = null,
+
+    // Actual reps done in workouts
+    @ColumnInfo
+    var repsDone: Int = -1,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

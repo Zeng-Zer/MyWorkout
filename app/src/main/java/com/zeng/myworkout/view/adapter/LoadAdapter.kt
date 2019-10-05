@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +29,8 @@ import kotlin.math.roundToInt
 class LoadAdapter(
     private val context: Context,
     private val viewModel: WorkoutExerciseViewModel,
-    private val exercise: WorkoutExerciseDetail
+    private val exercise: WorkoutExerciseDetail,
+    private val isSession: Boolean
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
@@ -43,6 +47,7 @@ class LoadAdapter(
     inner class LoadViewHolder(private val binding: ListItemGridLoadBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var load: Load
+        private val reps = MutableLiveData<Int>()
 
         fun bind(item: Load) {
             load = item
@@ -52,7 +57,11 @@ class LoadAdapter(
                 executePendingBindings()
             }
 
-            setButtonEditReps()
+            if (isSession) {
+                setButtonSessionReps()
+            } else {
+                setButtonEditReps()
+            }
             setTextEditLoad()
         }
 
@@ -144,13 +153,29 @@ class LoadAdapter(
         }
 
         // TODO SET OTHER TYPE
-//        private fun setButtonReps(item: Load) {
-//            binding.button.setOnClickListener {
-//                item.reps -= 1
-//                binding.button.text = item.reps.toString()
-//                viewModel.updateLoad(item)
-//            }
-//        }
+        private fun setButtonSessionReps() {
+            reps.value = load.repsDone
+            reps.observe(context as LifecycleOwner, Observer { it?.let { value ->
+                if (value == -1) {
+                    binding.button.text = load.reps.toString()
+                    binding.button.background = context.resources.getDrawable(R.drawable.my_button_unselected)
+                } else {
+                    binding.button.text = value.toString()
+                    binding.button.background = context.resources.getDrawable(R.drawable.my_button_ripple)
+                }
+            }})
+
+            binding.button.setOnClickListener {
+                load.repsDone -= 1
+
+                if (load.repsDone < -1) {
+                    load.repsDone = load.reps
+                }
+
+                reps.value = load.repsDone
+                viewModel.updateLoad(load)
+            }
+        }
 
         @SuppressLint("SetTextI18n")
         fun weightToText(weight: Float): String {

@@ -34,7 +34,7 @@ class HomeWorkoutFragment : Fragment() {
         })
     }
 
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutViewModel) }
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutViewModel, true) }
 
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
 

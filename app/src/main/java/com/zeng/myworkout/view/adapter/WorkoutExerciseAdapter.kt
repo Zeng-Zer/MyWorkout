@@ -12,7 +12,8 @@ import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class WorkoutExerciseAdapter(
     private val workoutExerciseRecycledViewPool: RecyclerView.RecycledViewPool,
-    private val viewModel: WorkoutViewModel
+    private val viewModel: WorkoutViewModel,
+    private val isSession: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     init {
@@ -42,6 +43,7 @@ class WorkoutExerciseAdapter(
         return WorkoutExerciseViewHolder(
             context,
             workoutExerciseRecycledViewPool,
+            isSession,
             ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
