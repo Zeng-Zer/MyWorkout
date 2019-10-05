@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
         val navController = requireActivity().findNavController(R.id.nav_host_fragment)
 
         binding.apply {
-            changeRoutine.setOnClickListener {
+            chooseRoutine.setOnClickListener {
                 navController.navigate(R.id.navigation_routine)
             }
         }

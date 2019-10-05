@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:textSize="26sp"
-                android:text="Current Routine"/>
+                android:text="Next workout"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/current_routine"
@@ -79,13 +79,13 @@
                 android:text=" Continue Routine"/>
 
             <Button
-                android:id="@+id/change_routine"
+                android:id="@+id/choose_routine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="26dp"
                 android:drawableStart="@drawable/ic_fitness_center_black_24dp"
                 app:cornerRadius="4dp"
-                android:text=" New Routine"/>
+                android:text=" Choose New Routine"/>
 
             <Button
                 android:id="@+id/start_empty_workout"
