@@ -18,6 +18,10 @@ class HomeViewModel(
         user?.workoutReferenceId?.let { workoutRepo.getWorkoutById(it) }
     }
 
+    val sessionWorkout = Transformations.switchMap(user) { user ->
+        user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
+    }
+
     val routine = Transformations.switchMap(workoutReference) { workout ->
         workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
@@ -25,6 +29,24 @@ class HomeViewModel(
     fun updateUserSessionWorkout(sessionWorkoutId: Long?) {
         viewModelScope.launch {
             workoutRepo.updateUserSessionWorkout(sessionWorkoutId)
+        }
+    }
+
+    fun continueRoutineWorkout() {
+        viewModelScope.launch {
+            val newWorkout = workoutReference.value?.copy(id = null, reference = false)!!
+            newWorkout.id = workoutRepo.insertWorkout(newWorkout)
+
+            val newWorkoutExercises =
+                workoutRepo.allWorkoutExerciseById(user.value?.workoutReferenceId!!)
+                    .map { ex ->
+                        ex.id = null
+                        ex.workoutId = newWorkout.id
+                        ex
+                    }
+
+            workoutRepo.insertWorkoutExercise(newWorkoutExercises)
+            workoutRepo.updateUserSessionWorkout(newWorkout.id)
         }
     }
 

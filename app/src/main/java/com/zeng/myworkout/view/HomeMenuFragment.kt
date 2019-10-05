@@ -28,7 +28,7 @@ class HomeMenuFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeMenuBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        binding.vm = viewModel
 
         subscribeUi()
         setupButtons()
@@ -57,7 +57,7 @@ class HomeMenuFragment : Fragment() {
                 // ADD WORKOUT
                 // SET USER SESSION WORKOUT
                 requireActivity().supportFragmentManager.popBackStack()
-                viewModel?.updateUserSessionWorkout(0)
+                viewModel.continueRoutineWorkout()
             }
 
             chooseRoutine.setOnClickListener {
