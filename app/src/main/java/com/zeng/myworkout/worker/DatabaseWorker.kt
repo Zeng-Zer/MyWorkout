@@ -64,9 +64,9 @@ class DatabaseWorker(
         val benchExercise = Exercise("Bench Press", chest.id).also { insertExercise(it) }
         val deadliftExercise = Exercise("Deadlift", legs.id).also { insertExercise(it) }
 
-        val routine = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
+        val fullbody = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
 
-        val workout = Workout("Workout A", "test", 0, routine.id!!, true).also { insertWorkout(it) }
+        val workout = Workout("Workout A", "test", 0, fullbody.id!!, true).also { insertWorkout(it) }
 
         // Add squat to workout
         val squat = WorkoutExercise(0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
@@ -80,7 +80,7 @@ class DatabaseWorker(
         val deadlift = WorkoutExercise(2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
         (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it, deadlift.id) }.also { insertLoads(it) }
 
-        val workout2 = Workout("Workout B", "test", 1, routine.id!!, true).also { insertWorkout(it) }
+        val workout2 = Workout("Workout B", "test", 1, fullbody.id!!, true).also { insertWorkout(it) }
 
         // Add squat to workout2
         val squat2 = WorkoutExercise(0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
@@ -88,8 +88,8 @@ class DatabaseWorker(
 
         User(workout.id, true).also { insertUser(it) }
 
-        // TESTING ROUTING TODO REMOVE
-        val routine2 = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
+        // TODO ADD PPL
+        val ppl = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
     }
 
     companion object {

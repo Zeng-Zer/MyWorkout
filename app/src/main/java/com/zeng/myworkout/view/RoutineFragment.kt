@@ -34,7 +34,7 @@ class RoutineFragment : Fragment() {
     }
 
     private val adapter: RoutineAdapter by lazy {
-        RoutineAdapter(viewModel, ::showRoutineDetailActivity, ::deleteRoutineWithUndo)
+        RoutineAdapter(viewModel, ::showRoutineDetailActivity, ::deleteRoutine)
     }
 
     private fun showRoutineDetailActivity(routineId: Long, isNew: Boolean) {
@@ -44,19 +44,17 @@ class RoutineFragment : Fragment() {
         activity?.startActivity(intent)
     }
 
-    private fun deleteRoutineWithUndo(viewHolder: RoutineAdapter.RoutineViewHolder) {
-        viewHolder.binding.routine?.let { routine ->
-            // Save current list
-            val oldList = adapter.currentList
-            viewModel.deleteRoutine(routine)
+    private fun deleteRoutine(routine: Routine) {
+        // Save current list
+        val oldList = adapter.currentList
+        viewModel.deleteRoutine(routine)
 
-            // Snackbar to restore old list
-            val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
-            snackbar.setAction("UNDO") {
-                viewModel.upsertRoutine(oldList)
-            }
-            snackbar.show()
+        // Snackbar to restore old list
+        val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
+        snackbar.setAction("UNDO") {
+            viewModel.upsertRoutine(oldList)
         }
+        snackbar.show()
     }
 
     override fun onCreateView(

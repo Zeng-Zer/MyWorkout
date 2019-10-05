@@ -1,6 +1,7 @@
 package com.zeng.myworkout.view.adapter
 
 import android.content.Context
+import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
@@ -41,13 +42,11 @@ class WorkoutExerciseViewHolder(
     }
 
     private fun setupMenuButton() {
-        binding.buttonMenu.setOnClickListener {
-            showMenuPopup()
-        }
+        binding.buttonMenu.setOnClickListener { showMenuPopup(it) }
     }
 
-    private fun showMenuPopup() {
-        val popup = PopupMenu(context, binding.buttonMenu)
+    private fun showMenuPopup(menuView: View) {
+        val popup = PopupMenu(context, menuView)
         popup.menuInflater.inflate(R.menu.workout_exercise_popup_menu, popup.menu)
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {

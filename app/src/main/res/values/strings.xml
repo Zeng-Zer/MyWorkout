@@ -23,4 +23,7 @@
     <string name="workout_exercise_add_set">Add set</string>
     <string name="workout_exercise_remove_set">Remove set</string>
     <string name="workout_exercise_remove_exercise">Remove exercise</string>
+
+    <!--  RoutineFragment  -->
+    <string name="routine_delete">Delete</string>
 </resources>
