@@ -7,7 +7,7 @@ import java.io.Serializable
     tableName = "workout_exercise",
     foreignKeys = [
         ForeignKey(
-            entity = WorkoutExercise::class,
+            entity = Workout::class,
             parentColumns = ["id"],
             childColumns = ["workoutId"],
             onDelete = ForeignKey.CASCADE,

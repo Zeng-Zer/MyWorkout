@@ -41,20 +41,23 @@ class HomeWorkoutFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeWorkoutBinding.inflate(inflater, container, false)
 
-
-        binding.apply {
-            // TODO do something here
-            cancel.setOnClickListener {
-                homeViewModel.updateUserSessionWorkout(null)
-            }
-            finish.setOnClickListener {
-                homeViewModel.updateUserSessionWorkout(null)
-            }
-        }
-
+        setupButtons()
         setupRecyclerView()
         subscribeUi()
         return binding.root
+    }
+
+    private fun setupButtons() {
+        binding.apply {
+            cancel.setOnClickListener {
+                homeViewModel.deleteSessionWorkout()
+                homeViewModel.updateUserSessionWorkout(null)
+            }
+            finish.setOnClickListener {
+                homeViewModel.updateToNextWorkout()
+                homeViewModel.updateUserSessionWorkout(null)
+            }
+        }
     }
 
     private fun setupRecyclerView() {

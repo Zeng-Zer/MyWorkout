@@ -27,6 +27,27 @@ class HomeViewModel(
         user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
     }.distinctUntilChanged()
 
+    // TODO Probably need to refactor this
+    fun updateToNextWorkout() {
+        viewModelScope.launch {
+            val routineId = sessionWorkout.value?.routineId!!
+            val sessionWorkout = sessionWorkout.value!!
+            val count = routineRepo.getReferenceWorkoutCount(routineId)
+            var newWorkoutOrderId = 0
+            if (sessionWorkout.order.toLong() < count - 1) {
+                newWorkoutOrderId = sessionWorkout.order + 1
+            }
+            val newWorkout = workoutRepo.getWorkoutByRoutineOrder(routineId, newWorkoutOrderId)
+            workoutRepo.updateUserWorkout(newWorkout.id!!)
+        }
+    }
+
+    fun deleteSessionWorkout() {
+        viewModelScope.launch {
+            workoutRepo.deleteWorkout(sessionWorkout.value!!)
+        }
+    }
+
     fun updateUserSessionWorkout(sessionWorkoutId: Long?) {
         viewModelScope.launch {
             workoutRepo.updateUserSessionWorkout(sessionWorkoutId)
@@ -40,9 +61,7 @@ class HomeViewModel(
             newWorkout.id = workoutRepo.insertWorkout(newWorkout)
 
             val referenceExercises = workoutRepo.allWorkoutExerciseById(user.value?.workoutReferenceId!!)
-
             val referenceExerciseIds = referenceExercises.map { it.id!! }
-
             val newWorkoutExercises = referenceExercises
                     .map { ex ->
                         ex.id = null
@@ -50,16 +69,16 @@ class HomeViewModel(
                         ex
                     }
 
-            val exerciseIds = workoutRepo.insertWorkoutExercise(newWorkoutExercises)
 
-            // Insert loads
+            // Insert loads with ids
+            val exerciseIds = workoutRepo.insertWorkoutExercise(newWorkoutExercises)
             val loads = referenceExerciseIds.zip(exerciseIds)
                 .flatMap { (referenceId, newId) ->
                     workoutRepo.allLoadById(referenceId)
                         .map { it.copy(id = null, workoutExerciseId = newId) }
                 }
-            workoutRepo.insertLoad(loads)
 
+            workoutRepo.insertLoad(loads)
             workoutRepo.updateUserSessionWorkout(newWorkout.id)
         }
     }

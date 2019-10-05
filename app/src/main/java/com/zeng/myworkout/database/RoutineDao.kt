@@ -10,8 +10,16 @@ import com.zeng.myworkout.model.Routine
 abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
+    @Query("SELECT COUNT(id) FROM workout WHERE routineId = :routineId AND reference = 1")
+    abstract suspend fun getReferenceWorkoutCount(routineId: Long): Long
+
+    @Transaction
     @Query("SELECT * FROM routine WHERE id = :id")
     abstract fun getRoutineById(id: Long): LiveData<Routine>
+
+    @Transaction
+    @Query("SELECT * FROM routine WHERE id = :id")
+    abstract suspend fun routineById(id: Long): Routine
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")

@@ -86,7 +86,7 @@ class DatabaseWorker(
         val squat2 = WorkoutExercise(0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
         (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it, squat2.id) }.also { insertLoads(it) }
 
-        User(workout.id, true).also { insertUser(it) }
+        User(null, true).also { insertUser(it) }
 
         // TODO ADD PPL
         val ppl = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
