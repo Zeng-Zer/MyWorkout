@@ -9,16 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.zeng.myworkout.databinding.FragmentHomeWorkoutBinding
+import com.zeng.myworkout.databinding.FragmentWorkoutBinding
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import com.zeng.myworkout.viewmodel.getViewModel
 
-class HomeWorkoutFragment : Fragment() {
+class WorkoutFragment : Fragment() {
 
-    private lateinit var binding: FragmentHomeWorkoutBinding
+    private lateinit var binding: FragmentWorkoutBinding
 
     private val homeViewModel by lazy {
         getViewModel({
@@ -40,7 +40,7 @@ class HomeWorkoutFragment : Fragment() {
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentHomeWorkoutBinding.inflate(inflater, container, false)
+        binding = FragmentWorkoutBinding.inflate(inflater, container, false)
 
         setupButtons()
         setupRecyclerView()

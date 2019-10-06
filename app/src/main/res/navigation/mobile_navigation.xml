@@ -9,7 +9,25 @@
         android:id="@+id/navigation_home"
         android:name="com.zeng.myworkout.view.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+<!--        <action-->
+<!--            android:id="@+id/navigate_to_home_workout_fragment"-->
+<!--            app:destination="@+id/home_workout_fragment"/>-->
+
+    </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/home_workout_fragment"-->
+<!--        android:name="com.zeng.myworkout.view.WorkoutFragment"-->
+<!--        android:label="Workout"-->
+<!--        tools:layout="@layout/fragment_workout" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/home_menu_fragment"-->
+<!--        android:name="com.zeng.myworkout.view.HomeMenuFragment"-->
+<!--        android:label="@string/title_home"-->
+<!--        tools:layout="@layout/fragment_home" />-->
 
     <fragment
         android:id="@+id/navigation_routine"
