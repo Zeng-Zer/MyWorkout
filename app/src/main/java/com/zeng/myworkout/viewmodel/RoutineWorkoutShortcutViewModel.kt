@@ -18,15 +18,13 @@ class RoutineWorkoutShortcutViewModel(
 
     suspend fun getUser() = workoutRepository.currentUser()
 
-    fun updateUserWorkout(workout: Workout) {
-        viewModelScope.launch {
-            // update user workout reference
-            workoutRepository.updateUserWorkoutReference(workout.id!!)
+    suspend fun updateUserWorkout(workout: Workout) {
+        // update user workout reference
+        workoutRepository.updateUserWorkoutReference(workout.id!!)
 
-            // create user workout session
-            val newWorkout = workoutRepository.newWorkoutSessionFromReference(workout)
-            workoutRepository.updateUserWorkoutSession(newWorkout.id)
-        }
+        // create user workout session
+        val newWorkout = workoutRepository.newWorkoutSessionFromReference(workout)
+        workoutRepository.updateUserWorkoutSession(newWorkout.id)
     }
 
     fun deleteWorkout(workoutId: Long) {
