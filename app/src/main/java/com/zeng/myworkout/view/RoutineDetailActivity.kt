@@ -140,6 +140,7 @@ class RoutineDetailActivity : AppCompatActivity() {
 
     private fun setupViewPager() {
         binding.viewPager.adapter = adapter
+        binding.viewPager.offscreenPageLimit = 7
         TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
 
         // Hide fab when changing fragment

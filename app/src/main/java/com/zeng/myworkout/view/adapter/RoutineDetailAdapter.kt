@@ -34,6 +34,7 @@ class WorkoutItemDiffCallback : DiffUtil.ItemCallback<WorkoutItem>() {
         return oldItem.workoutId == newItem.workoutId
     }
 
+    // TODO maybe we don't need to check everything here
     @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: WorkoutItem, newItem: WorkoutItem): Boolean {
         return oldItem == newItem

@@ -1,9 +1,6 @@
 package com.zeng.myworkout.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -32,7 +29,7 @@ class HomeViewModel(
         } else {
             MutableLiveData<Workout?>(null)
         }
-    }
+    }.distinctUntilChanged()
 
     suspend fun deleteWorkoutSession() {
             workoutRepo.deleteWorkout(workoutSession.value!!)

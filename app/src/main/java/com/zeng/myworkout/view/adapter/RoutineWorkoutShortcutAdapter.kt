@@ -4,10 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
 import com.zeng.myworkout.model.User
 import com.zeng.myworkout.model.Workout
@@ -64,9 +67,8 @@ class RoutineWorkoutShortcutAdapter(
         private fun setUserWorkout(workout: Workout) {
             viewModel.viewModelScope.launch {
                 viewModel.updateUserWorkout(workout)
-                // TODO FIX
-//                val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
-//                navController.navigate(R.id.action_navigation_routine_to_navigation_workout)
+                val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
+                navController.navigate(R.id.action_navigation_routine_to_home_nav)
             }
         }
     }
