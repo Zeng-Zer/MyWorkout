@@ -37,13 +37,17 @@ class HomeViewModel(
         workoutSession.value?.let { workout ->
             workout.finishDate = Date()
             viewModelScope.launch {
+                // add date to the session
                 workoutRepo.updateWorkout(workout)
+                // update user workoutReferenceId
+                updateToNextWorkout()
                 workoutRepo.updateUserWorkoutSession(null)
             }
         }
     }
 
-    fun updateToNextWorkout() {
+    // set user workout reference to the next one based on the routine
+    private fun updateToNextWorkout() {
         workoutSession.value?.let { workoutSession ->
             viewModelScope.launch {
                 val routineId = workoutSession.routineId!!

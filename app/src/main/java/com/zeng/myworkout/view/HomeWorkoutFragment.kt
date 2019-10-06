@@ -55,7 +55,6 @@ class HomeWorkoutFragment : Fragment() {
             }
             finish.setOnClickListener {
                 homeViewModel.finishCurrentWorkoutSession()
-                homeViewModel.updateToNextWorkout()
             }
         }
     }

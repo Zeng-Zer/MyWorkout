@@ -66,7 +66,7 @@ class HomeMenuFragment : Fragment() {
             }
 
             startEmptyWorkout.setOnClickListener {
-
+                // TODO
             }
         }
     }
