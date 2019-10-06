@@ -4,13 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
 import com.zeng.myworkout.model.User
 import com.zeng.myworkout.model.Workout
@@ -41,7 +38,7 @@ class RoutineWorkoutShortcutAdapter(
                     viewModel.viewModelScope.launch {
                         val user = viewModel.getUser()
                         // Check if the user currently has a session
-                        if (user.workoutSessionId != null) {
+                        if (user?.workoutSessionId != null) {
                             openValidationDialog(user, item)
                         } else {
                             setUserWorkout(item)
@@ -67,9 +64,9 @@ class RoutineWorkoutShortcutAdapter(
         private fun setUserWorkout(workout: Workout) {
             viewModel.viewModelScope.launch {
                 viewModel.updateUserWorkout(workout)
-                val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
-                navController.popBackStack(R.id.navigation_home, true)
-                navController.navigate(R.id.navigation_home)
+                // TODO FIX
+//                val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
+//                navController.navigate(R.id.action_navigation_routine_to_navigation_workout)
             }
         }
     }

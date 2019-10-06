@@ -6,22 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
+import com.zeng.myworkout.viewmodel.getSharedViewModel
 import com.zeng.myworkout.viewmodel.getViewModel
+import kotlinx.coroutines.launch
 
 class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
 
     private val homeViewModel by lazy {
-        getViewModel({
+        getSharedViewModel({
             HomeViewModel(
                 RepositoryUtils.getRoutineRepository(requireContext()),
                 RepositoryUtils.getWorkoutRepository(requireContext())
@@ -51,10 +56,14 @@ class WorkoutFragment : Fragment() {
     private fun setupButtons() {
         binding.apply {
             cancel.setOnClickListener {
-                homeViewModel.deleteWorkoutSession()
+                homeViewModel.viewModelScope.launch {
+                    homeViewModel.deleteWorkoutSession()
+                }
             }
             finish.setOnClickListener {
-                homeViewModel.finishCurrentWorkoutSession()
+                homeViewModel.viewModelScope.launch {
+                    homeViewModel.finishCurrentWorkoutSession()
+                }
             }
         }
     }
@@ -73,12 +82,14 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        homeViewModel.workoutSession.observe(viewLifecycleOwner, Observer { it?.let { workout ->
-            workout.id?.let { id ->
-                workoutViewModel.setWorkoutId(id)
+        homeViewModel.workoutSession.observe(viewLifecycleOwner, Observer { workout ->
+            if (workout != null) {
+                workout.id?.let { id -> workoutViewModel.setLiveDataWorkoutId(id) }
+                (requireActivity() as MainActivity).supportActionBar?.title = workout.name
+            } else {
+                findNavController().navigate(R.id.navigation_home)
             }
-            (requireActivity() as MainActivity).supportActionBar?.title = workout.name
-        }})
+        })
 
         workoutViewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
             adapter.submitList(exercises)

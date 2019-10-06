@@ -3,6 +3,7 @@
 
     <string name="title_home">Home</string>
     <string name="title_routine">Routine</string>
+    <string name="title_workout">Workout</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_routine_detail">RoutineDetailActivity</string>
 

@@ -27,6 +27,20 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(noinline creator: (() -
     }
 }
 
+inline fun <reified T : ViewModel> Fragment.getSharedViewModel(noinline creator: (() -> T)? = null, key: String? = null): T {
+    return if (creator == null) {
+        if (key == null)
+            ViewModelProviders.of(requireActivity()).get(T::class.java)
+        else
+            ViewModelProviders.of(requireActivity()).get(key, T::class.java)
+    } else {
+        if (key == null)
+            ViewModelProviders.of(requireActivity(), BaseViewModelFactory(creator)).get(T::class.java)
+        else
+            ViewModelProviders.of(requireActivity(), BaseViewModelFactory(creator)).get(key, T::class.java)
+    }
+}
+
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(noinline creator: (() -> T)? = null, key: String? = null): T {
     return if (creator == null) {
         if (key == null)

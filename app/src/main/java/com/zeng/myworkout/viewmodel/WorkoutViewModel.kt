@@ -2,7 +2,6 @@ package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.*
 import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -15,15 +14,11 @@ class WorkoutViewModel(
 
     private val liveDataId = MutableLiveData<Long?>(workoutId)
 
-    val workout: LiveData<Workout> = Transformations.switchMap(liveDataId) { it?.let { id ->
-        workoutRepository.getWorkoutById(id)
-    }}
-
     val exercises: LiveData<List<WorkoutExerciseDetail>> = Transformations.switchMap(liveDataId) { it?.let { id ->
         workoutRepository.getAllWorkoutExerciseById(id)
     }}
 
-    fun setWorkoutId(workoutId: Long) {
+    fun setLiveDataWorkoutId(workoutId: Long) {
         liveDataId.value = workoutId
     }
 
