@@ -3,41 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/home_nav">
 
-    <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.zeng.myworkout.view.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+    <navigation
+        android:id="@+id/home_nav"
+        app:startDestination="@id/navigation_home">
 
-<!--        <action-->
-<!--            android:id="@+id/navigate_to_home_workout_fragment"-->
-<!--            app:destination="@+id/home_workout_fragment"/>-->
+        <fragment
+            android:id="@+id/navigation_home"
+            android:name="com.zeng.myworkout.view.HomeFragment"
+            android:label="@string/title_home"
+            tools:layout="@layout/fragment_home" >
+            <action
+                android:id="@+id/action_navigation_home_to_navigation_workout"
+                app:destination="@id/navigation_workout"
+                app:popUpTo="@+id/mobile_navigation"
+                app:popUpToInclusive="true" />
+        </fragment>
 
-    </fragment>
-
-<!--    <fragment-->
-<!--        android:id="@+id/home_workout_fragment"-->
-<!--        android:name="com.zeng.myworkout.view.WorkoutFragment"-->
-<!--        android:label="Workout"-->
-<!--        tools:layout="@layout/fragment_workout" />-->
-
-<!--    <fragment-->
-<!--        android:id="@+id/home_menu_fragment"-->
-<!--        android:name="com.zeng.myworkout.view.HomeMenuFragment"-->
-<!--        android:label="@string/title_home"-->
-<!--        tools:layout="@layout/fragment_home" />-->
+        <fragment
+            android:id="@+id/navigation_workout"
+            android:name="com.zeng.myworkout.view.WorkoutFragment"
+            android:label="@string/title_workout"
+            tools:layout="@layout/fragment_workout" />
+    </navigation>
 
     <fragment
         android:id="@+id/navigation_routine"
         android:name="com.zeng.myworkout.view.RoutineFragment"
         android:label="@string/title_routine"
-        tools:layout="@layout/fragment_routine" />
+        tools:layout="@layout/fragment_routine" >
+
+        <action
+            android:id="@+id/action_navigation_routine_to_navigation_workout"
+            app:destination="@id/navigation_workout"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.zeng.myworkout.view.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
 </navigation>

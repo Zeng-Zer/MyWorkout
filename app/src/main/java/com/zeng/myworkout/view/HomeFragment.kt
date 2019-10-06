@@ -6,18 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.HomeViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
+import com.zeng.myworkout.viewmodel.getSharedViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val viewModel by lazy {
-        getViewModel({
+        getSharedViewModel({
             HomeViewModel(
                 RepositoryUtils.getRoutineRepository(requireContext()),
                 RepositoryUtils.getWorkoutRepository(requireContext())
@@ -36,6 +36,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun subscribeUi() {
+        // Show current routine workout
         viewModel.user.observe(viewLifecycleOwner, Observer { it?.let { user ->
             binding.apply {
                 if (user.workoutReferenceId != null) {
@@ -47,22 +48,22 @@ class HomeFragment : Fragment() {
                 }
             }
         }})
+
+        viewModel.workoutSession.observe(viewLifecycleOwner, Observer { session ->
+            if (session != null) {
+                findNavController().navigate(R.id.action_navigation_home_to_navigation_workout)
+            }
+        })
     }
 
     private fun setupButtons() {
-        val navController = requireActivity().findNavController(R.id.nav_host_fragment)
-
         binding.apply {
             continueRoutine.setOnClickListener {
-                // ADD WORKOUT
-                // SET USER SESSION WORKOUT
-                requireActivity().supportFragmentManager.popBackStack()
                 viewModel.continueRoutineWorkout()
             }
 
             chooseRoutine.setOnClickListener {
-                navController.popBackStack(R.id.navigation_routine, true)
-                navController.navigate(R.id.navigation_routine)
+                findNavController().navigate(R.id.navigation_routine)
             }
 
             startEmptyWorkout.setOnClickListener {

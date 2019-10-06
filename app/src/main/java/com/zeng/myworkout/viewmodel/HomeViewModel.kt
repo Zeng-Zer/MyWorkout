@@ -1,8 +1,10 @@
 package com.zeng.myworkout.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
@@ -15,6 +17,7 @@ class HomeViewModel(
 
     val user = workoutRepo.getCurrentUser()
 
+    // TODO WARNING THE LIVEDATA IS NOT MODIFIED IF THE USER SET THE WORKOUT REFERENCE TO NULL
     val workoutReference = Transformations.switchMap(user) { user ->
         user?.workoutReferenceId?.let { workoutRepo.getWorkoutById(it) }
     }
@@ -24,25 +27,25 @@ class HomeViewModel(
     }
 
     val workoutSession = Transformations.switchMap(user) { user ->
-        user?.workoutSessionId?.let { workoutRepo.getWorkoutById(it) }
-    }
-
-    fun deleteWorkoutSession() {
-        viewModelScope.launch {
-            workoutRepo.deleteWorkout(workoutSession.value!!)
+        if (user?.workoutSessionId != null) {
+            workoutRepo.getWorkoutById(user.workoutSessionId!!)
+        } else {
+            MutableLiveData<Workout?>(null)
         }
     }
 
-    fun finishCurrentWorkoutSession() {
+    suspend fun deleteWorkoutSession() {
+            workoutRepo.deleteWorkout(workoutSession.value!!)
+    }
+
+    suspend fun finishCurrentWorkoutSession() {
         workoutSession.value?.let { workout ->
             workout.finishDate = Date()
-            viewModelScope.launch {
-                // add date to the session
-                workoutRepo.updateWorkout(workout)
-                // update user workoutReferenceId
-                updateToNextWorkout()
-                workoutRepo.updateUserWorkoutSession(null)
-            }
+            // add date to the session
+            workoutRepo.updateWorkout(workout)
+            // update user workoutReferenceId
+            updateToNextWorkout()
+            workoutRepo.updateUserWorkoutSession(null)
         }
     }
 

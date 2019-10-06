@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
             childColumns = ["workoutSessionId"],
             onDelete = ForeignKey.SET_NULL,
             onUpdate = ForeignKey.CASCADE)
-]
+    ]
 )
 data class User(
     // Id of the workout reference from the routine
