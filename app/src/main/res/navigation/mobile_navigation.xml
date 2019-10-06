@@ -17,6 +17,7 @@
             <action
                 android:id="@+id/action_navigation_home_to_navigation_workout"
                 app:destination="@id/navigation_workout"
+                app:enterAnim="@anim/nav_default_enter_anim"
                 app:popUpTo="@+id/mobile_navigation"
                 app:popUpToInclusive="true" />
         </fragment>
@@ -25,7 +26,14 @@
             android:id="@+id/navigation_workout"
             android:name="com.zeng.myworkout.view.WorkoutFragment"
             android:label="@string/title_workout"
-            tools:layout="@layout/fragment_workout" />
+            tools:layout="@layout/fragment_workout" >
+            <action
+                android:id="@+id/action_navigation_workout_to_navigation_home"
+                app:destination="@id/navigation_home"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:popUpTo="@+id/mobile_navigation"
+                app:popUpToInclusive="true" />
+        </fragment>
     </navigation>
 
     <fragment
@@ -33,11 +41,11 @@
         android:name="com.zeng.myworkout.view.RoutineFragment"
         android:label="@string/title_routine"
         tools:layout="@layout/fragment_routine" >
-
         <action
-            android:id="@+id/action_navigation_routine_to_navigation_workout"
-            app:destination="@id/navigation_workout"
-            app:popUpTo="@id/mobile_navigation"
+            android:id="@+id/action_navigation_routine_to_home_nav"
+            app:destination="@+id/home_nav"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:popUpTo="@+id/mobile_navigation"
             app:popUpToInclusive="true" />
     </fragment>
 

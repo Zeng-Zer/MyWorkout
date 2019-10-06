@@ -87,7 +87,7 @@ class WorkoutFragment : Fragment() {
                 workout.id?.let { id -> workoutViewModel.setLiveDataWorkoutId(id) }
                 (requireActivity() as MainActivity).supportActionBar?.title = workout.name
             } else {
-                findNavController().navigate(R.id.navigation_home)
+                findNavController().navigate(R.id.action_navigation_workout_to_navigation_home)
             }
         })
 
