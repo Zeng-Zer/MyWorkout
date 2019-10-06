@@ -23,43 +23,39 @@ class HomeViewModel(
         workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
 
-    val sessionWorkout = Transformations.switchMap(user) { user ->
-        user?.sessionWorkoutId?.let { workoutRepo.getWorkoutById(it) }
+    val workoutSession = Transformations.switchMap(user) { user ->
+        user?.workoutSessionId?.let { workoutRepo.getWorkoutById(it) }
     }
 
-    fun deleteSessionWorkout() {
+    fun deleteWorkoutSession() {
         viewModelScope.launch {
-            workoutRepo.deleteWorkout(sessionWorkout.value!!)
+            workoutRepo.deleteWorkout(workoutSession.value!!)
         }
     }
 
-    fun updateUserSessionWorkout(sessionWorkoutId: Long?) {
-        viewModelScope.launch {
-            workoutRepo.updateUserSessionWorkout(sessionWorkoutId)
-        }
-    }
-
-    fun finishCurrentSessionWorkout() {
-        sessionWorkout.value?.let { workout ->
+    fun finishCurrentWorkoutSession() {
+        workoutSession.value?.let { workout ->
             workout.finishDate = Date()
             viewModelScope.launch {
                 workoutRepo.updateWorkout(workout)
+                workoutRepo.updateUserWorkoutSession(null)
             }
         }
     }
 
-    // TODO Probably need to refactor this
     fun updateToNextWorkout() {
-        sessionWorkout.value?.let { sessionWorkout ->
+        workoutSession.value?.let { workoutSession ->
             viewModelScope.launch {
-                val routineId = sessionWorkout.routineId!!
-                val count = routineRepo.getReferenceWorkoutCount(routineId)
+                val routineId = workoutSession.routineId!!
+                val workouts = workoutRepo.allReferenceWorkoutByRoutineId(routineId)
+
+                // Cycle order
                 var newWorkoutOrderId = 0
-                if (sessionWorkout.order.toLong() < count - 1) {
-                    newWorkoutOrderId = sessionWorkout.order + 1
+                if (workoutSession.order < workouts.size - 1) {
+                    newWorkoutOrderId = workoutSession.order + 1
                 }
-                val newWorkout = workoutRepo.getWorkoutByRoutineOrder(routineId, newWorkoutOrderId)
-                workoutRepo.updateUserWorkout(newWorkout.id!!)
+
+                workoutRepo.updateUserWorkoutReference(workouts[newWorkoutOrderId].id!!)
             }
         }
     }
@@ -89,7 +85,7 @@ class HomeViewModel(
                 }
 
             workoutRepo.insertLoad(loads)
-            workoutRepo.updateUserSessionWorkout(newWorkout.id)
+            workoutRepo.updateUserWorkoutSession(newWorkout.id)
         }
     }
 

@@ -13,20 +13,26 @@ import androidx.room.PrimaryKey
             parentColumns = ["id"],
             childColumns = ["workoutReferenceId"],
             onDelete = ForeignKey.SET_NULL,
+            onUpdate = ForeignKey.CASCADE),
+        ForeignKey(
+            entity = Workout::class,
+            parentColumns = ["id"],
+            childColumns = ["workoutSessionId"],
+            onDelete = ForeignKey.SET_NULL,
             onUpdate = ForeignKey.CASCADE)
-    ]
+]
 )
 data class User(
     // Id of the workout reference from the routine
-    @ColumnInfo
+    @ColumnInfo(index = true)
     var workoutReferenceId: Long? = null,
 
     @ColumnInfo
     var current: Boolean = false,
 
     // Id of current session
-    @ColumnInfo
-    var sessionWorkoutId: Long? = null,
+    @ColumnInfo(index = true)
+    var workoutSessionId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

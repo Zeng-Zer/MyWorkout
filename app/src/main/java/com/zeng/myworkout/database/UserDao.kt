@@ -14,11 +14,15 @@ abstract class UserDao : BaseDao<User>() {
     abstract fun getCurrentUser() : LiveData<User>
 
     @Transaction
-    @Query("UPDATE user SET workoutReferenceId = :workoutId WHERE current = 1")
-    abstract suspend fun updateUserWorkout(workoutId: Long)
+    @Query("SELECT * FROM user where current = 1")
+    abstract suspend fun currentUser() : User
 
     @Transaction
-    @Query("UPDATE user SET sessionWorkoutId = :sessionWorkoutId WHERE current = 1")
-    abstract suspend fun updateUserSessionWorkout(sessionWorkoutId: Long?)
+    @Query("UPDATE user SET workoutReferenceId = :workoutId WHERE current = 1")
+    abstract suspend fun updateUserWorkoutReference(workoutId: Long)
+
+    @Transaction
+    @Query("UPDATE user SET workoutSessionId = :workoutSessionId WHERE current = 1")
+    abstract suspend fun updateUserWorkoutSession(workoutSessionId: Long?)
 
 }

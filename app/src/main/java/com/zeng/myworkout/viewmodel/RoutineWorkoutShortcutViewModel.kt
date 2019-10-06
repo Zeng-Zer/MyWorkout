@@ -15,9 +15,17 @@ class RoutineWorkoutShortcutViewModel(
     val workouts = workoutRepository.getAllWorkoutByRoutineId(routineId)
     val hasWorkout = Transformations.map(workouts) { !it.isNullOrEmpty() }.distinctUntilChanged()
 
+    suspend fun getUser() = workoutRepository.currentUser()
+
     fun updateUserWorkout(workoutId: Long) {
         viewModelScope.launch {
-            workoutRepository.updateUserWorkout(workoutId)
+            workoutRepository.updateUserWorkoutReference(workoutId)
+        }
+    }
+
+    fun deleteWorkout(workoutId: Long) {
+        viewModelScope.launch {
+            workoutRepository.deleteWorkoutById(workoutId)
         }
     }
 }

@@ -18,7 +18,7 @@ open class WorkoutExercise(
     @ColumnInfo
     var order: Int = 0,
 
-    @ColumnInfo
+    @ColumnInfo(index = true)
     var workoutId: Long? = null,
 
     @ColumnInfo

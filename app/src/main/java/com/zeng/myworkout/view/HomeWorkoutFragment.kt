@@ -28,6 +28,7 @@ class HomeWorkoutFragment : Fragment() {
             )
         })
     }
+
     private val workoutViewModel by lazy {
         getViewModel({
             WorkoutViewModel(RepositoryUtils.getWorkoutRepository(requireContext()))
@@ -50,13 +51,11 @@ class HomeWorkoutFragment : Fragment() {
     private fun setupButtons() {
         binding.apply {
             cancel.setOnClickListener {
-                homeViewModel.deleteSessionWorkout()
-                homeViewModel.updateUserSessionWorkout(null)
+                homeViewModel.deleteWorkoutSession()
             }
             finish.setOnClickListener {
-                homeViewModel.finishCurrentSessionWorkout()
+                homeViewModel.finishCurrentWorkoutSession()
                 homeViewModel.updateToNextWorkout()
-                homeViewModel.updateUserSessionWorkout(null)
             }
         }
     }
@@ -75,7 +74,7 @@ class HomeWorkoutFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        homeViewModel.sessionWorkout.observe(viewLifecycleOwner, Observer { it?.let { workout ->
+        homeViewModel.workoutSession.observe(viewLifecycleOwner, Observer { it?.let { workout ->
             workout.id?.let { id ->
                 workoutViewModel.setWorkoutId(id)
             }

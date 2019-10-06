@@ -41,7 +41,7 @@ data class Load(
     @ColumnInfo
     var order: Int = 0,
 
-    @ColumnInfo
+    @ColumnInfo(index = true)
     var workoutExerciseId: Long? = null,
 
     // Actual reps done in workouts

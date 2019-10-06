@@ -3,15 +3,19 @@ package com.zeng.myworkout.view.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
+import com.zeng.myworkout.model.User
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
+import kotlinx.coroutines.launch
 
 class RoutineWorkoutShortcutAdapter(
     private val context: Context,
@@ -34,12 +38,37 @@ class RoutineWorkoutShortcutAdapter(
                 workout = item
 
                 button.setOnClickListener {
-                    viewModel.updateUserWorkout(item.id!!)
-                    val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
-                    navController.popBackStack(R.id.navigation_home, true)
-                    navController.navigate(R.id.navigation_home)
+                    viewModel.viewModelScope.launch {
+                        val user = viewModel.getUser()
+                        // Check if the user currently has a session
+                        if (user.workoutSessionId != null) {
+                            openValidationDialog(user, item)
+                        } else {
+                            setUserWorkout(item)
+                        }
+                    }
                 }
             }
+        }
+
+        private fun openValidationDialog(user: User, workout: Workout) {
+            val dialog = AlertDialog.Builder(context)
+                .setMessage("Close current workout session ?")
+                .setPositiveButton("Yes") { _, _ ->
+                    viewModel.deleteWorkout(user.workoutSessionId!!)
+                    setUserWorkout(workout)
+                }
+                .setNegativeButton("CANCEL") {  _, _ ->  }
+                .create()
+
+            dialog.show()
+        }
+
+        private fun setUserWorkout(workout: Workout) {
+            viewModel.updateUserWorkout(workout.id!!)
+            val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
+            navController.popBackStack(R.id.navigation_home, true)
+            navController.navigate(R.id.navigation_home)
         }
     }
 

@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
     private fun subscribeUi() {
         viewModel.user.observe(viewLifecycleOwner, Observer { it?.let { user ->
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            if (user.sessionWorkoutId != null) {
+            if (user.workoutSessionId != null) {
                 transaction.replace(R.id.frame, HomeWorkoutFragment())
                 transaction.commit()
             } else {

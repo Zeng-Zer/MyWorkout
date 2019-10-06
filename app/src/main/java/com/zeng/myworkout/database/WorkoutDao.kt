@@ -27,16 +27,16 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     abstract fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
 
     @Transaction
-    @Query("SELECT * FROM workout WHERE routineId = :routineId AND `order` = :orderId AND reference = 1")
-    abstract suspend fun getWorkoutByRoutineOrder(routineId: Long, orderId: Int): Workout
-
-    @Transaction
     @Query("SELECT * FROM workout WHERE id = :id")
     abstract fun workoutById(id: Long): Workout
 
     @Transaction
     @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
     abstract suspend fun allReferenceWorkoutByRoutineId(routineId: Long): List<Workout>
+
+    @Transaction
+    @Query("DELETE FROM workout WHERE id = :workoutId")
+    abstract suspend fun deleteWorkoutById(workoutId: Long)
 
     // TODO Probably need to optimize this
     @Transaction
