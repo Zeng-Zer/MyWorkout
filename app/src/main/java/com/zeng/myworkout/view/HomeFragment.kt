@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.util.RepositoryUtils
@@ -26,23 +27,47 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.vm = viewModel
 
         subscribeUi()
+        setupButtons()
         return binding.root
     }
 
     private fun subscribeUi() {
         viewModel.user.observe(viewLifecycleOwner, Observer { it?.let { user ->
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            if (user.workoutSessionId != null) {
-                transaction.replace(R.id.frame, HomeWorkoutFragment())
-                transaction.commit()
-            } else {
-                (requireActivity() as MainActivity).supportActionBar?.title =
-                    resources.getString(R.string.title_home)
-                transaction.replace(R.id.frame, HomeMenuFragment())
-                transaction.commit()
+            binding.apply {
+                if (user.workoutReferenceId != null) {
+                    currentProgramLayout.visibility = View.VISIBLE
+                    continueRoutine.visibility = View.VISIBLE
+                } else {
+                    currentProgramLayout.visibility = View.GONE
+                    continueRoutine.visibility = View.GONE
+                }
             }
         }})
+    }
+
+    private fun setupButtons() {
+        val navController = requireActivity().findNavController(R.id.nav_host_fragment)
+
+        binding.apply {
+            continueRoutine.setOnClickListener {
+                // ADD WORKOUT
+                // SET USER SESSION WORKOUT
+                requireActivity().supportFragmentManager.popBackStack()
+                viewModel.continueRoutineWorkout()
+            }
+
+            chooseRoutine.setOnClickListener {
+                navController.popBackStack(R.id.navigation_routine, true)
+                navController.navigate(R.id.navigation_routine)
+            }
+
+            startEmptyWorkout.setOnClickListener {
+                // TODO
+            }
+        }
     }
 }
