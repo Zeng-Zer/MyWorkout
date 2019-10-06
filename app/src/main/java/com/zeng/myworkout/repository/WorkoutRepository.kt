@@ -6,6 +6,7 @@ import com.zeng.myworkout.database.UserDao
 import com.zeng.myworkout.database.WorkoutDao
 import com.zeng.myworkout.database.WorkoutExerciseDao
 import com.zeng.myworkout.model.*
+import java.util.*
 
 class WorkoutRepository private constructor(
     private val workoutDao: WorkoutDao,
@@ -41,6 +42,32 @@ class WorkoutRepository private constructor(
     suspend fun insertLoad(load: Load) = loadDao.insert(load)
     suspend fun updateLoad(load: Load) = loadDao.update(load)
     suspend fun deleteLoad(load: Load) = loadDao.delete(load)
+
+    suspend fun newWorkoutSessionFromReference(workoutReference: Workout): Workout {
+        val newWorkout = workoutReference.copy(id = null, reference = false, startDate = Date())
+        newWorkout.id = insertWorkout(newWorkout)
+
+        val referenceExercises = allWorkoutExerciseById(workoutReference.id!!)
+        val referenceExerciseIds = referenceExercises.map { it.id!! }
+        val newWorkoutExercises = referenceExercises
+            .map { ex ->
+                ex.id = null
+                ex.workoutId = newWorkout.id
+                ex
+            }
+
+
+        // Insert loads with ids
+        val exerciseIds = insertWorkoutExercise(newWorkoutExercises)
+        val loads = referenceExerciseIds.zip(exerciseIds)
+            .flatMap { (referenceId, newId) ->
+                allLoadById(referenceId)
+                    .map { it.copy(id = null, workoutExerciseId = newId) }
+            }
+
+        insertLoad(loads)
+        return newWorkout
+    }
 
     companion object {
 

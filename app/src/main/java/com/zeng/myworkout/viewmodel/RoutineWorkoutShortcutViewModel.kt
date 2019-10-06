@@ -4,6 +4,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
@@ -17,9 +18,14 @@ class RoutineWorkoutShortcutViewModel(
 
     suspend fun getUser() = workoutRepository.currentUser()
 
-    fun updateUserWorkout(workoutId: Long) {
+    fun updateUserWorkout(workout: Workout) {
         viewModelScope.launch {
-            workoutRepository.updateUserWorkoutReference(workoutId)
+            // update user workout reference
+            workoutRepository.updateUserWorkoutReference(workout.id!!)
+
+            // create user workout session
+            val newWorkout = workoutRepository.newWorkoutSessionFromReference(workout)
+            workoutRepository.updateUserWorkoutSession(newWorkout.id)
         }
     }
 
