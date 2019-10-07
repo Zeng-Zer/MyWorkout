@@ -26,10 +26,4 @@ class RoutineViewModel(private val repository: RoutineRepository) : ViewModel() 
             repository.update(routines)
         }
     }
-
-    fun upsertRoutine(routines: List<Routine>) {
-        viewModelScope.launch {
-            repository.upsert(routines)
-        }
-    }
 }

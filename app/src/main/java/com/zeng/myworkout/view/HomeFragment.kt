@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.util.RepositoryUtils
@@ -27,12 +29,18 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.vm = viewModel
 
+        setupBinding()
         subscribeUi()
         setupButtons()
         return binding.root
+    }
+
+    private fun setupBinding() {
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            vm = viewModel
+        }
     }
 
     private fun subscribeUi() {
@@ -48,18 +56,13 @@ class HomeFragment : Fragment() {
                 }
             }
         }})
-
-        viewModel.workoutSession.observe(viewLifecycleOwner, Observer { session ->
-            if (session != null) {
-                findNavController().navigate(R.id.action_navigation_home_to_navigation_workout)
-            }
-        })
     }
 
     private fun setupButtons() {
         binding.apply {
             continueRoutine.setOnClickListener {
                 viewModel.continueRoutineWorkout()
+                navigateToWorkout()
             }
 
             chooseRoutine.setOnClickListener {
@@ -70,5 +73,11 @@ class HomeFragment : Fragment() {
                 // TODO
             }
         }
+    }
+
+    private fun navigateToWorkout() {
+        val homeNav = findNavController().graph[R.id.home_nav] as NavGraph
+        homeNav.startDestination = R.id.navigation_workout
+        findNavController().navigate(R.id.action_navigation_home_to_navigation_workout)
     }
 }

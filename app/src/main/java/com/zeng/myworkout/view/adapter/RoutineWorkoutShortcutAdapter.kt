@@ -3,9 +3,11 @@ package com.zeng.myworkout.view.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
+import androidx.navigation.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,8 @@ class RoutineWorkoutShortcutAdapter(
     private val context: Context,
     private val viewModel: RoutineWorkoutShortcutViewModel
 ) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
+
+    private val navController = (context as AppCompatActivity).findNavController(R.id.nav_host_fragment)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RoutineWorkoutShortcutViewHolder(ListItemRoutineWorkoutShortcutBinding.inflate(
@@ -44,23 +48,24 @@ class RoutineWorkoutShortcutAdapter(
                             context = context,
                             message = "Close current workout session ?",
                             positiveFun = {
-                                viewModel.deleteWorkout(user.workoutSessionId!!)
-                                setUserWorkout(workout)
+                                val oldWorkoutId = user.workoutSessionId!!
+                                viewModel.updateUserWorkout(workout)
+                                viewModel.deleteWorkout(oldWorkoutId)
+                                navigateToWorkout()
                             }
                         )
                     } else {
-                        setUserWorkout(workout)
+                        viewModel.updateUserWorkout(workout)
+                        navigateToWorkout()
                     }
                 }
             }
         }
 
-        private fun setUserWorkout(workout: Workout) {
-            viewModel.viewModelScope.launch {
-                viewModel.updateUserWorkout(workout)
-                val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
-                navController.navigate(R.id.action_global_to_home_nav)
-            }
+        private fun navigateToWorkout() {
+            val homeNav = navController.graph[R.id.home_nav] as NavGraph
+            homeNav.startDestination = R.id.navigation_workout
+            navController.navigate(R.id.action_global_to_home_nav)
         }
     }
 
