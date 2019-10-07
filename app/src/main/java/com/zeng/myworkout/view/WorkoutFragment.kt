@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -25,7 +27,7 @@ class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
 
-    private val homeViewModel by lazy {
+    private val homeVm by lazy {
         getSharedViewModel({
             HomeViewModel(
                 RepositoryUtils.getRoutineRepository(requireContext()),
@@ -34,18 +36,19 @@ class WorkoutFragment : Fragment() {
         })
     }
 
-    private val workoutViewModel by lazy {
+    private val workoutVm by lazy {
         getViewModel({
             WorkoutViewModel(RepositoryUtils.getWorkoutRepository(requireContext()))
         })
     }
 
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutViewModel, true) }
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutVm, true) }
 
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
+        (requireActivity() as MainActivity).supportActionBar?.title = ""
 
         setupButtons()
         setupRecyclerView()
@@ -56,16 +59,24 @@ class WorkoutFragment : Fragment() {
     private fun setupButtons() {
         binding.apply {
             cancel.setOnClickListener {
-                homeViewModel.viewModelScope.launch {
-                    homeViewModel.deleteWorkoutSession()
+                homeVm.viewModelScope.launch {
+                    homeVm.deleteWorkoutSession()
+                    navigateToHome()
                 }
             }
             finish.setOnClickListener {
-                homeViewModel.viewModelScope.launch {
-                    homeViewModel.finishCurrentWorkoutSession()
+                homeVm.viewModelScope.launch {
+                    homeVm.finishCurrentWorkoutSession()
+                    navigateToHome()
                 }
             }
         }
+    }
+
+    private fun navigateToHome() {
+        val homeNav = findNavController().graph[R.id.home_nav] as NavGraph
+        homeNav.startDestination = R.id.navigation_home
+        findNavController().navigate(R.id.action_navigation_workout_to_navigation_home)
     }
 
     private fun setupRecyclerView() {
@@ -82,16 +93,12 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        homeViewModel.workoutSession.observe(viewLifecycleOwner, Observer { workout ->
-            if (workout != null) {
-                workout.id?.let { id -> workoutViewModel.setLiveDataWorkoutId(id) }
-                (requireActivity() as MainActivity).supportActionBar?.title = workout.name
-            } else {
-                findNavController().navigate(R.id.action_navigation_workout_to_navigation_home)
-            }
-        })
+        homeVm.workoutSession.observe(viewLifecycleOwner, Observer { it?.let { workout ->
+            workout.id?.let { id -> workoutVm.setLiveDataWorkoutId(id) }
+            (requireActivity() as MainActivity).supportActionBar?.title = workout.name
+        }})
 
-        workoutViewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
+        workoutVm.exercises.observe(viewLifecycleOwner, Observer { exercises ->
             adapter.submitList(exercises)
         })
     }

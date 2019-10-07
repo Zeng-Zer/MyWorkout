@@ -23,7 +23,7 @@ class HomeViewModel(
         workout?.routineId?.let { routineRepo.getRoutineById(it) }
     }
 
-    val workoutSession = Transformations.switchMap(user) { user ->
+    val workoutSession: LiveData<Workout?> = Transformations.switchMap(user) { user ->
         if (user?.workoutSessionId != null) {
             workoutRepo.getWorkoutById(user.workoutSessionId!!)
         } else {
