@@ -75,7 +75,6 @@ class WorkoutExerciseViewHolder(
                     true
                 }
                 R.id.remove_exercise -> {
-                    // TODO MOVE TO ADAPTER ??!!
                     DialogUtils.openValidationDialog(
                         context = context,
                         message = "Remove ${exercise.detail.name} ?",
