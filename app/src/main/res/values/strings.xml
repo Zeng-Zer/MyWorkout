@@ -14,8 +14,6 @@
     <string name="intent_result_list">result_list</string>
 
     <!--  RoutineDetailActivity  -->
-    <string name="intent_routine">routine</string>
-    <string name="intent_new_routine">new_routine</string>
     <string name="action_delete_workout">Delete workout</string>
     <string name="action_new_workout">New workout</string>
     <string name="action_edit_workout">Edit workout</string>

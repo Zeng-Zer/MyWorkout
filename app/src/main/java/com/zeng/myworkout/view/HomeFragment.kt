@@ -10,8 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.util.RepositoryUtils
+import com.zeng.myworkout.util.getSharedViewModel
 import com.zeng.myworkout.viewmodel.HomeViewModel
-import com.zeng.myworkout.viewmodel.getSharedViewModel
 
 class HomeFragment : Fragment() {
 
@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
             }
 
             chooseRoutine.setOnClickListener {
-                findNavController().navigate(R.id.navigation_routine)
+                findNavController().navigate(R.id.action_navigation_home_to_routine_nav)
             }
 
             startEmptyWorkout.setOnClickListener {
