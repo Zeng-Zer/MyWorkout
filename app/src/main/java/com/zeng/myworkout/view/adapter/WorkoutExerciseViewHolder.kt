@@ -13,6 +13,7 @@ import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
 import com.zeng.myworkout.viewmodel.getViewModel
@@ -48,9 +49,13 @@ class WorkoutExerciseViewHolder(
         binding.buttonMenu.setOnClickListener { showMenuPopup(it) }
     }
 
+    // TODO MOVE TO ADAPTER ??!!
     private fun showMenuPopup(menuView: View) {
         val popup = PopupMenu(context, menuView)
         popup.menuInflater.inflate(R.menu.workout_exercise_popup_menu, popup.menu)
+        if (adapter.currentList.size <= 1) {
+            popup.menu.removeItem(R.id.remove_set)
+        }
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.add_set -> {
@@ -70,7 +75,12 @@ class WorkoutExerciseViewHolder(
                     true
                 }
                 R.id.remove_exercise -> {
-                    viewModel.deleteWorkoutExercise(exercise)
+                    // TODO MOVE TO ADAPTER ??!!
+                    DialogUtils.openValidationDialog(
+                        context = context,
+                        message = "Remove ${exercise.detail.name} ?",
+                        positiveFun = { viewModel.deleteWorkoutExercise(exercise) }
+                    )
                     true
                 }
                 else -> false
