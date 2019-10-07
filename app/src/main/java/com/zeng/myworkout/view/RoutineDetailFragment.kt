@@ -1,15 +1,13 @@
 package com.zeng.myworkout.view
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -19,8 +17,10 @@ import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.util.RepositoryUtils
+import com.zeng.myworkout.util.getSharedViewModel
 import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.RoutineDetailAdapter
+import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
@@ -40,6 +40,12 @@ class RoutineDetailFragment : Fragment() {
         )})
     }
 
+    private val exerciseVm by lazy {
+        getSharedViewModel({ExerciseViewModel(
+            RepositoryUtils.getExerciseRepository(requireContext())
+        )})
+    }
+
     private val adapter = RoutineDetailAdapter()
 
     private val workoutRecycledViewPool = RecyclerView.RecycledViewPool()
@@ -48,14 +54,10 @@ class RoutineDetailFragment : Fragment() {
     private var onListChangeCallback: ((List<WorkoutItem>) -> Unit)? = null
 
     private fun currentItemIdx(): Int = binding.viewPager.currentItem
-    private fun currentWorkoutItem(): WorkoutItem = adapter.currentList[currentItemIdx()]
+    private fun currentWorkoutItem(): WorkoutItem? = adapter.currentList.getOrNull(currentItemIdx())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineDetailBinding.inflate(inflater, container, false)
-
-        // TODO
-//        setSupportActionBar(binding.toolbar)
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Add new workout for new routine
         if (isNew) {
@@ -115,29 +117,13 @@ class RoutineDetailFragment : Fragment() {
 //        return super.onOptionsItemSelected(item!!)
 //    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == ExerciseActivity.PICK_EXERCISE_REQUEST) {
-            binding.fab.isEnabled = true
-            if (resultCode == Activity.RESULT_OK) {
-                @Suppress("UNCHECKED_CAST")
-                val exerciseIds = data?.extras?.getSerializable(resources.getString(R.string.intent_result_list)) as Array<Long>? ?: emptyArray()
-                currentWorkoutItem().addExercises(exerciseIds)
-                // Enable fab after getting exercise activity results
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (adapter.currentList.size >= binding.viewPager.currentItem) {
                 // Disable fab to prevent double clicks
                 binding.fab.isEnabled = false
 
-                // Start activity to get Exercises
-                // TODO
-//                val intent = Intent(this, ExerciseActivity::class.java)
-//                startActivityForResult(intent, ExerciseActivity.PICK_EXERCISE_REQUEST)
+                findNavController().navigate(R.id.action_navigation_routine_detail_to_navigation_exercise)
             }
         }
     }
@@ -191,6 +177,15 @@ class RoutineDetailFragment : Fragment() {
                 }
             }
         })
+
+        // Add new exercises from ExerciseFragment
+        exerciseVm.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
+            if (!exercises.isNullOrEmpty()) {
+                currentWorkoutItem()?.addExercises(exercises.map { it.id!! })
+                // TODO is there another way ?
+                exerciseVm.exercisesToAdd.value = null
+            }
+        })
     }
 
     private fun createWorkoutItem(workoutId: Long): WorkoutItem {
@@ -203,7 +198,7 @@ class RoutineDetailFragment : Fragment() {
     }
 
     private fun addNewWorkout() {
-        val form = DataBindingUtil.inflate<DialogWorkoutFormBinding>(layoutInflater, R.layout.dialog_workout_form, null, false)
+        val form = DialogWorkoutFormBinding.inflate(layoutInflater, null, false)
         val dialog = AlertDialog.Builder(requireContext())
             .setMessage("New workout")
             .setPositiveButton("CREATE") { _, _ ->

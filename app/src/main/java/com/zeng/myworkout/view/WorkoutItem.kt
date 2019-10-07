@@ -48,7 +48,7 @@ class WorkoutItem(
     }
 
     // TODO THINK OF A WAY TO HANDLE DEFAULT VALUES
-    fun addExercises(exerciseIds: Array<Long>) {
+    fun addExercises(exerciseIds: List<Long>) {
         val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
             // Make a pair of exercise and their load list
             Pair(

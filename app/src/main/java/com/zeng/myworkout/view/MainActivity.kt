@@ -1,13 +1,11 @@
 package com.zeng.myworkout.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,20 +14,9 @@ import com.zeng.myworkout.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    val navController by lazy {
-        findNavController(R.id.nav_host_fragment)
-    }
-    val appBarConfiguration by lazy { AppBarConfiguration(
-        setOf(
-            R.id.navigation_home,
-            R.id.navigation_workout,
-            R.id.navigation_routine,
-            R.id.navigation_notifications
-        )
-    )}
-
     private lateinit var binding: ActivityMainBinding
     private var navBarShown = true
+    private val navController by lazy { findNavController(R.id.nav_host_fragment) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +24,14 @@ class MainActivity : AppCompatActivity() {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home,
+                R.id.navigation_workout,
+                R.id.navigation_routine,
+                R.id.navigation_notifications
+            )
+        )
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navView.setupWithNavController(navController)
@@ -44,19 +39,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
+        return navController.navigateUp()
     }
 
     private fun setupNavControllerListener() {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.navigation_routine_detail -> {
-                    Log.d("TEST", "RoutineDetail")
-                    hideBottomNavigationView(binding.navView)
-                }
-            }
+        val hideBottomViewIds = listOf(
+            R.id.navigation_routine_detail,
+            R.id.navigation_exercise
+        )
 
-            if (destination.id != R.id.navigation_routine_detail && !navBarShown) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (hideBottomViewIds.contains(destination.id)) {
+                hideBottomNavigationView(binding.navView)
+            } else {
                 showBottomNavigationView(binding.navView)
             }
         }
@@ -64,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNavigationView(bottomView: BottomNavigationView) {
         if (navBarShown) {
-//            bottomView.collapse()
             bottomView.visibility = View.GONE
             navBarShown = false
         }
@@ -72,7 +66,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showBottomNavigationView(bottomView: BottomNavigationView) {
         if (!navBarShown) {
-//            bottomView.expand()
             bottomView.visibility = View.VISIBLE
             navBarShown = true
         }

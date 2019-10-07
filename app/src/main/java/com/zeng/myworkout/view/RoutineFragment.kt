@@ -15,9 +15,9 @@ import com.zeng.myworkout.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineBinding
 import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.util.RepositoryUtils
+import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.RoutineAdapter
 import com.zeng.myworkout.viewmodel.RoutineViewModel
-import com.zeng.myworkout.util.getViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
@@ -36,8 +36,8 @@ class RoutineFragment : Fragment() {
     }
 
     private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
-        val direction = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
-        findNavController().navigate(direction)
+        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
+        findNavController().navigate(action)
     }
 
     private fun deleteRoutine(routine: Routine) {

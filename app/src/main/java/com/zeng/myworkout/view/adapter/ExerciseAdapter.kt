@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemExerciseBinding
 import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.util.minusAssign
+import com.zeng.myworkout.util.plusAssign
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
 
 class ExerciseAdapter(private val viewModel: ExerciseViewModel) : ListAdapter<Exercise, RecyclerView.ViewHolder>(ExerciseDiffCallback()) {
@@ -27,18 +29,13 @@ class ExerciseAdapter(private val viewModel: ExerciseViewModel) : ListAdapter<Ex
         fun bind(item: Exercise) {
             binding.apply {
                 exercise = item
-                executePendingBindings()
 
                 // added checked element to checkedlist
                 checkbox.setOnCheckedChangeListener{ _, checked ->
                     if (checked) {
-                        viewModel.checkedList.add(item)
+                        viewModel.exercisesToAdd += item
                     } else {
-                        viewModel.checkedList.remove(item)
-                    }
-                    // update livedata if has checked or not
-                    if (viewModel.hasChecked.value!! != viewModel.checkedList.isNotEmpty()) {
-                        viewModel.hasChecked.value = viewModel.checkedList.isNotEmpty()
+                        viewModel.exercisesToAdd -= item
                     }
                 }
             }
