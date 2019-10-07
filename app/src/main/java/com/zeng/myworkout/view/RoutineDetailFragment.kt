@@ -2,9 +2,8 @@ package com.zeng.myworkout.view
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -26,11 +25,15 @@ import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class RoutineDetailFragment : Fragment() {
 
-    val args by navArgs<RoutineDetailFragmentArgs>()
+    private val args by navArgs<RoutineDetailFragmentArgs>()
     private val routineId by lazy { args.routineId }
     private val isNew by lazy { args.isNew }
 
     private lateinit var binding: FragmentRoutineDetailBinding
+    private val navController by lazy { findNavController() }
+    private val toolbar by lazy {
+        (requireActivity() as AppCompatActivity).supportActionBar
+    }
 
     private val viewModel by lazy {
         getViewModel({RoutineDetailViewModel(
@@ -64,58 +67,51 @@ class RoutineDetailFragment : Fragment() {
             addNewWorkout()
         }
 
-        setupViewPager()
+        setHasOptionsMenu(true)
         setupFab()
+        setupViewPager()
         subscribeUi()
         return binding.root
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.routine_detail_menu, menu)
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.routine_detail_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                navController.navigateUp()
+            }
+            R.id.action_new_workout -> {
+                addNewWorkout()
+            }
+
+            R.id.action_delete_workout -> {
+                // ACTUALLY THERE IS A BUG WHEN DELETING LAST VIEW
+                // IT WILL BE FIXED IN THE NEXT MATERIAL COMPONENTS VERSION
+                currentWorkoutItem()?.workoutId?.let { viewModel.deleteWorkoutById(it) }
+            }
+
+            // TODO
 //
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        when (item?.itemId) {
-//            android.R.id.home -> {
-//                finish()
-//                return true
-//            }
-//
-//            R.id.action_new_workout -> {
-//                addNewWorkout()
-//                return true
-//            }
-//
-//            R.id.action_delete_workout -> {
-//                if (adapter.itemCount > 0) {
-//                    // ACTUALLY THERE IS A BUG WHEN DELETING LAST VIEW
-//                    // IT WILL BE FIXED IN THE NEXT MATERIAL COMPONENTS VERSION
-//                    viewModel.deleteWorkoutById(currentWorkoutItem().workoutId)
+//            R.id.action_move_right_workout -> {
+//                if (viewPager.currentItemIdx + 1 < sectionsPagerAdapter.fragments.size) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx + 1)
+//                    viewPager.setCurrentItem(viewPager.currentItemIdx + 1, true)
 //                }
 //                return true
 //            }
 //
-//            // TODO
-////
-////            R.id.action_move_right_workout -> {
-////                if (viewPager.currentItemIdx + 1 < sectionsPagerAdapter.fragments.size) {
-////                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx + 1)
-////                    viewPager.setCurrentItem(viewPager.currentItemIdx + 1, true)
-////                }
-////                return true
-////            }
-////
-////            R.id.action_move_left_workout -> {
-////                if (viewPager.currentItemIdx - 1 >= 0) {
-////                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx - 1)
-////                    viewPager.setCurrentItem(viewPager.currentItemIdx - 1, true)
-////                }
-////                return true
-////            }
-//        }
-//        return super.onOptionsItemSelected(item!!)
-//    }
+//            R.id.action_move_left_workout -> {
+//                if (viewPager.currentItemIdx - 1 >= 0) {
+//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx - 1)
+//                    viewPager.setCurrentItem(viewPager.currentItemIdx - 1, true)
+//                }
+//                return true
+        }
+        return true
+    }
 
     private fun setupFab() {
         binding.fab.setOnClickListener {
@@ -123,7 +119,7 @@ class RoutineDetailFragment : Fragment() {
                 // Disable fab to prevent double clicks
                 binding.fab.isEnabled = false
 
-                findNavController().navigate(R.id.action_navigation_routine_detail_to_navigation_exercise)
+                navController.navigate(R.id.action_navigation_routine_detail_to_navigation_exercise)
             }
         }
     }
@@ -149,8 +145,7 @@ class RoutineDetailFragment : Fragment() {
     private fun subscribeUi() {
         // Change toolbar title
         viewModel.routine.observe(this, Observer { routine ->
-            // TODO
-//            supportActionBar?.title = routine?.name
+            toolbar?.title = routine?.name
         })
 
         // Update workouts
