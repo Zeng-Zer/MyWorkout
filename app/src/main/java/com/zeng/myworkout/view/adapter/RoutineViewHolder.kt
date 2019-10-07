@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineBinding
 import com.zeng.myworkout.model.Routine
+import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
 import com.zeng.myworkout.viewmodel.getViewModel
@@ -69,7 +70,11 @@ class RoutineViewHolder(
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.delete_routine -> {
-                    deleteRoutine(routine)
+                    DialogUtils.openValidationDialog(
+                        context = context,
+                        message = "Delete ${routine.name} ?",
+                        positiveFun = { deleteRoutine(routine) }
+                    )
                     true
                 }
                 // TODO Stats/History ?
