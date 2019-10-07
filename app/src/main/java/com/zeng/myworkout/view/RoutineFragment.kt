@@ -1,7 +1,6 @@
 package com.zeng.myworkout.view
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.google.android.material.snackbar.Snackbar
-import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineBinding
 import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.RoutineAdapter
 import com.zeng.myworkout.viewmodel.RoutineViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
+import com.zeng.myworkout.util.getViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
 
@@ -34,27 +32,16 @@ class RoutineFragment : Fragment() {
     }
 
     private val adapter: RoutineAdapter by lazy {
-        RoutineAdapter(viewModel, ::showRoutineDetailActivity, ::deleteRoutine)
+        RoutineAdapter(viewModel, ::navRoutineDetailFragment, ::deleteRoutine)
     }
 
-    private fun showRoutineDetailActivity(routineId: Long, isNew: Boolean) {
-        val intent = Intent(activity, RoutineDetailActivity::class.java)
-        intent.putExtra(resources.getString(R.string.intent_routine), routineId)
-        intent.putExtra(resources.getString(R.string.intent_new_routine), isNew)
-        activity?.startActivity(intent)
+    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
+        val direction = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
+        findNavController().navigate(direction)
     }
 
     private fun deleteRoutine(routine: Routine) {
-        // Save current list
-        val oldList = adapter.currentList
         viewModel.deleteRoutine(routine)
-
-        // Snackbar to restore old list
-        val snackbar = Snackbar.make(binding.coordinator, "Routine deleted", Snackbar.LENGTH_LONG)
-        snackbar.setAction("UNDO") {
-            viewModel.upsertRoutine(oldList)
-        }
-        snackbar.show()
     }
 
     override fun onCreateView(
@@ -106,7 +93,7 @@ class RoutineFragment : Fragment() {
                 )
                 viewModel.viewModelScope.launch {
                     routine.id = viewModel.insertRoutineAsync(routine)
-                    showRoutineDetailActivity(routine.id!!, true)
+                    navRoutineDetailFragment(routine.id!!, true)
                 }
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }

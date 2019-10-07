@@ -59,7 +59,7 @@ class RoutineWorkoutShortcutAdapter(
             viewModel.viewModelScope.launch {
                 viewModel.updateUserWorkout(workout)
                 val navController = (context as FragmentActivity).findNavController(R.id.nav_host_fragment)
-                navController.navigate(R.id.action_navigation_routine_to_home_nav)
+                navController.navigate(R.id.action_global_to_home_nav)
             }
         }
     }

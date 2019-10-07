@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
 import com.zeng.myworkout.util.RepositoryUtils
+import com.zeng.myworkout.util.getSharedViewModel
+import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
-import com.zeng.myworkout.viewmodel.getSharedViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
 import kotlinx.coroutines.launch
 
 class WorkoutFragment : Fragment() {

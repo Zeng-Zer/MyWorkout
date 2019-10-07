@@ -1,4 +1,4 @@
-package com.zeng.myworkout.viewmodel
+package com.zeng.myworkout.util
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -35,9 +35,13 @@ inline fun <reified T : ViewModel> Fragment.getSharedViewModel(noinline creator:
             ViewModelProviders.of(requireActivity()).get(key, T::class.java)
     } else {
         if (key == null)
-            ViewModelProviders.of(requireActivity(), BaseViewModelFactory(creator)).get(T::class.java)
+            ViewModelProviders.of(requireActivity(),
+                BaseViewModelFactory(creator)
+            ).get(T::class.java)
         else
-            ViewModelProviders.of(requireActivity(), BaseViewModelFactory(creator)).get(key, T::class.java)
+            ViewModelProviders.of(requireActivity(),
+                BaseViewModelFactory(creator)
+            ).get(key, T::class.java)
     }
 }
 

@@ -16,7 +16,7 @@ import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
+import com.zeng.myworkout.util.getViewModel
 
 
 class WorkoutExerciseViewHolder(

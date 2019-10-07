@@ -13,7 +13,7 @@ import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
+import com.zeng.myworkout.util.getViewModel
 
 
 class RoutineViewHolder(

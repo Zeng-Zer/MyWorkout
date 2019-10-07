@@ -13,7 +13,7 @@ import com.zeng.myworkout.databinding.ActivityExerciseBinding
 import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.view.adapter.ExerciseAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
-import com.zeng.myworkout.viewmodel.getViewModel
+import com.zeng.myworkout.util.getViewModel
 
 class ExerciseActivity : AppCompatActivity() {
 

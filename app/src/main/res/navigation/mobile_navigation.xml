@@ -5,6 +5,7 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/home_nav">
 
+    <!--  HOME NAVIGATION  -->
     <navigation
         android:id="@+id/home_nav"
         app:startDestination="@id/navigation_home">
@@ -14,6 +15,10 @@
             android:name="com.zeng.myworkout.view.HomeFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_home" >
+            <action
+                android:id="@+id/action_navigation_home_to_routine_nav"
+                app:destination="@+id/routine_nav"
+                app:enterAnim="@anim/nav_default_enter_anim" />
             <action
                 android:id="@+id/action_navigation_home_to_navigation_workout"
                 app:destination="@id/navigation_workout"
@@ -35,19 +40,54 @@
                 app:popUpToInclusive="true" />
         </fragment>
     </navigation>
+    <action
+        android:id="@+id/action_global_to_home_nav"
+        app:destination="@+id/home_nav"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:popUpTo="@+id/mobile_navigation"
+        app:popUpToInclusive="true" />
 
-    <fragment
-        android:id="@+id/navigation_routine"
-        android:name="com.zeng.myworkout.view.RoutineFragment"
-        android:label="@string/title_routine"
-        tools:layout="@layout/fragment_routine" >
-        <action
-            android:id="@+id/action_navigation_routine_to_home_nav"
-            app:destination="@+id/home_nav"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:popUpTo="@+id/mobile_navigation"
-            app:popUpToInclusive="true" />
-    </fragment>
+    <!--  ROUTINE NAVIGATION  -->
+    <navigation
+        android:id="@+id/routine_nav"
+        app:startDestination="@id/navigation_routine" >
+        <fragment
+            android:id="@+id/navigation_routine"
+            android:name="com.zeng.myworkout.view.RoutineFragment"
+            android:label="@string/title_routine"
+            tools:layout="@layout/fragment_routine">
+            <action
+                android:id="@+id/action_navigation_routine_to_navigation_routine_detail"
+                app:destination="@+id/navigation_routine_detail"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@+id/navigation_routine">
+                <argument
+                    android:name="isNew"
+                    android:defaultValue="false"
+                    app:argType="boolean" />
+            </action>
+        </fragment>
+
+        <fragment
+            android:id="@+id/navigation_routine_detail"
+            android:name="com.zeng.myworkout.view.RoutineDetailFragment"
+            android:label="RoutineDetailFragment" >
+            <action
+                android:id="@+id/action_routineDetailFragment_to_navigation_routine"
+                app:destination="@id/navigation_routine"
+                app:enterAnim="@anim/nav_default_enter_anim" />
+            <argument
+                android:name="routineId"
+                app:argType="long" />
+            <argument
+                android:name="isNew"
+                app:argType="boolean"
+                android:defaultValue="false" />
+        </fragment>
+    </navigation>
 
     <fragment
         android:id="@+id/navigation_notifications"
