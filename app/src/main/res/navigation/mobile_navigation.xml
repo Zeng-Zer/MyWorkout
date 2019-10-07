@@ -75,10 +75,6 @@
             android:id="@+id/navigation_routine_detail"
             android:name="com.zeng.myworkout.view.RoutineDetailFragment"
             android:label="RoutineDetailFragment" >
-            <action
-                android:id="@+id/action_routineDetailFragment_to_navigation_routine"
-                app:destination="@id/navigation_routine"
-                app:enterAnim="@anim/nav_default_enter_anim" />
             <argument
                 android:name="routineId"
                 app:argType="long" />
@@ -86,7 +82,20 @@
                 android:name="isNew"
                 app:argType="boolean"
                 android:defaultValue="false" />
+            <action
+                android:id="@+id/action_navigation_routine_detail_to_navigation_exercise"
+                app:destination="@id/navigation_exercise"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@+id/navigation_routine_detail"
+                app:popUpToInclusive="false" />
         </fragment>
+        <fragment
+            android:id="@+id/navigation_exercise"
+            android:name="com.zeng.myworkout.view.ExerciseFragment"
+            android:label="Exercise" />
     </navigation>
 
     <fragment
