@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import com.zeng.myworkout.model.Routine
+import com.zeng.myworkout.model.RoutineWithWorkouts
 
 @Dao
 abstract class RoutineDao : BaseDao<Routine>() {
@@ -23,7 +24,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
-    abstract fun getAllRoutine(): LiveData<List<Routine>>
+    abstract fun getAllRoutineWithWorkouts(): LiveData<List<RoutineWithWorkouts>>
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")

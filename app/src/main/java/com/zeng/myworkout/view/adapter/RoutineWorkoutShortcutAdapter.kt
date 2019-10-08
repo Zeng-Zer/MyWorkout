@@ -3,31 +3,18 @@ package com.zeng.myworkout.view.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavGraph
-import androidx.navigation.findNavController
-import androidx.navigation.get
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
 import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.util.DialogUtils
-import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
-import kotlinx.coroutines.launch
 
-class RoutineWorkoutShortcutAdapter(
-    private val context: Context,
-    private val viewModel: RoutineWorkoutShortcutViewModel
-) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
+class RoutineWorkoutShortcutAdapter(private val context: Context) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
 
-    private val navController = (context as AppCompatActivity).findNavController(R.id.nav_host_fragment)
+    lateinit var onWorkoutShortcutClick: (Workout) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return RoutineWorkoutShortcutViewHolder(ListItemRoutineWorkoutShortcutBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false))
+        return RoutineWorkoutShortcutViewHolder(ListItemRoutineWorkoutShortcutBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -36,36 +23,12 @@ class RoutineWorkoutShortcutAdapter(
     }
 
     inner class RoutineWorkoutShortcutViewHolder(private val binding: ListItemRoutineWorkoutShortcutBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(workout: Workout) {
-            binding.workout = workout
+        fun bind(item: Workout) {
+            binding.apply {
+                workout = item
 
-            binding.button.setOnClickListener {
-                viewModel.viewModelScope.launch {
-                    val user = viewModel.getUser()
-                    // Check if the user currently has a session
-                    if (user?.workoutSessionId != null) {
-                        DialogUtils.openValidationDialog(
-                            context = context,
-                            message = "Close current workout session ?",
-                            positiveFun = {
-                                val oldWorkoutId = user.workoutSessionId!!
-                                viewModel.updateUserWorkout(workout)
-                                viewModel.deleteWorkout(oldWorkoutId)
-                                navigateToWorkout()
-                            }
-                        )
-                    } else {
-                        viewModel.updateUserWorkout(workout)
-                        navigateToWorkout()
-                    }
-                }
+                button.setOnClickListener { onWorkoutShortcutClick(item) }
             }
-        }
-
-        private fun navigateToWorkout() {
-            val homeNav = navController.graph[R.id.home_nav] as NavGraph
-            homeNav.startDestination = R.id.navigation_workout
-            navController.navigate(R.id.action_global_to_home_nav)
         }
     }
 
