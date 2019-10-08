@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineBinding
 import com.zeng.myworkout.model.Routine
+import com.zeng.myworkout.model.Workout
+import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.view.adapter.RoutineAdapter
 import com.zeng.myworkout.viewmodel.RoutineViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,40 +29,19 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RoutineFragment : Fragment() {
 
     private lateinit var binding: FragmentRoutineBinding
-
     private val viewModel by viewModel<RoutineViewModel>()
+    private val adapter: RoutineAdapter by lazy { RoutineAdapter(requireContext()) }
+    private val navController by lazy { findNavController() }
 
-    private val adapter: RoutineAdapter by lazy {
-        RoutineAdapter(viewModel, ::navRoutineDetailFragment, ::deleteRoutine)
-    }
-
-    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
-        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
-        findNavController().navigate(action)
-    }
-
-    private fun deleteRoutine(routine: Routine) {
-        viewModel.deleteRoutine(routine)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineBinding.inflate(inflater, container, false)
 
+        setupAdapter()
         setupRecyclerView()
-        subscribeUi()
         setupFab(inflater)
+        subscribeUi()
 
         return binding.root
-    }
-
-    private fun setupFab(inflater: LayoutInflater) {
-        binding.fab.setOnClickListener{
-            showNewRoutineDialog(inflater)
-        }
     }
 
     private fun setupRecyclerView() {
@@ -70,10 +55,29 @@ class RoutineFragment : Fragment() {
         helper.attachToRecyclerView(binding.list)
     }
 
+    private fun setupAdapter() {
+        adapter.enableDrag()
+        adapter.onItemClick = ::navRoutineDetailFragment
+        adapter.onMenuClick = ::showRoutineMenuPopup
+        adapter.onClearView = { list -> viewModel.updateRoutine(list.map { it.routine }) }
+        adapter.onWorkoutShortcutClickNested = ::onWorkoutShortcutClickNested
+    }
+
+    private fun setupFab(inflater: LayoutInflater) {
+        binding.fab.setOnClickListener {
+            showNewRoutineDialog(inflater)
+        }
+    }
+
     private fun subscribeUi() {
         viewModel.routines.observe(viewLifecycleOwner, Observer { routines ->
             adapter.submitList(routines)
         })
+    }
+
+    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
+        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
+        navController.navigate(action)
     }
 
     private fun showNewRoutineDialog(inflater: LayoutInflater) {
@@ -91,11 +95,58 @@ class RoutineFragment : Fragment() {
                     navRoutineDetailFragment(routine.id!!, true)
                 }
             }
-            .setNegativeButton("CANCEL") {  _, _ ->  }
+            .setNegativeButton("CANCEL") { _, _ -> }
             .setView(formDialog.root)
             .create()
 
         dialog.show()
     }
 
+    private fun showRoutineMenuPopup(viewMenu: View, routine: Routine) {
+        val popup = PopupMenu(requireContext(), viewMenu)
+        popup.menuInflater.inflate(R.menu.routine_popup_menu, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.delete_routine -> {
+                    DialogUtils.openValidationDialog(
+                        context = requireContext(),
+                        message = "Delete ${routine.name} ?",
+                        positiveFun = { viewModel.deleteRoutine(routine) }
+                    )
+                    true
+                }
+                // TODO Stats/History ?
+                else -> false
+            }
+        }
+        popup.show()
+    }
+
+    private fun onWorkoutShortcutClickNested(workout: Workout) {
+        viewModel.viewModelScope.launch {
+            val user = viewModel.getUser()
+            // Check if the user currently has a session
+            if (user?.workoutSessionId != null) {
+                DialogUtils.openValidationDialog(
+                    context = requireContext(),
+                    message = "Close current item session ?",
+                    positiveFun = {
+                        val oldWorkoutId = user.workoutSessionId!!
+                        viewModel.updateUserWorkout(workout)
+                        viewModel.deleteWorkout(oldWorkoutId)
+                        navigateToWorkout()
+                    }
+                )
+            } else {
+                viewModel.updateUserWorkout(workout)
+                navigateToWorkout()
+            }
+        }
+    }
+
+    private fun navigateToWorkout() {
+        val homeNav = navController.graph[R.id.home_nav] as NavGraph
+        homeNav.startDestination = R.id.navigation_workout
+        navController.navigate(R.id.action_global_to_home_nav)
+    }
 }

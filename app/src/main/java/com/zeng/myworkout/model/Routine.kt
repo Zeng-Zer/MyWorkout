@@ -1,8 +1,6 @@
 package com.zeng.myworkout.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(tableName = "routine")
 data class Routine(
@@ -17,4 +15,11 @@ data class Routine(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
+)
+
+data class RoutineWithWorkouts(
+    @Embedded
+    var routine: Routine = Routine(),
+    @Relation(parentColumn = "id", entityColumn = "routineId", entity = Workout::class)
+    var workouts: List<Workout> = emptyList()
 )

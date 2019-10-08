@@ -5,6 +5,7 @@ import com.zeng.myworkout.repository.ExerciseRepository
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.viewmodel.HomeViewModel
+import com.zeng.myworkout.viewmodel.RoutineViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -27,4 +28,5 @@ val appModule = module {
     single { RoutineRepository(get()) }
 
     viewModel { HomeViewModel(get(), get()) }
+    viewModel { RoutineViewModel(get(), get()) }
 }

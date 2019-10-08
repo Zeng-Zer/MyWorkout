@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DraggableListAdapter
+import com.zeng.myworkout.view.holder.WorkoutExerciseViewHolder
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class WorkoutExerciseAdapter(

@@ -1,4 +1,4 @@
-package com.zeng.myworkout.view.adapter
+package com.zeng.myworkout.view.holder
 
 import android.content.Context
 import android.view.View
@@ -13,6 +13,7 @@ import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DialogUtils
+import com.zeng.myworkout.view.adapter.LoadAdapter
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
 
 
