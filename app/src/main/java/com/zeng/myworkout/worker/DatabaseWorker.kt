@@ -7,17 +7,19 @@ import androidx.work.WorkerParameters
 import com.zeng.myworkout.database.AppDatabase
 import com.zeng.myworkout.model.*
 import kotlinx.coroutines.coroutineScope
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class DatabaseWorker(
     context: Context,
     workerParams: WorkerParameters
-) : CoroutineWorker(context, workerParams) {
+) : CoroutineWorker(context, workerParams), KoinComponent {
 
-    private lateinit var database: AppDatabase
+    private val database: AppDatabase by inject()
 
     override suspend fun doWork(): Result = coroutineScope {
         try {
-            database = AppDatabase.getInstance(applicationContext)
+//            database = AppDatabase.getInstance(applicationContext)
             populateDatabase()
             Result.success()
         } catch (ex: Exception) {

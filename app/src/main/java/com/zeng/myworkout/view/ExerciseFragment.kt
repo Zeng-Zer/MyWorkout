@@ -12,25 +12,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentExerciseBinding
-import com.zeng.myworkout.util.RepositoryUtils
-import com.zeng.myworkout.util.getSharedViewModel
 import com.zeng.myworkout.view.adapter.ExerciseAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ExerciseFragment : Fragment() {
 
     private lateinit var binding: FragmentExerciseBinding
     private val navController by lazy { findNavController() }
-
-    private val viewModel by lazy {
-        getSharedViewModel({ExerciseViewModel(
-            RepositoryUtils.getExerciseRepository(requireContext())
-        )})
-    }
-
-    private val adapter by lazy {
-        ExerciseAdapter(viewModel)
-    }
+    private val viewModel by viewModel<ExerciseViewModel>()
+    private val adapter by lazy { ExerciseAdapter(viewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentExerciseBinding.inflate(inflater, container, false)

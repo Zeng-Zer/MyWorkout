@@ -3,7 +3,6 @@ package com.zeng.myworkout.view.adapter
 import android.content.Context
 import android.view.View
 import android.widget.PopupMenu
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,9 +13,7 @@ import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DialogUtils
-import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
-import com.zeng.myworkout.util.getViewModel
 
 
 class WorkoutExerciseViewHolder(
@@ -32,7 +29,7 @@ class WorkoutExerciseViewHolder(
 
     fun bind(item: WorkoutExerciseDetail) {
         exercise = item
-        viewModel = getWorkoutExerciseViewModel(item.id!!)
+//        viewModel = getWorkoutExerciseViewModel(item.id!!)
         adapter = LoadAdapter(context, viewModel, item, isSession)
 
         binding.apply {
@@ -100,13 +97,13 @@ class WorkoutExerciseViewHolder(
         })
     }
 
-    private fun getWorkoutExerciseViewModel(workoutExerciseId: Long): WorkoutExerciseViewModel {
-        val workoutRepo = RepositoryUtils.getWorkoutRepository(context)
-        return (context as AppCompatActivity).getViewModel({
-            WorkoutExerciseViewModel(
-                workoutRepo,
-                workoutExerciseId
-            )
-        }, workoutExerciseId.toString())
-    }
+//    private fun getWorkoutExerciseViewModel(workoutExerciseId: Long): WorkoutExerciseViewModel {
+//        val workoutRepo = RepositoryUtils.getWorkoutRepository(context)
+//        return (context as AppCompatActivity).getViewModel({
+//            WorkoutExerciseViewModel(
+//                workoutRepo,
+//                workoutExerciseId
+//            )
+//        }, workoutExerciseId.toString())
+//    }
 }

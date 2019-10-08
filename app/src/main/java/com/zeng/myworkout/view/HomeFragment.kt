@@ -11,21 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
-import com.zeng.myworkout.util.RepositoryUtils
-import com.zeng.myworkout.util.getSharedViewModel
 import com.zeng.myworkout.viewmodel.HomeViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private val viewModel by lazy {
-        getSharedViewModel({
-            HomeViewModel(
-                RepositoryUtils.getRoutineRepository(requireContext()),
-                RepositoryUtils.getWorkoutRepository(requireContext())
-            )
-        })
-    }
+    private val viewModel by sharedViewModel<HomeViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)

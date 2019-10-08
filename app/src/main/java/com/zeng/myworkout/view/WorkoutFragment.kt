@@ -15,36 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
-import com.zeng.myworkout.util.RepositoryUtils
-import com.zeng.myworkout.util.getSharedViewModel
-import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
-
-    private val homeVm by lazy {
-        getSharedViewModel({
-            HomeViewModel(
-                RepositoryUtils.getRoutineRepository(requireContext()),
-                RepositoryUtils.getWorkoutRepository(requireContext())
-            )
-        })
-    }
-
-    private val workoutVm by lazy {
-        getViewModel({
-            WorkoutViewModel(RepositoryUtils.getWorkoutRepository(requireContext()))
-        })
-    }
-
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutVm, true) }
-
+    private val homeVm by sharedViewModel<HomeViewModel>()
+    private val workoutVm by viewModel<WorkoutViewModel>()
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
+//    private lateinit var adapter: WorkoutExerciseAdapter
+    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutVm, true) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
@@ -94,7 +79,10 @@ class WorkoutFragment : Fragment() {
 
     private fun subscribeUi() {
         homeVm.workoutSession.observe(viewLifecycleOwner, Observer { it?.let { workout ->
-            workout.id?.let { id -> workoutVm.setLiveDataWorkoutId(id) }
+//            if (!::adapter.isInitialized) {
+//                adapter = WorkoutExerciseAdapter(recycledViewPool, workoutVm, true)
+//            }
+//            workout.id?.let { id -> workoutVm.setLiveDataWorkoutId(id) }
             (requireActivity() as MainActivity).supportActionBar?.title = workout.name
         }})
 

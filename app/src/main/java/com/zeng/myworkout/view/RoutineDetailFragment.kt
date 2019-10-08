@@ -15,13 +15,12 @@ import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
 import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.util.RepositoryUtils
-import com.zeng.myworkout.util.getSharedViewModel
-import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.RoutineDetailAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RoutineDetailFragment : Fragment() {
 
@@ -31,26 +30,13 @@ class RoutineDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentRoutineDetailBinding
     private val navController by lazy { findNavController() }
-    private val toolbar by lazy {
-        (requireActivity() as AppCompatActivity).supportActionBar
-    }
+    private val toolbar by lazy { (requireActivity() as AppCompatActivity).supportActionBar }
 
-    private val viewModel by lazy {
-        getViewModel({RoutineDetailViewModel(
-            RepositoryUtils.getRoutineRepository(requireContext()),
-            RepositoryUtils.getWorkoutRepository(requireContext()),
-            routineId
-        )})
-    }
-
-    private val exerciseVm by lazy {
-        getSharedViewModel({ExerciseViewModel(
-            RepositoryUtils.getExerciseRepository(requireContext())
-        )})
-    }
+    private val viewModel by viewModel<RoutineDetailViewModel>()
+    private val workoutViewModel by viewModel<WorkoutViewModel>()
+    private val exerciseVm by sharedViewModel<ExerciseViewModel>()
 
     private val adapter = RoutineDetailAdapter()
-
     private val workoutRecycledViewPool = RecyclerView.RecycledViewPool()
     private val workoutExerciseRecycledViewPool = RecyclerView.RecycledViewPool()
 
@@ -184,11 +170,13 @@ class RoutineDetailFragment : Fragment() {
     }
 
     private fun createWorkoutItem(workoutId: Long): WorkoutItem {
-        val workoutRepo = RepositoryUtils.getWorkoutRepository(requireContext())
-        val workoutViewModel = getViewModel({WorkoutViewModel(
-            workoutRepo,
-            workoutId
-        )}, workoutId.toString())
+//        val workoutRepo = RepositoryUtils.getWorkoutRepository(requireContext())
+//        val workoutViewModel = getViewModel({
+//            WorkoutViewModel(
+//            workoutRepo,
+//            workoutId
+//        )
+//        }, workoutId.toString())
         return WorkoutItem(this, workoutRecycledViewPool, workoutExerciseRecycledViewPool, workoutId, workoutViewModel)
     }
 
