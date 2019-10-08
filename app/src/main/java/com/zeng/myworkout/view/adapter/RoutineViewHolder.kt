@@ -3,7 +3,6 @@ package com.zeng.myworkout.view.adapter
 import android.content.Context
 import android.view.View
 import android.widget.PopupMenu
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -11,9 +10,7 @@ import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemRoutineBinding
 import com.zeng.myworkout.model.Routine
 import com.zeng.myworkout.util.DialogUtils
-import com.zeng.myworkout.util.RepositoryUtils
 import com.zeng.myworkout.viewmodel.RoutineWorkoutShortcutViewModel
-import com.zeng.myworkout.util.getViewModel
 
 
 class RoutineViewHolder(
@@ -29,7 +26,7 @@ class RoutineViewHolder(
     private lateinit var routine: Routine
 
     fun bind(item: Routine) {
-        viewModel = getRoutineWorkoutShortcutViewModel(item.id!!)
+//        viewModel = getRoutineWorkoutShortcutViewModel(item.id!!)
         adapter = RoutineWorkoutShortcutAdapter(context, viewModel)
         routine = item
 
@@ -84,13 +81,13 @@ class RoutineViewHolder(
         popup.show()
     }
 
-    private fun getRoutineWorkoutShortcutViewModel(routineId: Long): RoutineWorkoutShortcutViewModel {
-        val workoutRepo = RepositoryUtils.getWorkoutRepository(context)
-        return (context as AppCompatActivity).getViewModel({
-            RoutineWorkoutShortcutViewModel(
-                workoutRepo,
-                routineId
-            )
-        }, routineId.toString())
-    }
+//    private fun getRoutineWorkoutShortcutViewModel(routineId: Long): RoutineWorkoutShortcutViewModel {
+//        val workoutRepo = RepositoryUtils.getWorkoutRepository(context)
+//        return (context as AppCompatActivity).getViewModel({
+//            RoutineWorkoutShortcutViewModel(
+//                workoutRepo,
+//                routineId
+//            )
+//        }, routineId.toString())
+//    }
 }

@@ -14,22 +14,17 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.databinding.DialogRoutineFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineBinding
 import com.zeng.myworkout.model.Routine
-import com.zeng.myworkout.util.RepositoryUtils
-import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.view.adapter.RoutineAdapter
 import com.zeng.myworkout.viewmodel.RoutineViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RoutineFragment : Fragment() {
 
     private lateinit var binding: FragmentRoutineBinding
 
-    private val viewModel: RoutineViewModel by lazy {
-        getViewModel({RoutineViewModel(
-            RepositoryUtils.getRoutineRepository(requireContext())
-        )})
-    }
+    private val viewModel by viewModel<RoutineViewModel>()
 
     private val adapter: RoutineAdapter by lazy {
         RoutineAdapter(viewModel, ::navRoutineDetailFragment, ::deleteRoutine)

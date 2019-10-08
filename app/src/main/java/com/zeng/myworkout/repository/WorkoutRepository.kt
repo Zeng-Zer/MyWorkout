@@ -8,7 +8,7 @@ import com.zeng.myworkout.database.WorkoutExerciseDao
 import com.zeng.myworkout.model.*
 import java.util.*
 
-class WorkoutRepository private constructor(
+class WorkoutRepository (
     private val workoutDao: WorkoutDao,
     private val workoutExerciseDao: WorkoutExerciseDao,
     private val loadDao: LoadDao,
@@ -67,22 +67,5 @@ class WorkoutRepository private constructor(
 
         insertLoad(loads)
         return newWorkout
-    }
-
-    companion object {
-
-        // For Singleton instantiation
-        @Volatile private var instance: WorkoutRepository? = null
-
-        fun getInstance(workoutDao: WorkoutDao, workoutExerciseDao: WorkoutExerciseDao, loadDao: LoadDao, userDao: UserDao) =
-            instance ?: synchronized(this) {
-                instance
-                    ?: WorkoutRepository(
-                        workoutDao,
-                        workoutExerciseDao,
-                        loadDao,
-                        userDao
-                    ).also { instance = it }
-            }
     }
 }

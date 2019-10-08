@@ -36,17 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
     companion object {
-
-        // For Singleton instantiation
-        @Volatile private var instance: AppDatabase? = null
-
-        fun getInstance(context: Context): AppDatabase {
-            return instance ?: synchronized(this) {
-                instance ?: buildDatabase(context).also { instance = it }
-            }
-        }
-
-        private fun buildDatabase(context: Context): AppDatabase {
+        fun buildDatabase(context: Context): AppDatabase {
             context.deleteDatabase("my_workout_database")
             return Room.databaseBuilder(context, AppDatabase::class.java, "my_workout_database")
                 .addCallback(object : RoomDatabase.Callback() {
@@ -58,6 +48,5 @@ abstract class AppDatabase : RoomDatabase() {
                 })
                 .build()
         }
-
     }
 }

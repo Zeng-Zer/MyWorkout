@@ -73,8 +73,7 @@
 
         <fragment
             android:id="@+id/navigation_routine_detail"
-            android:name="com.zeng.myworkout.view.RoutineDetailFragment"
-            android:label="RoutineDetailFragment" >
+            android:name="com.zeng.myworkout.view.RoutineDetailFragment" >
             <argument
                 android:name="routineId"
                 app:argType="long" />
@@ -95,7 +94,7 @@
         <fragment
             android:id="@+id/navigation_exercise"
             android:name="com.zeng.myworkout.view.ExerciseFragment"
-            android:label="Exercise" />
+            android:label="@string/title_exercise" />
     </navigation>
 
     <fragment
