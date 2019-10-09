@@ -33,7 +33,7 @@ class RoutineDetailFragment : Fragment() {
     private val toolbar by lazy { (requireActivity() as AppCompatActivity).supportActionBar }
     private val viewModel by viewModel<RoutineDetailViewModel> { parametersOf(routineId) }
 
-    private val exerciseVm by sharedViewModel<ExerciseViewModel>()
+    private val sharedViewModel by sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy { RoutineWorkoutAdapter(this) }
     private var onListChangeCallback: ((List<WorkoutName>) -> Unit)? = null
 
@@ -137,15 +137,15 @@ class RoutineDetailFragment : Fragment() {
 
             adapter.submitList(workouts) {
                 onListChangeCallback?.invoke(workouts)
-            }
 
-            workouts.forEachIndexed { i, workout ->
-                binding.tabs.getTabAt(i)?.text = workout.name
+                workouts.forEachIndexed { i, workout ->
+                    binding.tabs.getTabAt(i)?.text = workout.name
+                }
             }
         }})
 
         // Add new exercises from ExerciseFragment
-        exerciseVm.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
+        sharedViewModel.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
             if (!exercises.isNullOrEmpty()) {
                 addExercises(
                     exercises.map { it.id!! },
@@ -153,7 +153,7 @@ class RoutineDetailFragment : Fragment() {
                 )
 
                 // TODO is there another way ?
-                exerciseVm.exercisesToAdd.value = null
+                sharedViewModel.exercisesToAdd.value = null
             }
         })
     }
