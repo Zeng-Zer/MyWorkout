@@ -1,6 +1,8 @@
 package com.zeng.myworkout.util
 
 import androidx.lifecycle.MutableLiveData
+import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 operator fun <T> MutableLiveData<List<T>>.plusAssign(newValue: T) {
     value =
@@ -36,4 +38,12 @@ operator fun <T> MutableLiveData<List<T>>.minusAssign(newValues: List<T>) {
         } else {
             value!! - newValues
         }
+}
+
+fun Float.weightToString(): String {
+    return if (this.roundToInt().toFloat() == this) {
+        this.toInt().toString() + "kg"
+    } else {
+        DecimalFormat("#.##").format(this) + "kg"
+    }
 }

@@ -1,9 +1,12 @@
 package com.zeng.myworkout.model
 
+import android.content.res.Resources
+import android.widget.Button
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.zeng.myworkout.R
 
 enum class LoadType(val value: Int) {
     WEIGHT(0), // BY DEFAULT THE WEIGHT IS SET TO KG, IF LB DISPLAY BY DOING WEIGHT * 2.2
@@ -50,4 +53,19 @@ data class Load(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-)
+) {
+    // Helper function to set button value based on the load
+    fun setRepsButtonText(button: Button, session: Boolean, resources: Resources) {
+        if (session) {
+            if (repsDone == -1) {
+                button.text = reps.toString()
+                button.background = resources.getDrawable(R.drawable.my_button_unselected)
+            } else {
+                button.text = repsDone.toString()
+                button.background = resources.getDrawable(R.drawable.my_button_ripple)
+            }
+        } else {
+            button.text = reps.toString()
+        }
+    }
+}

@@ -57,10 +57,10 @@ class RoutineFragment : Fragment() {
 
     private fun setupAdapter() {
         adapter.enableDrag()
-        adapter.onItemClick = ::navRoutineDetailFragment
-        adapter.onMenuClick = ::showRoutineMenuPopup
+        adapter.onItemClick = this::navRoutineDetailFragment
+        adapter.onMenuClick = this::showRoutineMenuPopup
         adapter.onClearView = { list -> viewModel.updateRoutine(list.map { it.routine }) }
-        adapter.onWorkoutShortcutClickNested = ::onWorkoutShortcutClickNested
+        adapter.onWorkoutShortcutClickNested = this::onWorkoutShortcutClickNested
     }
 
     private fun setupFab(inflater: LayoutInflater) {
