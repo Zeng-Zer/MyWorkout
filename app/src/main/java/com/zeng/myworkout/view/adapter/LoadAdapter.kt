@@ -21,16 +21,10 @@ import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.WorkoutExerciseDetail
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class LoadAdapter(
-    private val context: Context,
-//    private val viewModel: WorkoutExerciseViewModel,
-    private val exercise: WorkoutExerciseDetail,
-    private val isSession: Boolean
-) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
+class LoadAdapter(private val context: Context, private val isSession: Boolean) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
 

@@ -42,8 +42,8 @@ class RoutineViewModel(
             workoutRepo.updateUserWorkoutReference(workout.id!!)
 
             // create user workout session
-            val newWorkout = workoutRepo.newWorkoutSessionFromReference(workout)
-            workoutRepo.updateUserWorkoutSession(newWorkout.id)
+//            val newWorkout = workoutRepo.newWorkoutSessionFromReference(workout)
+//            workoutRepo.updateUserWorkoutSession(newWorkout.id)
         }
     }
 
