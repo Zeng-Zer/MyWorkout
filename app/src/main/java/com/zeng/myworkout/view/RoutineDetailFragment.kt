@@ -13,10 +13,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
-import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.model.WorkoutName
+import com.zeng.myworkout.model.*
 import com.zeng.myworkout.view.adapter.RoutineWorkoutAdapter
+import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -30,19 +31,11 @@ class RoutineDetailFragment : Fragment() {
     private lateinit var binding: FragmentRoutineDetailBinding
     private val navController by lazy { findNavController() }
     private val toolbar by lazy { (requireActivity() as AppCompatActivity).supportActionBar }
-
     private val viewModel by viewModel<RoutineDetailViewModel> { parametersOf(routineId) }
-//    private val workoutViewModel by viewModel<WorkoutViewModel>()
-//    private val exerciseVm by sharedViewModel<ExerciseViewModel>()
 
+    private val exerciseVm by sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy { RoutineWorkoutAdapter(this) }
-//    private val workoutRecycledViewPool = RecyclerView.RecycledViewPool()
-//    private val workoutExerciseRecycledViewPool = RecyclerView.RecycledViewPool()
-
     private var onListChangeCallback: ((List<WorkoutName>) -> Unit)? = null
-
-//    private fun currentItemIdx(): Int = binding.viewPager.currentItem
-//    private fun currentWorkoutItem(): WorkoutItem? = adapter.currentList.getOrNull(currentItemIdx())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineDetailBinding.inflate(inflater, container, false)
@@ -53,8 +46,8 @@ class RoutineDetailFragment : Fragment() {
         }
 
         setHasOptionsMenu(true)
-        setupFab()
         setupViewPager()
+        setupFab()
         subscribeUi()
         return binding.root
     }
@@ -99,17 +92,6 @@ class RoutineDetailFragment : Fragment() {
         return true
     }
 
-    private fun setupFab() {
-//        binding.fab.setOnClickListener {
-//            if (adapter.currentList.size >= binding.viewPager.currentItem) {
-//                // Disable fab to prevent double clicks
-//                binding.fab.isEnabled = false
-//
-//                navController.navigate(R.id.action_navigation_routine_detail_to_navigation_exercise)
-//            }
-//        }
-    }
-
     private fun setupViewPager() {
         binding.viewPager.adapter = adapter
         binding.viewPager.offscreenPageLimit = 2
@@ -126,6 +108,17 @@ class RoutineDetailFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun setupFab() {
+        binding.fab.setOnClickListener {
+            if (adapter.currentList.size >= binding.viewPager.currentItem) {
+                // Disable fab to prevent double clicks
+                binding.fab.isEnabled = false
+
+                navController.navigate(R.id.action_navigation_routine_detail_to_navigation_exercise)
+            }
+        }
     }
 
     private fun subscribeUi() {
@@ -150,50 +143,20 @@ class RoutineDetailFragment : Fragment() {
                 binding.tabs.getTabAt(i)?.text = workout.name
             }
         }})
-//        viewModel.workouts.observe(this, Observer {
-//            it?.let { workouts ->
-//                if (workouts.isEmpty()) {
-//                    binding.fab.hide()
-//                } else {
-//                    binding.fab.show()
-//                }
-//
-//                val newWorkoutItems = workouts.map { workout ->
-//                    createWorkoutItem(workout.id!!)
-//                }
-//
-//                adapter.submitList(newWorkoutItems) {
-//                    // On list committed
-//                    onListChangeCallback?.invoke(newWorkoutItems)
-//
-//                    // Set title for each tabs
-//                    workouts.forEachIndexed { i, workout ->
-//                        binding.tabs.getTabAt(i)?.text = workout.name
-//                    }
-//                }
-//            }
-//        })
 
         // Add new exercises from ExerciseFragment
-//        exerciseVm.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
-//            if (!exercises.isNullOrEmpty()) {
-////                currentWorkoutItem()?.addExercises(exercises.map { it.id!! })
-//                // TODO is there another way ?
-//                exerciseVm.exercisesToAdd.value = null
-//            }
-//        })
-    }
+        exerciseVm.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
+            if (!exercises.isNullOrEmpty()) {
+                addExercises(
+                    exercises.map { it.id!! },
+                    adapter.currentList[binding.viewPager.currentItem].id
+                )
 
-//    private fun createWorkoutItem(workoutId: Long): WorkoutItem {
-//        val workoutRepo = RepositoryUtils.getWorkoutRepository(requireContext())
-//        val workoutViewModel = getViewModel({
-//            WorkoutViewModel(
-//            workoutRepo,
-//            workoutId
-//        )
-//        }, workoutId.toString())
-//        return WorkoutItem(this, workoutRecycledViewPool, workoutExerciseRecycledViewPool, workoutId, workoutViewModel)
-//    }
+                // TODO is there another way ?
+                exerciseVm.exercisesToAdd.value = null
+            }
+        })
+    }
 
     private fun addNewWorkout() {
         val form = DialogWorkoutFormBinding.inflate(layoutInflater, null, false)
@@ -222,6 +185,22 @@ class RoutineDetailFragment : Fragment() {
             .create()
 
         dialog.show()
+    }
+
+    private fun addExercises(exerciseIds: List<Long>, workoutId: Long) {
+        val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
+            // Make a pair of exercise and their load list
+            Pair(
+                WorkoutExercise(
+                    // Add element at the end with its order in the list of ids
+                    i + adapter.itemCount,
+                    workoutId,
+                    exerciseId
+                ),
+                listOf(Load(LoadType.WEIGHT, 0F, 0, 0))
+            )
+        }
+        viewModel.insertWorkoutExerciseWithLoads(exercisesWithLoads)
     }
 
 }
