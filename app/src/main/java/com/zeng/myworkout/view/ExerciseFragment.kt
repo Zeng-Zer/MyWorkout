@@ -12,16 +12,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentExerciseBinding
+import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.util.minusAssign
+import com.zeng.myworkout.util.plusAssign
 import com.zeng.myworkout.view.adapter.ExerciseAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ExerciseFragment : Fragment() {
 
     private lateinit var binding: FragmentExerciseBinding
     private val navController by lazy { findNavController() }
-    private val viewModel by viewModel<ExerciseViewModel>()
-    private val adapter by lazy { ExerciseAdapter(viewModel) }
+    private val viewModel by sharedViewModel<ExerciseViewModel>()
+    private val adapter by lazy {
+        ExerciseAdapter(this::onCheckedItem)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentExerciseBinding.inflate(inflater, container, false)
@@ -66,5 +71,13 @@ class ExerciseFragment : Fragment() {
                 (requireActivity() as AppCompatActivity).supportActionBar?.setHomeAsUpIndicator(resources.getDrawable(R.drawable.ic_arrow_back_white_24dp))
             }
         })
+    }
+
+    private fun onCheckedItem(checked: Boolean, item: Exercise) {
+        if (checked) {
+            viewModel.exercisesToAdd += item
+        } else {
+            viewModel.exercisesToAdd -= item
+        }
     }
 }
