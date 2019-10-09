@@ -10,8 +10,8 @@ import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
 class WorkoutViewModel(
-    private val workoutRepository: WorkoutRepository,
-    val workoutId: Long
+    val workoutId: Long,
+    private val workoutRepository: WorkoutRepository
 ) : ViewModel() {
 
     val exercises: LiveData<List<WorkoutExerciseDetail>> = workoutRepository.getAllWorkoutExerciseById(workoutId)
