@@ -10,12 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
-import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.launch
@@ -29,7 +26,7 @@ class WorkoutFragment : Fragment() {
     private val workoutVm by viewModel<WorkoutViewModel>()
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
 //    private lateinit var adapter: WorkoutExerciseAdapter
-    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutVm, true) }
+//    private val adapter: WorkoutExerciseAdapter by lazy { WorkoutExerciseAdapter(recycledViewPool, workoutVm, true) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
@@ -65,16 +62,16 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.apply {
-            list.adapter = adapter
-
-            // prevent RecyclerView blinking on submitList
-            val animator = list.itemAnimator as SimpleItemAnimator
-            animator.supportsChangeAnimations = false
-
-            val helper = ItemTouchHelper(adapter.callback)
-            helper.attachToRecyclerView(list)
-        }
+//        binding.apply {
+//            list.adapter = adapter
+//
+//            // prevent RecyclerView blinking on submitList
+//            val animator = list.itemAnimator as SimpleItemAnimator
+//            animator.supportsChangeAnimations = false
+//
+//            val helper = ItemTouchHelper(adapter.callback)
+//            helper.attachToRecyclerView(list)
+//        }
     }
 
     private fun subscribeUi() {
@@ -86,9 +83,9 @@ class WorkoutFragment : Fragment() {
             (requireActivity() as MainActivity).supportActionBar?.title = workout.name
         }})
 
-        workoutVm.exercises.observe(viewLifecycleOwner, Observer { exercises ->
-            adapter.submitList(exercises)
-        })
+//        workoutVm.exercises.observe(viewLifecycleOwner, Observer { exercises ->
+//            adapter.submitList(exercises)
+//        })
     }
 
 }
