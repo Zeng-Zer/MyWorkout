@@ -22,13 +22,12 @@ import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
-import com.zeng.myworkout.viewmodel.WorkoutExerciseViewModel
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class LoadAdapter(
     private val context: Context,
-    private val viewModel: WorkoutExerciseViewModel,
+//    private val viewModel: WorkoutExerciseViewModel,
     private val exercise: WorkoutExerciseDetail,
     private val isSession: Boolean
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
@@ -81,7 +80,7 @@ class LoadAdapter(
                     .setMessage("Number of reps:")
                     .setPositiveButton("OK") { _, _ ->
                         binding.button.text = load.reps.toString()
-                        viewModel.updateLoad(load)
+//                        viewModel.updateLoad(load)
                     }
                     .setNegativeButton("CANCEL") {  _, _ ->  }
                     .setView(pickerBinding.root)
@@ -140,7 +139,7 @@ class LoadAdapter(
                     .setPositiveButton("OK") { _, _ ->
                         load.value = weight
                         binding.value.setText(weightToText(weight))
-                        viewModel.updateLoad(load)
+//                        viewModel.updateLoad(load)
                     }
                     .setNegativeButton("CANCEL") {  _, _ ->  }
                     .setView(numberPickerBinding.root)
@@ -173,7 +172,7 @@ class LoadAdapter(
                 }
 
                 reps.value = load.repsDone
-                viewModel.updateLoad(load)
+//                viewModel.updateLoad(load)
             }
         }
 

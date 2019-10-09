@@ -1,6 +1,7 @@
 package com.zeng.myworkout.view.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,11 +10,10 @@ import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DraggableListAdapter
 import com.zeng.myworkout.view.holder.WorkoutExerciseViewHolder
-import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 class WorkoutExerciseAdapter(
-    private val workoutExerciseRecycledViewPool: RecyclerView.RecycledViewPool,
-    private val viewModel: WorkoutViewModel,
+    private val context: Context,
+    private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val isSession: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
@@ -36,14 +36,13 @@ class WorkoutExerciseAdapter(
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        viewModel.updateAllWorkoutExercise(currentList)
+//        viewModel.updateAllWorkoutExercise(currentList)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val context = parent.context
         return WorkoutExerciseViewHolder(
             context,
-            workoutExerciseRecycledViewPool,
+            recycledViewPool,
             isSession,
             ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
         )

@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.model.WorkoutName
 
 @Dao
 abstract class WorkoutDao : BaseDao<Workout>() {
@@ -25,6 +26,10 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     @Transaction
     @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
     abstract fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
+
+    @Transaction
+    @Query("SELECT id, name FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
+    abstract fun getAllReferenceWorkoutNamesByRoutineId(routineId: Long): LiveData<List<WorkoutName>>
 
     @Transaction
     @Query("SELECT * FROM workout WHERE id = :id")
