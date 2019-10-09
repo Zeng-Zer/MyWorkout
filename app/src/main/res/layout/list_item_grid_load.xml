@@ -2,14 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
-        <variable
-            name="load"
-            type="com.zeng.myworkout.model.Load" />
-
-        <variable
-            name="holder"
-            type="com.zeng.myworkout.view.adapter.LoadAdapter.LoadViewHolder" />
     </data>
 
     <LinearLayout
@@ -28,8 +20,7 @@
             android:background="@drawable/my_button_ripple"
             android:textColor="@android:color/white"
             android:clickable="true"
-            android:focusable="true"
-            android:text="@{Integer.toString(load.reps)}"/>
+            android:focusable="true"/>
 
         <EditText
             android:id="@+id/value"
@@ -37,8 +28,7 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:textSize="12sp"
-            android:background="@null"
-            android:text="@{holder.weightToText(load.value)}" />
+            android:background="@null" />
 
     </LinearLayout>
 </layout>
