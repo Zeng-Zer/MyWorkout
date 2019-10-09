@@ -14,13 +14,18 @@ import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DraggableListAdapter
 
-class WorkoutExerciseAdapter(private val context: Context, private val recycledViewPool: RecyclerView.RecycledViewPool, private val isSession: Boolean = false) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(
+    private val context: Context,
+    private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val session: Boolean = false
+) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     lateinit var onClearView: (List<WorkoutExerciseDetail>) -> Unit
     lateinit var onMenuClick: (View, WorkoutExerciseDetail) -> Unit
 
     // Nested
-
+    lateinit var onLoadClickNested: (View, Load) -> Unit
+    lateinit var onLoadTextClickNested: (View, Load) -> Unit
 
     init {
         enableDrag()
@@ -64,7 +69,9 @@ class WorkoutExerciseAdapter(private val context: Context, private val recycledV
         }
 
         private fun ListItemWorkoutExerciseBinding.setupAdapter(loads: List<Load>) {
-            val adapter = LoadAdapter(context, isSession)
+            val adapter = LoadAdapter(context, session)
+            adapter.onLoadClick = onLoadClickNested
+            adapter.onLoadTextClick = onLoadTextClickNested
             adapter.submitList(loads)
             list.adapter = adapter
         }

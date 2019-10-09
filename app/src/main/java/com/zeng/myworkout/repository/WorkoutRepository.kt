@@ -35,12 +35,12 @@ class WorkoutRepository (
     suspend fun deleteWorkoutExercise(exercise: WorkoutExercise) = workoutExerciseDao.delete(exercise)
 
 
-//    fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
-//    suspend fun allLoadById(workoutExerciseId: Long): List<Load> = loadDao.allLoadById(workoutExerciseId)
-//    suspend fun insertLoad(loads: List<Load>) = loadDao.insert(loads)
-//    suspend fun insertLoad(load: Load) = loadDao.insert(load)
-//    suspend fun updateLoad(load: Load) = loadDao.update(load)
-//    suspend fun deleteLoad(load: Load) = loadDao.delete(load)
+    fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
+    suspend fun allLoadById(workoutExerciseId: Long): List<Load> = loadDao.allLoadById(workoutExerciseId)
+    suspend fun insertLoad(loads: List<Load>) = loadDao.insert(loads)
+    suspend fun insertLoad(load: Load) = loadDao.insert(load)
+    suspend fun updateLoad(load: Load) = loadDao.update(load)
+    suspend fun deleteLoad(load: Load) = loadDao.delete(load)
 
 //    suspend fun newWorkoutSessionFromReference(workoutReference: Workout): Workout {
 //        val newWorkout = workoutReference.copy(id = null, reference = false, startDate = Date())

@@ -1,6 +1,7 @@
 package com.zeng.myworkout.view.adapter
 
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.zeng.myworkout.model.WorkoutName
 import com.zeng.myworkout.view.RoutineWorkoutFragment
@@ -10,12 +11,15 @@ class RoutineWorkoutAdapter(fragment: Fragment) : FragmentStateAdapter(fragment)
     var currentList: List<WorkoutName> = emptyList()
         private set
 
+    private val recycledViewPool = RecyclerView.RecycledViewPool()
+    private val loadRecycledViewPool = RecyclerView.RecycledViewPool()
+
     override fun getItemCount(): Int {
         return currentList.size
     }
 
     override fun createFragment(position: Int): Fragment {
-        return RoutineWorkoutFragment(currentList[position].id)
+        return RoutineWorkoutFragment(currentList[position].id, recycledViewPool, loadRecycledViewPool)
     }
 
     fun submitList(list: List<WorkoutName>, runnable: (() -> Unit)? = null) {
