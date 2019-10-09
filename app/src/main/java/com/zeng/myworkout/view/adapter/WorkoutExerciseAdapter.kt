@@ -3,19 +3,24 @@ package com.zeng.myworkout.view.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.ListItemWorkoutExerciseBinding
+import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DraggableListAdapter
-import com.zeng.myworkout.view.holder.WorkoutExerciseViewHolder
 
-class WorkoutExerciseAdapter(
-    private val context: Context,
-    private val recycledViewPool: RecyclerView.RecycledViewPool,
-    private val isSession: Boolean = false
-) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+class WorkoutExerciseAdapter(private val context: Context, private val recycledViewPool: RecyclerView.RecycledViewPool, private val isSession: Boolean = false) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+
+    lateinit var onClearView: (List<WorkoutExerciseDetail>) -> Unit
+    lateinit var onMenuClick: (View, WorkoutExerciseDetail) -> Unit
+
+    // Nested
+
 
     init {
         enableDrag()
@@ -27,24 +32,18 @@ class WorkoutExerciseAdapter(
 
         val updatedList = currentList.toMutableList()
 
-        updatedList[from].order = to
-        updatedList[to].order = from
+        updatedList[from].exercise.order = to
+        updatedList[to].exercise.order = from
         updatedList[from] = updatedList[to].also { updatedList[to] = updatedList[from] }
 
         submitList(updatedList)
         return true
     }
 
-    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-//        viewModel.updateAllWorkoutExercise(currentList)
-    }
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) = onClearView(currentList)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return WorkoutExerciseViewHolder(
-            context,
-            recycledViewPool,
-            isSession,
-            ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
+        return WorkoutExerciseViewHolder(ListItemWorkoutExerciseBinding.inflate(LayoutInflater.from(context), parent, false)
         )
     }
 
@@ -53,11 +52,41 @@ class WorkoutExerciseAdapter(
         (holder as WorkoutExerciseViewHolder).bind(item)
     }
 
+    inner class WorkoutExerciseViewHolder(private val binding: ListItemWorkoutExerciseBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: WorkoutExerciseDetail) {
+            binding.apply {
+                exercise = item.detail
+                setupAdapter(item.loads)
+                setupRecyclerView()
+                setupCallbacks(item)
+                executePendingBindings()
+            }
+        }
+
+        private fun ListItemWorkoutExerciseBinding.setupAdapter(loads: List<Load>) {
+            val adapter = LoadAdapter(context, isSession)
+            adapter.submitList(loads)
+            list.adapter = adapter
+        }
+
+
+        private fun ListItemWorkoutExerciseBinding.setupRecyclerView() {
+            list.setRecycledViewPool(recycledViewPool)
+            list.layoutManager = GridLayoutManager(context, context.resources.getInteger(R.integer.grid_load_row_count))
+        }
+
+        private fun ListItemWorkoutExerciseBinding.setupCallbacks(item: WorkoutExerciseDetail) {
+            buttonMenu.setOnClickListener {
+                onMenuClick(it, item)
+            }
+        }
+    }
+
 }
 
 class WorkoutExerciseDiffCallback : DiffUtil.ItemCallback<WorkoutExerciseDetail>() {
     override fun areItemsTheSame(oldItem: WorkoutExerciseDetail, newItem: WorkoutExerciseDetail): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.exercise.id == newItem.exercise.id
     }
 
     @SuppressLint("DiffUtilEquals")

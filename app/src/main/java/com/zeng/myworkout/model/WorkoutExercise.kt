@@ -29,19 +29,17 @@ open class WorkoutExercise(
 
 ) : Serializable
 
-class WorkoutExerciseDetail(
-    ex: Exercise = Exercise(),
-    order: Int = 0,
-    workoutId: Long? = null,
-    exerciseId: Long? = null,
-    id: Long? = null
-) : WorkoutExercise(order, workoutId, exerciseId, id) {
+data class WorkoutExerciseDetail(
+    @Embedded
+    val exercise: WorkoutExercise,
 
     @Relation(parentColumn = "exerciseId", entityColumn = "id", entity = Exercise::class)
-    var exercises: List<Exercise> = listOf(ex)
+    private var exercises: List<Exercise>,
 
+    @Relation(parentColumn = "id", entityColumn = "workoutExerciseId", entity = Load::class)
+    val loads: List<Load>
+) {
     var detail: Exercise
         get() = exercises.first()
         set(ex) { exercises = listOf(ex) }
-
 }
