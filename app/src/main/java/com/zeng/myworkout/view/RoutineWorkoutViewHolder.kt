@@ -1,12 +1,9 @@
 package com.zeng.myworkout.view
 
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -24,30 +21,32 @@ import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.model.WorkoutName
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.RoutineWorkoutViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
-class RoutineWorkoutFragment(
-    private val workoutId: Long,
+class RoutineWorkoutViewHolder(
+    private val binding: FragmentRoutineWorkoutBinding,
+    private val fragment: Fragment,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val loadRecycledViewPool: RecyclerView.RecycledViewPool
-) : Fragment() {
+) : RecyclerView.ViewHolder(binding.root) {
 
-    private lateinit var binding: FragmentRoutineWorkoutBinding
-    private val viewModel by viewModel<RoutineWorkoutViewModel> { parametersOf(workoutId) }
-    private val adapter by lazy { WorkoutExerciseAdapter(requireContext(), loadRecycledViewPool) }
+    private val context = fragment.requireContext()
+    private val viewLifecycleOwner = fragment.viewLifecycleOwner
+    private var workoutId: Long = -1
+    private val adapter by lazy { WorkoutExerciseAdapter(context, loadRecycledViewPool) }
+    private val viewModel by fragment.inject<RoutineWorkoutViewModel> { parametersOf(fragment, workoutId) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentRoutineWorkoutBinding.inflate(inflater, container, false)
-
+    fun bind(item: WorkoutName) {
+        workoutId = item.id
         setupAdapter()
         setupRecyclerView()
         subscribeUi()
-        return binding.root
     }
 
     private fun setupAdapter() {
@@ -78,7 +77,7 @@ class RoutineWorkoutFragment(
     }
 
     private fun showWorkoutExerciseMenuPopup(menuView: View, item: WorkoutExerciseDetail) {
-        val popup = PopupMenu(requireContext(), menuView)
+        val popup = PopupMenu(context, menuView)
         popup.menuInflater.inflate(R.menu.workout_exercise_popup_menu, popup.menu)
         if (adapter.currentList.size <= 1) {
             popup.menu.removeItem(R.id.remove_set)
@@ -102,7 +101,7 @@ class RoutineWorkoutFragment(
                 }
                 R.id.remove_exercise -> {
                     DialogUtils.openValidationDialog(
-                        context = requireContext(),
+                        context = context,
                         message = "Remove ${detail.name} ?",
                         positiveFun = { viewModel.deleteWorkoutExercise(exercise) }
                     )
@@ -117,7 +116,7 @@ class RoutineWorkoutFragment(
 
     private fun setButtonEdit(view: View, load: Load) {
         val button = view as Button
-        val pickerBinding = IntegerPickerBinding.inflate(layoutInflater)
+        val pickerBinding = IntegerPickerBinding.inflate(fragment.layoutInflater)
 
         pickerBinding.picker.minValue = 1
         pickerBinding.picker.maxValue = 100
@@ -127,11 +126,10 @@ class RoutineWorkoutFragment(
             load.reps = new
         }
 
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(context)
             .setMessage("Number of reps:")
             .setPositiveButton("OK") { _, _ ->
-                load.setRepsButtonText(button, false, resources)
-//                button.text = load.reps.toString()
+                load.setRepsButtonText(button, false, fragment.resources)
                 viewModel.updateLoad(load)
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }
@@ -150,7 +148,7 @@ class RoutineWorkoutFragment(
             load.repsDone = load.reps
         }
 
-        load.setRepsButtonText(view as Button, false, resources)
+        load.setRepsButtonText(view as Button, false, fragment.resources)
         viewModel.updateLoad(load)
     }
 
@@ -158,7 +156,7 @@ class RoutineWorkoutFragment(
     private fun setTextEditLoad(view: View, load: Load) {
         val editText = view as EditText
         var weight = load.value
-        val numberPickerBinding = NumberPickerBinding.inflate(layoutInflater, null, false)
+        val numberPickerBinding = NumberPickerBinding.inflate(fragment.layoutInflater, null, false)
         numberPickerBinding.value = weight
         numberPickerBinding.increase.setOnClickListener {
             weight += 0.5f

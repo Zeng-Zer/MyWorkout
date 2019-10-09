@@ -9,7 +9,7 @@ import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
-class RoutineWorkoutViewModel( workoutId: Long, private val workoutRepo: WorkoutRepository): ViewModel() {
+class RoutineWorkoutViewModel(workoutId: Long, private val workoutRepo: WorkoutRepository): ViewModel() {
     val exercises: LiveData<List<WorkoutExerciseDetail>> = workoutRepo.getAllWorkoutExerciseById(workoutId)
 
     fun deleteWorkoutExercise(exercise: WorkoutExercise) {
