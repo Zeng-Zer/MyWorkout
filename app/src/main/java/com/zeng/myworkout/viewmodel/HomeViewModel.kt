@@ -67,8 +67,8 @@ class HomeViewModel(
     // Create a Workout that will be the session workout
     fun continueRoutineWorkout() {
         viewModelScope.launch {
-            val newWorkout = workoutRepo.newWorkoutSessionFromReference(workoutReference.value!!)
-            workoutRepo.updateUserWorkoutSession(newWorkout.id)
+//            val newWorkout = workoutRepo.newWorkoutSessionFromReference(workoutReference.value!!)
+//            workoutRepo.updateUserWorkoutSession(newWorkout.id)
         }
     }
 
