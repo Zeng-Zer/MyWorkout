@@ -25,7 +25,7 @@ import com.zeng.myworkout.model.WorkoutName
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
-import com.zeng.myworkout.viewmodel.RoutineWorkoutViewModel
+import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -38,7 +38,7 @@ class RoutineWorkoutViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     private val context = fragment.requireContext()
     private val viewLifecycleOwner = fragment.viewLifecycleOwner
-    private lateinit var viewModel: RoutineWorkoutViewModel
+    private lateinit var viewModel: WorkoutViewModel
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = context,
         viewLifecycleOwner = fragment.viewLifecycleOwner,
@@ -77,10 +77,10 @@ class RoutineWorkoutViewHolder(
         })
     }
 
-    private fun showWorkoutExerciseMenuPopup(menuView: View, item: WorkoutExerciseDetail) {
+    private fun showWorkoutExerciseMenuPopup(menuView: View, item: WorkoutExerciseDetail, loadSize: Int) {
         val popup = PopupMenu(context, menuView)
         popup.menuInflater.inflate(R.menu.workout_exercise_popup_menu, popup.menu)
-        if (adapter.currentList.size <= 1) {
+        if (loadSize <= 1) {
             popup.menu.removeItem(R.id.remove_set)
         }
         popup.setOnMenuItemClickListener { menuItem ->

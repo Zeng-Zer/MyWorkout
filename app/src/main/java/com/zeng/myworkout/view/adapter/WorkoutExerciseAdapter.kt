@@ -21,7 +21,7 @@ class WorkoutExerciseAdapter(
     private val viewLifecycleOwner: LifecycleOwner,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
-    private val onMenuClick: (View, WorkoutExerciseDetail) -> Unit,
+    private val onMenuClick: (View, WorkoutExerciseDetail, Int) -> Unit,
     private val onLoadClickNested: (View, Load) -> Unit,
     private val onLoadTextClickNested: (View, Load) -> Unit,
     private val session: Boolean = false
@@ -53,6 +53,8 @@ class WorkoutExerciseAdapter(
     }
 
     inner class WorkoutExerciseViewHolder(private val binding: ListItemWorkoutExerciseBinding) : RecyclerView.ViewHolder(binding.root) {
+        private lateinit var adapter: LoadAdapter
+
         fun bind(item: WorkoutExerciseDetail) {
             binding.apply {
                 exercise = item.detail
@@ -64,7 +66,7 @@ class WorkoutExerciseAdapter(
         }
 
         private fun ListItemWorkoutExerciseBinding.setupAdapter(item: WorkoutExerciseDetail) {
-            val adapter = LoadAdapter(
+            adapter = LoadAdapter(
                 context = context,
                 session = session,
                 onLoadClick = onLoadClickNested,
@@ -72,6 +74,7 @@ class WorkoutExerciseAdapter(
             )
             list.adapter = adapter
             item.loadsLiveData.observe(viewLifecycleOwner, Observer { loads ->
+                item.loads = loads
                 adapter.submitList(loads)
             })
         }
@@ -84,7 +87,7 @@ class WorkoutExerciseAdapter(
 
         private fun ListItemWorkoutExerciseBinding.setupCallbacks(item: WorkoutExerciseDetail) {
             buttonMenu.setOnClickListener {
-                onMenuClick(it, item)
+                onMenuClick(it, item, adapter.itemCount)
             }
         }
     }

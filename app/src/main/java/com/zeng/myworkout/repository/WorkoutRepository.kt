@@ -1,6 +1,7 @@
 package com.zeng.myworkout.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.zeng.myworkout.database.LoadDao
 import com.zeng.myworkout.database.UserDao
 import com.zeng.myworkout.database.WorkoutDao
@@ -20,8 +21,6 @@ class WorkoutRepository (
     suspend fun updateUserWorkoutSession(sessionWorkoutId: Long?) = userDao.updateUserWorkoutSession(sessionWorkoutId)
 
     fun getWorkoutById(workoutId: Long): LiveData<Workout?> = workoutDao.getWorkoutById(workoutId)
-    private suspend fun allWorkoutExerciseById(workoutId: Long): List<WorkoutExerciseDetail> = workoutDao.allWorkoutExerciseById(workoutId)
-    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>> = workoutDao.getAllWorkoutExerciseById(workoutId)
     fun getAllReferenceWorkoutNamesByRoutineId(routineId: Long): LiveData<List<WorkoutName>> = workoutDao.getAllReferenceWorkoutNamesByRoutineId(routineId)
     suspend fun allReferenceWorkoutByRoutineId(routineId: Long): List<Workout> = workoutDao.allReferenceWorkoutByRoutineId(routineId)
 
@@ -36,12 +35,20 @@ class WorkoutRepository (
     suspend fun deleteWorkoutExercise(exercise: WorkoutExercise) = workoutExerciseDao.delete(exercise)
 
 
-    fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
-    suspend fun allLoadById(workoutExerciseId: Long): List<Load> = loadDao.allLoadById(workoutExerciseId)
+    private fun getAllLoadById(workoutExerciseId: Long): LiveData<List<Load>> = loadDao.getAllLoadById(workoutExerciseId)
+    private suspend fun allLoadById(workoutExerciseId: Long): List<Load> = loadDao.allLoadById(workoutExerciseId)
     suspend fun insertLoad(loads: List<Load>) = loadDao.insert(loads)
     suspend fun insertLoad(load: Load) = loadDao.insert(load)
     suspend fun updateLoad(load: Load) = loadDao.update(load)
     suspend fun deleteLoad(load: Load) = loadDao.delete(load)
+
+    private suspend fun allWorkoutExerciseById(workoutId: Long): List<WorkoutExerciseDetail> = workoutDao.allWorkoutExerciseById(workoutId)
+    fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>> =
+        workoutDao.getAllWorkoutExerciseById(workoutId).map { exercises ->
+            exercises.apply { forEach {
+                it.loadsLiveData = getAllLoadById(it.exercise.id!!)
+            }}
+        }
 
     suspend fun newWorkoutSessionFromReference(workoutReference: Workout): Workout {
         val newWorkout = workoutReference.copy(id = null, reference = false, startDate = Date())

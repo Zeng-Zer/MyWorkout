@@ -1,6 +1,6 @@
 package com.zeng.myworkout.model
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity(
@@ -37,12 +37,12 @@ data class WorkoutExerciseDetail(
     private var exercises: List<Exercise>,
 
     @Relation(parentColumn = "id", entityColumn = "workoutExerciseId", entity = Load::class)
-    val loads: List<Load>
+    var loads: List<Load>
 ) {
     var detail: Exercise
         get() = exercises.first()
         set(ex) { exercises = listOf(ex) }
 
     @Ignore
-    lateinit var loadsLiveData: MutableLiveData<List<Load>>
+    lateinit var loadsLiveData: LiveData<List<Load>>
 }

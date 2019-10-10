@@ -30,7 +30,7 @@ import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.HomeViewModel
-import com.zeng.myworkout.viewmodel.RoutineWorkoutViewModel
+import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -39,7 +39,7 @@ class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
     private val homeViewModel by viewModel<HomeViewModel>()
-    private val workoutViewModel by viewModel<RoutineWorkoutViewModel> { parametersOf(this) }
+    private val workoutViewModel by viewModel<WorkoutViewModel> { parametersOf(this) }
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = requireContext(),
@@ -109,10 +109,10 @@ class WorkoutFragment : Fragment() {
             adapter.submitList(exercises)
         })
     }
-    private fun showWorkoutExerciseMenuPopup(menuView: View, item: WorkoutExerciseDetail) {
+    private fun showWorkoutExerciseMenuPopup(menuView: View, item: WorkoutExerciseDetail, loadCount: Int) {
         val popup = PopupMenu(requireContext(), menuView)
         popup.menuInflater.inflate(R.menu.workout_exercise_popup_menu, popup.menu)
-        if (adapter.currentList.size <= 1) {
+        if (loadCount <= 1) {
             popup.menu.removeItem(R.id.remove_set)
         }
         popup.setOnMenuItemClickListener { menuItem ->

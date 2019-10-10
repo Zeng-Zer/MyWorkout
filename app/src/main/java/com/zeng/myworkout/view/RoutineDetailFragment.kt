@@ -68,8 +68,10 @@ class RoutineDetailFragment : Fragment() {
             R.id.action_delete_workout -> {
                 // ACTUALLY THERE IS A BUG WHEN DELETING LAST VIEW
                 // IT WILL BE FIXED IN THE NEXT MATERIAL COMPONENTS VERSION
-                val currentItem = adapter.currentList[binding.viewPager.currentItem]
-                viewModel.deleteWorkoutById(currentItem.id)
+                if (adapter.itemCount > 0) {
+                    val currentItem = adapter.currentList[binding.viewPager.currentItem]
+                    viewModel.deleteWorkoutById(currentItem.id)
+                }
             }
 
             // TODO
