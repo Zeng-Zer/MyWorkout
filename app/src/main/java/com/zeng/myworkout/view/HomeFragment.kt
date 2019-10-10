@@ -6,18 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
 import com.zeng.myworkout.viewmodel.HomeViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private val viewModel by sharedViewModel<HomeViewModel>()
+    private val viewModel by viewModel<HomeViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -53,8 +55,10 @@ class HomeFragment : Fragment() {
     private fun setupButtons() {
         binding.apply {
             continueRoutine.setOnClickListener {
-                viewModel.continueRoutineWorkout()
-                navigateToWorkout()
+                viewModel.viewModelScope.launch {
+                    viewModel.continueRoutineWorkout()
+                    navigateToWorkout()
+                }
             }
 
             chooseRoutine.setOnClickListener {
@@ -70,6 +74,7 @@ class HomeFragment : Fragment() {
     private fun navigateToWorkout() {
         val homeNav = findNavController().graph[R.id.home_nav] as NavGraph
         homeNav.startDestination = R.id.navigation_workout
-        findNavController().navigate(R.id.action_navigation_home_to_navigation_workout)
+        val action = HomeFragmentDirections.actionNavigationHomeToNavigationWorkout()
+        findNavController().navigate(action)
     }
 }

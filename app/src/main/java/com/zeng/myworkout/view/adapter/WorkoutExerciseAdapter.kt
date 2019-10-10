@@ -17,26 +17,18 @@ import com.zeng.myworkout.util.DraggableListAdapter
 class WorkoutExerciseAdapter(
     private val context: Context,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
+    private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
+    private val onMenuClick: (View, WorkoutExerciseDetail) -> Unit,
+    private val onLoadClickNested: (View, Load) -> Unit,
+    private val onLoadTextClickNested: (View, Load) -> Unit,
     private val session: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
-
-    lateinit var onClearView: (List<WorkoutExerciseDetail>) -> Unit
-    lateinit var onMenuClick: (View, WorkoutExerciseDetail) -> Unit
-
-    // Nested
-    lateinit var onLoadClickNested: (View, Load) -> Unit
-    lateinit var onLoadTextClickNested: (View, Load) -> Unit
-
-    init {
-        enableDrag()
-    }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val from = viewHolder.adapterPosition
         val to = target.adapterPosition
 
         val updatedList = currentList.toMutableList()
-
         updatedList[from].exercise.order = to
         updatedList[to].exercise.order = from
         updatedList[from] = updatedList[to].also { updatedList[to] = updatedList[from] }

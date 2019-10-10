@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.util.weightToString
-import kotlinx.android.extensions.LayoutContainer
 
 class LoadAdapter(private val context: Context, private val session: Boolean) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
@@ -28,10 +27,7 @@ class LoadAdapter(private val context: Context, private val session: Boolean) : 
         (holder as LoadViewHolder).bind(item)
     }
 
-    inner class LoadViewHolder(private val binding: ListItemGridLoadBinding) : RecyclerView.ViewHolder(binding.root), LayoutContainer {
-        override val containerView: View?
-            get() = binding.root
-
+    inner class LoadViewHolder(private val binding: ListItemGridLoadBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Load) {
             binding.apply {
                 // Set initial values

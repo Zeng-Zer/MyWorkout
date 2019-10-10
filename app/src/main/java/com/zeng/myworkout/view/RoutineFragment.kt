@@ -75,11 +75,6 @@ class RoutineFragment : Fragment() {
         })
     }
 
-    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
-        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
-        navController.navigate(action)
-    }
-
     private fun showNewRoutineDialog(inflater: LayoutInflater) {
         val formDialog = DialogRoutineFormBinding.inflate(inflater, container, false)
         val dialog = AlertDialog.Builder(context)
@@ -132,9 +127,11 @@ class RoutineFragment : Fragment() {
                     message = "Close current item session ?",
                     positiveFun = {
                         val oldWorkoutId = user.workoutSessionId!!
-                        viewModel.updateUserWorkout(workout)
-                        viewModel.deleteWorkout(oldWorkoutId)
-                        navigateToWorkout()
+                        viewModel.viewModelScope.launch {
+                            viewModel.updateUserWorkout(workout)
+                            viewModel.deleteWorkout(oldWorkoutId)
+                            navigateToWorkout()
+                        }
                     }
                 )
             } else {
@@ -147,6 +144,12 @@ class RoutineFragment : Fragment() {
     private fun navigateToWorkout() {
         val homeNav = navController.graph[R.id.home_nav] as NavGraph
         homeNav.startDestination = R.id.navigation_workout
-        navController.navigate(R.id.action_global_to_home_nav)
+        val action = RoutineFragmentDirections.actionGlobalToHomeNav()
+        navController.navigate(action)
+    }
+
+    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
+        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
+        navController.navigate(action)
     }
 }
