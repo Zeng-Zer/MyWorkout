@@ -29,14 +29,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RoutineFragment : Fragment() {
 
     private lateinit var binding: FragmentRoutineBinding
-    private val viewModel by viewModel<RoutineViewModel>()
-    private val adapter: RoutineAdapter by lazy { RoutineAdapter(requireContext()) }
     private val navController by lazy { findNavController() }
+    private val viewModel by viewModel<RoutineViewModel>()
+    private val adapter: RoutineAdapter by lazy {
+        RoutineAdapter(
+            context = requireContext(),
+            onClearView = { list -> viewModel.updateRoutine(list.map { it.routine }) },
+            onItemClick = this::navRoutineDetailFragment,
+            onMenuClick = this::showRoutineMenuPopup,
+            onWorkoutShortcutClickNested = this::onWorkoutShortcutClickNested
+        )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineBinding.inflate(inflater, container, false)
 
-        setupAdapter()
         setupRecyclerView()
         setupFab(inflater)
         subscribeUi()
@@ -45,6 +52,7 @@ class RoutineFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        adapter.enableDrag()
         binding.list.adapter = adapter
 
         // prevent RecyclerView blinking on submitList
@@ -53,14 +61,6 @@ class RoutineFragment : Fragment() {
 
         val helper = ItemTouchHelper(adapter.callback)
         helper.attachToRecyclerView(binding.list)
-    }
-
-    private fun setupAdapter() {
-        adapter.enableDrag()
-        adapter.onItemClick = this::navRoutineDetailFragment
-        adapter.onMenuClick = this::showRoutineMenuPopup
-        adapter.onClearView = { list -> viewModel.updateRoutine(list.map { it.routine }) }
-        adapter.onWorkoutShortcutClickNested = this::onWorkoutShortcutClickNested
     }
 
     private fun setupFab(inflater: LayoutInflater) {

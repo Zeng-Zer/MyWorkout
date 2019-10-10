@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +18,7 @@ import com.zeng.myworkout.util.DraggableListAdapter
 
 class WorkoutExerciseAdapter(
     private val context: Context,
+    private val viewLifecycleOwner: LifecycleOwner,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
     private val onMenuClick: (View, WorkoutExerciseDetail) -> Unit,
@@ -53,19 +56,24 @@ class WorkoutExerciseAdapter(
         fun bind(item: WorkoutExerciseDetail) {
             binding.apply {
                 exercise = item.detail
-                setupAdapter(item.loads)
+                setupAdapter(item)
                 setupRecyclerView()
                 setupCallbacks(item)
                 executePendingBindings()
             }
         }
 
-        private fun ListItemWorkoutExerciseBinding.setupAdapter(loads: List<Load>) {
-            val adapter = LoadAdapter(context, session)
-            adapter.onLoadClick = onLoadClickNested
-            adapter.onLoadTextClick = onLoadTextClickNested
-            adapter.submitList(loads)
+        private fun ListItemWorkoutExerciseBinding.setupAdapter(item: WorkoutExerciseDetail) {
+            val adapter = LoadAdapter(
+                context = context,
+                session = session,
+                onLoadClick = onLoadClickNested,
+                onLoadTextClick = onLoadTextClickNested
+            )
             list.adapter = adapter
+            item.loadsLiveData.observe(viewLifecycleOwner, Observer { loads ->
+                adapter.submitList(loads)
+            })
         }
 
 
@@ -90,7 +98,8 @@ class WorkoutExerciseDiffCallback : DiffUtil.ItemCallback<WorkoutExerciseDetail>
 
     @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: WorkoutExerciseDetail, newItem: WorkoutExerciseDetail): Boolean {
-        return oldItem == newItem
+        return oldItem.exercise == newItem.exercise &&
+                oldItem.detail == newItem.detail
     }
 
 }
