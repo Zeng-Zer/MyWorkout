@@ -7,7 +7,7 @@ import com.zeng.myworkout.model.RoutineWithWorkouts
 
 class RoutineRepository(private val routineDao: RoutineDao) {
 
-    fun getAllRoutineWithWorkouts(): LiveData<List<RoutineWithWorkouts>> = routineDao.getAllRoutineWithWorkouts()
+    fun getAllRoutineWithWorkouts(): LiveData<List<RoutineWithWorkouts>> = routineDao.getAllRoutineWithReferenceWorkouts()
     fun getRoutineById(routineId: Long): LiveData<Routine> = routineDao.getRoutineById(routineId)
 
     suspend fun insertRoutine(routine: Routine) = routineDao.insertRoutineReorder(routine)

@@ -15,6 +15,7 @@ import com.zeng.myworkout.util.DraggableListAdapter
 
 class RoutineAdapter(private val context: Context) : DraggableListAdapter<RoutineWithWorkouts>(RoutineWithWorkoutsDiffCallback()) {
 
+    // TODO
     lateinit var onClearView: (List<RoutineWithWorkouts>) -> Unit
     lateinit var onItemClick: (Long, Boolean) -> Unit
     lateinit var onMenuClick: (View, Routine) -> Unit

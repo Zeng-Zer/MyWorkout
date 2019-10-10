@@ -8,6 +8,7 @@ import com.zeng.myworkout.repository.WorkoutRepository
 import com.zeng.myworkout.util.getViewModel
 import com.zeng.myworkout.viewmodel.*
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
@@ -32,11 +33,11 @@ val appModule = module {
     viewModel { RoutineViewModel(get(), get()) }
     viewModel { ExerciseViewModel(get()) }
     viewModel { (routineId: Long) -> RoutineDetailViewModel(routineId, get(), get()) }
-    viewModel { (workoutId: Long) -> WorkoutViewModel(workoutId, get()) }
+    viewModel { RoutineWorkoutViewModel(get()) }
 
     // Dynamic key for RoutineWorkoutViewModel
-    factory { (fragment: Fragment, workoutId: Long) ->
-        val creator = { RoutineWorkoutViewModel(workoutId, get()) }
+    factory(named("factory")) { (fragment: Fragment, workoutId: Long) ->
+        val creator = { RoutineWorkoutViewModel(get()) }
         fragment.getViewModel(creator, workoutId.toString())
     }
 }

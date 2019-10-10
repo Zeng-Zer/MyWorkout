@@ -36,16 +36,13 @@ class RoutineViewModel(
         }
     }
 
-    fun updateUserWorkout(workout: Workout) {
-        viewModelScope.launch {
-            // update user workout reference
-            workoutRepo.updateUserWorkoutReference(workout.id!!)
+    suspend fun updateUserWorkout(workout: Workout) {
+        // update user workout reference
+        workoutRepo.updateUserWorkoutReference(workout.id!!)
 
-            // create user workout session
-            // TODO
-//            val newWorkout = workoutRepo.newWorkoutSessionFromReference(workout)
-//            workoutRepo.updateUserWorkoutSession(newWorkout.id)
-        }
+        // create user workout session
+        val newWorkout = workoutRepo.newWorkoutSessionFromReference(workout)
+        workoutRepo.updateUserWorkoutSession(newWorkout.id)
     }
 
     fun deleteWorkout(workoutId: Long) {

@@ -26,8 +26,9 @@ import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.RoutineWorkoutViewModel
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class RoutineWorkoutViewHolder(
     private val binding: FragmentRoutineWorkoutBinding,
@@ -38,27 +39,27 @@ class RoutineWorkoutViewHolder(
 
     private val context = fragment.requireContext()
     private val viewLifecycleOwner = fragment.viewLifecycleOwner
-    private var workoutId: Long = -1
-    private val adapter by lazy { WorkoutExerciseAdapter(context, loadRecycledViewPool) }
-    private val viewModel by fragment.inject<RoutineWorkoutViewModel> { parametersOf(fragment, workoutId) }
+    private lateinit var viewModel: RoutineWorkoutViewModel
+    private val adapter by lazy { WorkoutExerciseAdapter(
+        context = context,
+        recycledViewPool = loadRecycledViewPool,
+        session = false,
+        onClearView = { list -> viewModel.updateAllWorkoutExercise(list.map{ it.exercise }) },
+        onMenuClick = this::showWorkoutExerciseMenuPopup,
+        onLoadClickNested = this::setButtonEdit,
+        onLoadTextClickNested = this::setTextEditLoad
+    )}
 
     fun bind(item: WorkoutName) {
-        workoutId = item.id
-        setupAdapter()
+        viewModel = fragment.get(named("factory")) { parametersOf(fragment, item.id) }
+        viewModel.workoutId.value = item.id
+
         setupRecyclerView()
         subscribeUi()
     }
 
-    private fun setupAdapter() {
-        adapter.enableDrag()
-        adapter.onMenuClick = this::showWorkoutExerciseMenuPopup
-        adapter.onClearView = { list -> viewModel.updateAllWorkoutExercise(list.map{ it.exercise }) }
-        // Nested
-        adapter.onLoadClickNested = this::setButtonEdit
-        adapter.onLoadTextClickNested = this::setTextEditLoad
-    }
-
     private fun setupRecyclerView() {
+        adapter.enableDrag()
         binding.list.adapter = adapter
         binding.list.setRecycledViewPool(recycledViewPool)
 

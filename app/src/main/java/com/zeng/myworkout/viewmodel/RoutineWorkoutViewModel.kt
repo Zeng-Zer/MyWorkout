@@ -1,16 +1,22 @@
 package com.zeng.myworkout.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.repository.WorkoutRepository
 import kotlinx.coroutines.launch
 
-class RoutineWorkoutViewModel(workoutId: Long, private val workoutRepo: WorkoutRepository): ViewModel() {
-    val exercises: LiveData<List<WorkoutExerciseDetail>> = workoutRepo.getAllWorkoutExerciseById(workoutId)
+class RoutineWorkoutViewModel(private val workoutRepo: WorkoutRepository): ViewModel() {
+
+    val workoutId: MutableLiveData<Long?> = MutableLiveData(null)
+    val exercises: LiveData<List<WorkoutExerciseDetail>> = workoutId.switchMap { id ->
+        if (id != null) {
+            workoutRepo.getAllWorkoutExerciseById(id)
+        } else {
+            MutableLiveData()
+        }
+    }
 
     fun deleteWorkoutExercise(exercise: WorkoutExercise) {
         viewModelScope.launch {
