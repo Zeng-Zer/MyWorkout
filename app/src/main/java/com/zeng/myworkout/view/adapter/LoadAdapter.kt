@@ -12,11 +12,14 @@ import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.util.weightToString
 
-class LoadAdapter(private val context: Context, private val session: Boolean) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
+class LoadAdapter(
+    private val context: Context,
+    private val session: Boolean,
+    private val onLoadClick: (View, Load) -> Unit,
+    private val onLoadTextClick: (View, Load) -> Unit
+) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
-    lateinit var onLoadClick: (View, Load) -> Unit
-    lateinit var onLoadTextClick: (View, Load) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return LoadViewHolder(ListItemGridLoadBinding.inflate(inflater, parent, false))

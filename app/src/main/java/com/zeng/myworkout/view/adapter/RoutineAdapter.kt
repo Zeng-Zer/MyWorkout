@@ -13,15 +13,13 @@ import com.zeng.myworkout.model.RoutineWithWorkouts
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.util.DraggableListAdapter
 
-class RoutineAdapter(private val context: Context) : DraggableListAdapter<RoutineWithWorkouts>(RoutineWithWorkoutsDiffCallback()) {
-
-    // TODO
-    lateinit var onClearView: (List<RoutineWithWorkouts>) -> Unit
-    lateinit var onItemClick: (Long, Boolean) -> Unit
-    lateinit var onMenuClick: (View, Routine) -> Unit
-
-    // Nested
-    lateinit var onWorkoutShortcutClickNested: (Workout) -> Unit
+class RoutineAdapter(
+    private val context: Context,
+    private val onClearView: (List<RoutineWithWorkouts>) -> Unit,
+    private val onItemClick: (Long, Boolean) -> Unit,
+    private val onMenuClick: (View, Routine) -> Unit,
+    private val onWorkoutShortcutClickNested: (Workout) -> Unit
+) : DraggableListAdapter<RoutineWithWorkouts>(RoutineWithWorkoutsDiffCallback()) {
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val from = viewHolder.adapterPosition

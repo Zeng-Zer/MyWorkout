@@ -49,6 +49,10 @@ class HomeFragment : Fragment() {
                     continueRoutine.visibility = View.GONE
                 }
             }
+
+            if (user.workoutSessionId != null) {
+                navigateToWorkout()
+            }
         }})
     }
 

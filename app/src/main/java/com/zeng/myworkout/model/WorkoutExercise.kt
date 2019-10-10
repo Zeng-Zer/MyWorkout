@@ -1,7 +1,7 @@
 package com.zeng.myworkout.model
 
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
-import java.io.Serializable
 
 @Entity(
     tableName = "workout_exercise",
@@ -14,7 +14,7 @@ import java.io.Serializable
             onUpdate = ForeignKey.CASCADE)
     ]
 )
-open class WorkoutExercise(
+data class WorkoutExercise(
     @ColumnInfo
     var order: Int = 0,
 
@@ -27,7 +27,7 @@ open class WorkoutExercise(
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 
-) : Serializable
+)
 
 data class WorkoutExerciseDetail(
     @Embedded
@@ -42,4 +42,7 @@ data class WorkoutExerciseDetail(
     var detail: Exercise
         get() = exercises.first()
         set(ex) { exercises = listOf(ex) }
+
+    @Ignore
+    lateinit var loadsLiveData: MutableLiveData<List<Load>>
 }

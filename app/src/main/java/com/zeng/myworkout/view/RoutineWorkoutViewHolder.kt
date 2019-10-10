@@ -36,12 +36,12 @@ class RoutineWorkoutViewHolder(
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val loadRecycledViewPool: RecyclerView.RecycledViewPool
 ) : RecyclerView.ViewHolder(binding.root) {
-
     private val context = fragment.requireContext()
     private val viewLifecycleOwner = fragment.viewLifecycleOwner
     private lateinit var viewModel: RoutineWorkoutViewModel
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = context,
+        viewLifecycleOwner = fragment.viewLifecycleOwner,
         recycledViewPool = loadRecycledViewPool,
         session = false,
         onClearView = { list -> viewModel.updateAllWorkoutExercise(list.map{ it.exercise }) },
@@ -141,17 +141,6 @@ class RoutineWorkoutViewHolder(
         dialog.show()
     }
 
-
-    // TODO SET OTHER TYPE
-    private fun setButtonSessionReps(view: View, load: Load) {
-        load.repsDone -= 1
-        if (load.repsDone < -1) {
-            load.repsDone = load.reps
-        }
-
-        load.setRepsButtonText(view as Button, false, fragment.resources)
-        viewModel.updateLoad(load)
-    }
 
     // TODO REFACTOR THIS
     private fun setTextEditLoad(view: View, load: Load) {
