@@ -5,6 +5,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemRoutineBinding
@@ -20,6 +22,8 @@ class RoutineAdapter(
     private val onMenuClick: (View, Routine) -> Unit,
     private val onWorkoutShortcutClickNested: (Workout) -> Unit
 ) : DraggableListAdapter<RoutineWithWorkouts>(RoutineWithWorkoutsDiffCallback()) {
+
+    lateinit var viewLifecycleOwner: LifecycleOwner
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val from = viewHolder.adapterPosition
@@ -48,23 +52,31 @@ class RoutineAdapter(
     private inner class RoutineViewHolder(val binding: ListItemRoutineBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: RoutineWithWorkouts) {
             binding.apply {
-                setupAdapter(item.workouts)
+                setupAdapter(item)
                 setCallbacks(item.routine)
                 routine = item.routine
                 executePendingBindings()
             }
         }
 
-        private fun ListItemRoutineBinding.setupAdapter(workouts: List<Workout>) {
-            if (workouts.isNotEmpty()) {
-                val adapter = RoutineWorkoutShortcutAdapter(context)
-                adapter.submitList(workouts)
-                adapter.onWorkoutShortcutClick = onWorkoutShortcutClickNested
-                list.adapter = adapter
-            } else {
-                // Hide divider if there isn't any workouts
-                workoutShortcutLayout.visibility = View.GONE
-            }
+        private fun ListItemRoutineBinding.setupAdapter(item: RoutineWithWorkouts) {
+            val adapter = RoutineWorkoutShortcutAdapter(
+                context = context,
+                onWorkoutShortcutClick =  onWorkoutShortcutClickNested
+            )
+            list.adapter = adapter
+
+            item.workoutsLiveData.observe(viewLifecycleOwner, Observer { workouts ->
+                if (workouts.isNullOrEmpty()) {
+                    // Hide divider if there isn't any workouts
+                    workoutShortcutLayout.visibility = View.GONE
+                } else {
+                    workoutShortcutLayout.visibility = View.VISIBLE
+                    item.workouts = workouts
+                    adapter.submitList(workouts)
+                }
+            })
+
         }
 
         private fun ListItemRoutineBinding.setCallbacks(routine: Routine) {

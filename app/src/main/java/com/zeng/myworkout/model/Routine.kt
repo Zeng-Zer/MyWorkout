@@ -1,5 +1,6 @@
 package com.zeng.myworkout.model
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity(tableName = "routine")
@@ -20,6 +21,10 @@ data class Routine(
 data class RoutineWithWorkouts(
     @Embedded
     var routine: Routine = Routine(),
+
     @Relation(parentColumn = "id", entityColumn = "routineId", entity = Workout::class)
     var workouts: List<Workout> = emptyList()
-)
+) {
+    @Ignore
+    lateinit var workoutsLiveData: LiveData<List<Workout>>
+}

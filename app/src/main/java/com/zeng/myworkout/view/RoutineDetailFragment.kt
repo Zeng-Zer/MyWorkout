@@ -96,7 +96,7 @@ class RoutineDetailFragment : Fragment() {
 
     private fun setupViewPager() {
         binding.viewPager.adapter = adapter
-        binding.viewPager.offscreenPageLimit = 2
+        binding.viewPager.offscreenPageLimit = 5
         TabLayoutMediator(binding.tabs, binding.viewPager){ _, _ -> }.attach()
 
         // Hide fab when changing fragment

@@ -43,7 +43,6 @@ class WorkoutFragment : Fragment() {
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = requireContext(),
-        viewLifecycleOwner = viewLifecycleOwner,
         recycledViewPool = recycledViewPool,
         session = true,
         onClearView = { list -> workoutViewModel.updateAllWorkoutExercise(list.map{ it.exercise }) },
@@ -87,6 +86,7 @@ class WorkoutFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.apply {
+            adapter.viewLifecycleOwner = viewLifecycleOwner
             adapter.enableDrag()
             list.adapter = adapter
 

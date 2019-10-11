@@ -52,6 +52,7 @@ class RoutineFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        adapter.viewLifecycleOwner = viewLifecycleOwner
         adapter.enableDrag()
         binding.list.adapter = adapter
 

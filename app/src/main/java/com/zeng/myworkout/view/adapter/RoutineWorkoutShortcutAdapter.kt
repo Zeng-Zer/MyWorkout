@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemRoutineWorkoutShortcutBinding
 import com.zeng.myworkout.model.Workout
 
-class RoutineWorkoutShortcutAdapter(private val context: Context) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
+class RoutineWorkoutShortcutAdapter(
+    private val context: Context,
+    val onWorkoutShortcutClick: (Workout) -> Unit
+) : ListAdapter<Workout, RecyclerView.ViewHolder>(WorkoutDiffCallback()) {
 
-    lateinit var onWorkoutShortcutClick: (Workout) -> Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RoutineWorkoutShortcutViewHolder(ListItemRoutineWorkoutShortcutBinding.inflate(LayoutInflater.from(context), parent, false))

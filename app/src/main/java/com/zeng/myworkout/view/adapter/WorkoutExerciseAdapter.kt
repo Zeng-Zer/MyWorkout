@@ -18,7 +18,6 @@ import com.zeng.myworkout.util.DraggableListAdapter
 
 class WorkoutExerciseAdapter(
     private val context: Context,
-    private val viewLifecycleOwner: LifecycleOwner,
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
     private val onMenuClick: (View, WorkoutExerciseDetail, Int) -> Unit,
@@ -26,6 +25,8 @@ class WorkoutExerciseAdapter(
     private val onLoadTextClickNested: (View, Load) -> Unit,
     private val session: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
+
+    lateinit var viewLifecycleOwner: LifecycleOwner
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val from = viewHolder.adapterPosition

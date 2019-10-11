@@ -27,7 +27,7 @@ val appModule = module {
     // Repositories
     single { ExerciseRepository(get(), get()) }
     single { WorkoutRepository(get(), get(), get(), get()) }
-    single { RoutineRepository(get()) }
+    single { RoutineRepository(get(), get()) }
 
     viewModel { HomeViewModel(get(), get()) }
     viewModel { RoutineViewModel(get(), get()) }
