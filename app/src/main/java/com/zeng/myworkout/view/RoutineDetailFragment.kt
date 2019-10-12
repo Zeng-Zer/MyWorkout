@@ -165,21 +165,23 @@ class RoutineDetailFragment : Fragment() {
         val dialog = AlertDialog.Builder(requireContext())
             .setMessage("New workout")
             .setPositiveButton("CREATE") { _, _ ->
-                // Add workout to the end
-                val workout = Workout(
-                    form.workoutName.text.toString(),
-                    "",
-                    adapter.itemCount,
-                    routineId,
-                    true
-                )
+                if (form.workoutName.text.isNotBlank()) {
+                    // Add workout to the end
+                    val workout = Workout(
+                        form.workoutName.text.toString().trim(),
+                        "",
+                        adapter.itemCount,
+                        routineId,
+                        true
+                    )
 
-                viewModel.insertWorkout(workout)
+                    viewModel.insertWorkout(workout)
 
-                // Focus newly added view
-                onListChangeCallback = { list ->
-                    binding.viewPager.setCurrentItem(list.size, true)
-                    onListChangeCallback = null
+                    // Focus newly added view
+                    onListChangeCallback = { list ->
+                        binding.viewPager.setCurrentItem(list.size, true)
+                        onListChangeCallback = null
+                    }
                 }
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }

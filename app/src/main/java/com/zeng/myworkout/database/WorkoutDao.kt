@@ -28,7 +28,7 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     abstract fun getAllReferenceWorkoutNamesByRoutineId(routineId: Long): LiveData<List<WorkoutName>>
 
     @Transaction
-    @Query("SELECT * FROM workout WHERE routineId = :routineId ORDER BY [order] ASC")
+    @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
     abstract fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
 
     @Transaction
