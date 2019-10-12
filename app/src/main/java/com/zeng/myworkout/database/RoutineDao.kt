@@ -1,7 +1,6 @@
 package com.zeng.myworkout.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
@@ -25,22 +24,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
-    abstract fun getAllRoutineWithWorkouts(): LiveData<List<RoutineWithWorkouts>>
-
-    @Transaction
-    @Query("SELECT * FROM routine ORDER BY [order] ASC")
-    open fun getAllRoutineWithReferenceWorkouts(): LiveData<List<RoutineWithWorkouts>> {
-        return getAllRoutineWithWorkouts().map { routines ->
-            routines.map { routine ->
-                routine.workouts = routine.workouts
-                    .filter { workout ->
-                        workout.reference
-                    }
-                    .sortedBy { it.order }
-                routine
-            }
-        }
-    }
+    abstract fun getAllRoutineWithReferenceWorkouts(): LiveData<List<RoutineWithWorkouts>>
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")

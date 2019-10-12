@@ -20,10 +20,7 @@ data class Routine(
 
 data class RoutineWithWorkouts(
     @Embedded
-    var routine: Routine = Routine(),
-
-    @Relation(parentColumn = "id", entityColumn = "routineId", entity = Workout::class)
-    var workouts: List<Workout> = emptyList()
+    var routine: Routine = Routine()
 ) {
     @Ignore
     lateinit var workoutsLiveData: LiveData<List<Workout>>

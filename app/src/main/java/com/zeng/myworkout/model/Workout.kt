@@ -31,8 +31,3 @@ data class Workout(
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 )
-
-data class WorkoutName(
-    val id: Long,
-    val name: String
-)

@@ -34,14 +34,15 @@ data class WorkoutExerciseDetail(
     val exercise: WorkoutExercise,
 
     @Relation(parentColumn = "exerciseId", entityColumn = "id", entity = Exercise::class)
-    private var exercises: List<Exercise>,
+    private var exerciseDetail: List<Exercise>
 
-    @Relation(parentColumn = "id", entityColumn = "workoutExerciseId", entity = Load::class)
-    var loads: List<Load>
 ) {
     var detail: Exercise
-        get() = exercises.first()
-        set(ex) { exercises = listOf(ex) }
+        get() = exerciseDetail.first()
+        set(ex) { exerciseDetail = listOf(ex) }
+
+    @Ignore
+    lateinit var loads: List<Load>
 
     @Ignore
     lateinit var loadsLiveData: LiveData<List<Load>>

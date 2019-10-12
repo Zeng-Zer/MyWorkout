@@ -72,7 +72,6 @@ class RoutineAdapter(
                     workoutShortcutLayout.visibility = View.GONE
                 } else {
                     workoutShortcutLayout.visibility = View.VISIBLE
-                    item.workouts = workouts
                     adapter.submitList(workouts)
                 }
             })
