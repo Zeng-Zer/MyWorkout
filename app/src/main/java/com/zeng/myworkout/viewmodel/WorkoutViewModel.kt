@@ -47,4 +47,24 @@ class WorkoutViewModel(private val workoutRepo: WorkoutRepository): ViewModel() 
             workoutRepo.insertLoad(load)
         }
     }
+
+    fun insertWorkoutExerciseWithLoads(exercisesWithLoads: List<Pair<WorkoutExercise, List<Load>>>) {
+        viewModelScope.launch {
+            val exercises = exercisesWithLoads.map { it.first }
+            val loadsWithoutIds = exercisesWithLoads.map { it.second }
+
+            val ids = workoutRepo.insertWorkoutExercise(exercises)
+
+            // Add workout exercise id to loads
+            val loads = loadsWithoutIds
+                .zip(ids)
+                .flatMap { (loads, id) ->
+                    loads.map { load ->
+                        load.workoutExerciseId = id
+                        load
+                    }
+                }
+            workoutRepo.insertLoad(loads)
+        }
+    }
 }

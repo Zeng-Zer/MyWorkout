@@ -13,14 +13,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
-import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.RoutineWorkoutAdapter
-import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -35,8 +30,6 @@ class RoutineDetailFragment : Fragment() {
     private val navController by lazy { findNavController() }
     private val toolbar by lazy { (requireActivity() as AppCompatActivity).supportActionBar }
     private val viewModel by viewModel<RoutineDetailViewModel> { parametersOf(routineId) }
-
-    private val sharedViewModel by sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy { RoutineWorkoutAdapter(this) }
     private var onListChangeCallback: ((List<Workout>) -> Unit)? = null
 
@@ -157,19 +150,6 @@ class RoutineDetailFragment : Fragment() {
                 }
             }
         }})
-
-        // Add new exercises from ExerciseFragment
-        sharedViewModel.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
-            if (!exercises.isNullOrEmpty()) {
-                addExercises(
-                    exercises.map { it.id!! },
-                    adapter.currentList[binding.viewPager.currentItem].id!!
-                )
-
-                // TODO is there another way ?
-                sharedViewModel.exercisesToAdd.value = null
-            }
-        })
     }
 
     private fun addNewWorkout() {
@@ -201,22 +181,6 @@ class RoutineDetailFragment : Fragment() {
             .create()
 
         dialog.show()
-    }
-
-    private fun addExercises(exerciseIds: List<Long>, workoutId: Long) {
-        val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
-            // Make a pair of exercise and their load list
-            Pair(
-                WorkoutExercise(
-                    // Add element at the end with its order in the list of ids
-                    i + adapter.itemCount,
-                    workoutId,
-                    exerciseId
-                ),
-                listOf(Load(LoadType.WEIGHT, 0F, 0, 0))
-            )
-        }
-        viewModel.insertWorkoutExerciseWithLoads(exercisesWithLoads)
     }
 
 }

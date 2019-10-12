@@ -18,15 +18,14 @@ import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentRoutineWorkoutBinding
 import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
-import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.LoadType
-import com.zeng.myworkout.model.Workout
-import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.model.*
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
+import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import org.koin.android.ext.android.get
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
@@ -39,6 +38,7 @@ class RoutineWorkoutViewHolder(
     private val context = fragment.requireContext()
     private val viewLifecycleOwner = fragment.viewLifecycleOwner
     private lateinit var viewModel: WorkoutViewModel
+    private val sharedViewModel by fragment.sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = context,
         recycledViewPool = loadRecycledViewPool,
@@ -74,6 +74,14 @@ class RoutineWorkoutViewHolder(
     private fun subscribeUi() {
         viewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
             adapter.submitList(exercises)
+        })
+
+        // Add new exercises from ExerciseFragment
+        sharedViewModel.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
+            if (!exercises.isNullOrEmpty()) {
+                addExercises(exercises.map { it.id!! })
+                sharedViewModel.exercisesToAdd.value = null
+            }
         })
     }
 
@@ -197,5 +205,21 @@ class RoutineWorkoutViewHolder(
         dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.window?.setDimAmount(0.1f)
         dialog.show()
+    }
+
+    private fun addExercises(exerciseIds: List<Long>) {
+        val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
+            // Make a pair of exercise and their load list
+            Pair(
+                WorkoutExercise(
+                    // Add element at the end with its order in the list of ids
+                    i + adapter.itemCount,
+                    viewModel.workoutId.value!!,
+                    exerciseId
+                ),
+                listOf(Load(LoadType.WEIGHT, 0F, 0, 0))
+            )
+        }
+        viewModel.insertWorkoutExerciseWithLoads(exercisesWithLoads)
     }
 }
