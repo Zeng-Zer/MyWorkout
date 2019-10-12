@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
+import com.zeng.myworkout.logic.setLoadButton
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.util.weightToString
 
@@ -34,7 +35,7 @@ class LoadAdapter(
         fun bind(item: Load) {
             binding.apply {
                 // Set initial values
-                item.setRepsButtonText(button, session, context.resources)
+                setLoadButton(item, button, session, context.resources)
                 value.setText(item.value.weightToString())
 
                 setupCallbacks(item)
