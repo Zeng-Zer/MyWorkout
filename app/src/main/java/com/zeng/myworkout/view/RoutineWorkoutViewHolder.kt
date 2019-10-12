@@ -20,8 +20,8 @@ import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.LoadType
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExerciseDetail
-import com.zeng.myworkout.model.WorkoutName
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
@@ -49,7 +49,7 @@ class RoutineWorkoutViewHolder(
         onLoadTextClickNested = this::setTextEditLoad
     )}
 
-    fun bind(item: WorkoutName) {
+    fun bind(item: Workout) {
         viewModel = fragment.get(named("factory")) { parametersOf(fragment, item.id) }
         viewModel.workoutId.value = item.id
 

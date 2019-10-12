@@ -13,7 +13,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogWorkoutFormBinding
 import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
-import com.zeng.myworkout.model.*
+import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.LoadType
+import com.zeng.myworkout.model.Workout
+import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.RoutineWorkoutAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
@@ -35,7 +38,7 @@ class RoutineDetailFragment : Fragment() {
 
     private val sharedViewModel by sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy { RoutineWorkoutAdapter(this) }
-    private var onListChangeCallback: ((List<WorkoutName>) -> Unit)? = null
+    private var onListChangeCallback: ((List<Workout>) -> Unit)? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineDetailBinding.inflate(inflater, container, false)
@@ -66,30 +69,39 @@ class RoutineDetailFragment : Fragment() {
             }
 
             R.id.action_delete_workout -> {
-                // ACTUALLY THERE IS A BUG WHEN DELETING LAST VIEW
-                // IT WILL BE FIXED IN THE NEXT MATERIAL COMPONENTS VERSION
                 if (adapter.itemCount > 0) {
                     val currentItem = adapter.currentList[binding.viewPager.currentItem]
-                    viewModel.deleteWorkoutById(currentItem.id)
+                    viewModel.deleteWorkout(currentItem)
                 }
             }
 
             // TODO
-//
-//            R.id.action_move_right_workout -> {
-//                if (viewPager.currentItemIdx + 1 < sectionsPagerAdapter.fragments.size) {
-//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx + 1)
-//                    viewPager.setCurrentItem(viewPager.currentItemIdx + 1, true)
-//                }
-//                return true
-//            }
-//
-//            R.id.action_move_left_workout -> {
-//                if (viewPager.currentItemIdx - 1 >= 0) {
-//                    sectionsPagerAdapter.swapTab(viewPager.currentItemIdx, viewPager.currentItemIdx - 1)
-//                    viewPager.setCurrentItem(viewPager.currentItemIdx - 1, true)
-//                }
-//                return true
+            // EDIT
+
+            R.id.action_move_right_workout -> {
+                if (binding.viewPager.currentItem + 1 < adapter.itemCount) {
+                    val from = binding.viewPager.currentItem
+                    val to = from + 1
+                    adapter.swapElements(from, to) {
+                        binding.viewPager.setCurrentItem(to, false)
+                        viewModel.updateWorkout(it)
+                    }
+                }
+                return true
+            }
+
+            R.id.action_move_left_workout -> {
+                if (binding.viewPager.currentItem - 1 >= 0) {
+                    val from = binding.viewPager.currentItem
+                    val to = from - 1
+                    adapter.swapElements(from, to) { viewModel.updateWorkout(it) }
+                    onListChangeCallback = {
+                        binding.viewPager.setCurrentItem(to, false)
+                        onListChangeCallback = null
+                    }
+                }
+                return true
+            }
         }
         return true
     }
@@ -151,7 +163,7 @@ class RoutineDetailFragment : Fragment() {
             if (!exercises.isNullOrEmpty()) {
                 addExercises(
                     exercises.map { it.id!! },
-                    adapter.currentList[binding.viewPager.currentItem].id
+                    adapter.currentList[binding.viewPager.currentItem].id!!
                 )
 
                 // TODO is there another way ?

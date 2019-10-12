@@ -6,7 +6,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.model.WorkoutExerciseDetail
-import com.zeng.myworkout.model.WorkoutName
 
 @Dao
 abstract class WorkoutDao : BaseDao<Workout>() {
@@ -24,16 +23,8 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     abstract suspend fun allWorkoutExerciseById(workoutId: Long): List<WorkoutExerciseDetail>
 
     @Transaction
-    @Query("SELECT id, name FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
-    abstract fun getAllReferenceWorkoutNamesByRoutineId(routineId: Long): LiveData<List<WorkoutName>>
-
-    @Transaction
     @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
     abstract fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>>
-
-    @Transaction
-    @Query("SELECT * FROM workout WHERE id = :id")
-    abstract fun workoutById(id: Long): Workout
 
     @Transaction
     @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")
@@ -45,8 +36,7 @@ abstract class WorkoutDao : BaseDao<Workout>() {
 
     // TODO Probably need to optimize this
     @Transaction
-    open suspend fun deleteWorkoutReorderById(workoutId: Long) {
-        val workout = workoutById(workoutId)
+    open suspend fun deleteWorkoutReorder(workout: Workout) {
         val workouts = allReferenceWorkoutByRoutineId(workout.routineId!!)
         val updateList = workouts
             .filter { w -> w.order > workout.order }

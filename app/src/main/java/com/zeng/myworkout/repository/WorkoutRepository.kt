@@ -21,12 +21,13 @@ class WorkoutRepository (
     suspend fun updateUserWorkoutSession(sessionWorkoutId: Long?) = userDao.updateUserWorkoutSession(sessionWorkoutId)
 
     fun getWorkoutById(workoutId: Long): LiveData<Workout?> = workoutDao.getWorkoutById(workoutId)
-    fun getAllReferenceWorkoutNamesByRoutineId(routineId: Long): LiveData<List<WorkoutName>> = workoutDao.getAllReferenceWorkoutNamesByRoutineId(routineId)
+    fun getAllReferenceWorkoutByRoutineId(routineId: Long): LiveData<List<Workout>> = workoutDao.getAllReferenceWorkoutByRoutineId(routineId)
     suspend fun allReferenceWorkoutByRoutineId(routineId: Long): List<Workout> = workoutDao.allReferenceWorkoutByRoutineId(routineId)
 
     suspend fun insertWorkout(workout: Workout) = workoutDao.insert(workout)
     suspend fun updateWorkout(workout: Workout) = workoutDao.update(workout)
-    suspend fun deleteWorkoutReorderById(workoutId: Long) = workoutDao.deleteWorkoutReorderById(workoutId)
+    suspend fun updateWorkout(workouts: List<Workout>) = workoutDao.update(workouts)
+    suspend fun deleteWorkoutReorder(workout: Workout) = workoutDao.deleteWorkoutReorder(workout)
     suspend fun deleteWorkout(workout: Workout) = workoutDao.delete(workout)
     suspend fun deleteWorkoutById(workoutId: Long) = workoutDao.deleteWorkoutById(workoutId)
 
