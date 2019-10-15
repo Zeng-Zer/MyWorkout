@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Squat",
+    "category": "Legs"
+  },
+  {
+    "name": "Deadlift",
+    "category": "Legs"
+  },
+  {
+    "name": "Bench Press",
+    "category": "Chest"
+  },
+  {
+    "name": "Overhead Press",
+    "category": "Shoulder"
+  },
+  {
+    "name": "Rowing",
+    "category": "Back"
+  },
+  {
+    "name": "Pullups",
+    "category": "Back"
+  }
+]

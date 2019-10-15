@@ -1,11 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-
+apply plugin: 'kotlinx-serialization'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
@@ -70,6 +67,10 @@ dependencies {
     implementation 'org.koin:koin-android:2.0.1'
     implementation "org.koin:koin-androidx-scope:2.0.1"
     implementation "org.koin:koin-androidx-viewmodel:2.0.1"
+
+    // Serialization
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.13.0" // JVM dependency
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

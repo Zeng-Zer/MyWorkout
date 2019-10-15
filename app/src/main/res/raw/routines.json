@@ -1,0 +1,181 @@
+[
+  {
+    "name": "5x5 StrongLifts",
+    "description": "Twice a week",
+    "workouts": [
+      {
+        "name": "Workout A",
+        "reference": true,
+        "exercises": [
+          {
+            "name": "Squat",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "name": "Bench Press",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "name": "Rowing",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 100,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Workout B",
+        "description": "",
+        "reference": true,
+        "exercises": [
+          {
+            "name": "Squat",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 140,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "name": "Overhead Press",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 60,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 60,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 60,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 60,
+                "reps": 5
+              },
+              {
+                "type": "WEIGHT",
+                "value": 60,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "name": "Deadlift",
+            "loads": [
+              {
+                "type": "WEIGHT",
+                "value": 180,
+                "reps": 5
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

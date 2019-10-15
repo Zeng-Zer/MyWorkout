@@ -4,14 +4,18 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.zeng.myworkout.R
 import com.zeng.myworkout.database.AppDatabase
 import com.zeng.myworkout.model.*
 import kotlinx.coroutines.coroutineScope
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.list
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class DatabaseWorker(
-    context: Context,
+    val context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams), KoinComponent {
 
@@ -19,7 +23,6 @@ class DatabaseWorker(
 
     override suspend fun doWork(): Result = coroutineScope {
         try {
-//            database = AppDatabase.getInstance(applicationContext)
             populateDatabase()
             Result.success()
         } catch (ex: Exception) {
@@ -28,70 +31,73 @@ class DatabaseWorker(
         }
     }
 
-    private suspend fun insertRoutine(routine: Routine) {
-        routine.id = database.routineDao().insert(routine)
-    }
+    private suspend fun populateDatabase() {
+        val json = Json(JsonConfiguration.Stable)
+        val categories: List<Category> = json.parse(
+            Category.serializer().list,
+            context.resources.openRawResource(R.raw.categories).bufferedReader().use {it.readText()}
+        )
+        val exercises: List<Exercise> = json.parse(
+            Exercise.serializer().list,
+            context.resources.openRawResource(R.raw.exercises).bufferedReader().use {it.readText()}
+        )
+        val routines: List<RoutineSerialized> = json.parse(
+            RoutineSerialized.serializer().list,
+            context.resources.openRawResource(R.raw.routines).bufferedReader().use {it.readText()}
+        )
 
-    private suspend fun insertWorkout(workout: Workout) {
-        workout.id = database.workoutDao().insert(workout)
-    }
-
-    private suspend fun insertCategory(category: Category) {
-        database.categoryDao().insert(category)
-    }
-
-    private suspend fun insertExercise(exercise: Exercise) {
-        exercise.id = database.exerciseDao().insert(exercise)
-    }
-
-    private suspend fun insertWorkoutExercise(workoutExercise: WorkoutExercise) {
-        workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
-    }
-
-    private suspend fun insertLoads(loads: List<Load>) {
-        database.loadDao().insert(loads)
+        insertUser(User(null, true))
+        insertCategories(categories)
+        insertExercises(exercises)
+        val exerciseIds = exercises.map { it.name to it.id }.toMap()
+        insertRoutines(routines, categories, exerciseIds)
     }
 
     private suspend fun insertUser(user: User) {
         user.id = database.userDao().insert(user)
     }
 
-    private suspend fun populateDatabase() {
-        // Category
-        val legs = Category("Legs").also { insertCategory(it) }
-        val chest = Category("Chest").also { insertCategory(it) }
+    // TODO REAL CATEGORY IMPLEMENTATION
+    private suspend fun insertCategories(categories: List<Category>) {
+        database.categoryDao().insert(categories)
+    }
 
-        // Exercise
-        val squatExercise = Exercise("Squat", legs.id).also { insertExercise(it) }
-        val benchExercise = Exercise("Bench Press", chest.id).also { insertExercise(it) }
-        val deadliftExercise = Exercise("Deadlift", legs.id).also { insertExercise(it) }
+    private suspend fun insertExercises(exercises: List<Exercise>) {
+        val ids = database.exerciseDao().insert(exercises)
+        exercises.forEachIndexed { i, item ->
+            item.id = ids[i]
+        }
+    }
 
-        val fullbody = Routine("Fullbody - Test", "2x / week", 0).also { insertRoutine(it) }
+    // TODO OPTIMIZE THIS
+    private suspend fun insertRoutines(routines: List<RoutineSerialized>, categories: List<Category>, exerciseIds: Map<String, Long?>) {
+        routines.mapIndexed { i, routine ->
 
-        val workout = Workout("Workout A", "test", 0, fullbody.id!!, true).also { insertWorkout(it) }
+            // Routines + Workouts
+            Routine(routine.name, routine.description, i) to routine.workouts
+        }.forEach { (routine, workouts) ->
+            routine.id = database.routineDao().insertRoutineReorder(routine)
+            workouts.mapIndexed { i, workout ->
 
-        // Add squat to workout
-        val squat = WorkoutExercise(0, workout.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
-        (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it, squat.id) }.also { insertLoads(it) }
+                // Workout + WorkoutExercises
+                Workout(workout.name, workout.description, i, routine.id, workout.reference) to workout.exercises
+            }.forEach { (workout, exercises) ->
+                workout.id = database.workoutDao().insert(workout)
+                exercises.mapIndexed { i, exercise ->
 
-        // Add bench to workout
-        val bench = WorkoutExercise(1, workout.id!!, benchExercise.id!!).also { insertWorkoutExercise(it) }
-        (0..4).map { Load(LoadType.WEIGHT, 60f, 10, it, bench.id) }.also { insertLoads(it) }
+                    // WorkoutExercise + Loads
+                    WorkoutExercise(i, workout.id, exerciseIds[exercise.name]) to exercise.loads
+                }.forEach { (workoutExercise, loads) ->
+                    workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
 
-        // Add deadlift to workout
-        val deadlift = WorkoutExercise(2, workout.id!!, deadliftExercise.id!!).also { insertWorkoutExercise(it) }
-        (0..0).map { Load(LoadType.WEIGHT, 180f, 5, it, deadlift.id) }.also { insertLoads(it) }
-
-        val workout2 = Workout("Workout B", "test", 1, fullbody.id!!, true).also { insertWorkout(it) }
-
-        // Add squat to workout2
-        val squat2 = WorkoutExercise(0, workout2.id!!, squatExercise.id!!).also { insertWorkoutExercise(it) }
-        (0..4).map { Load(LoadType.WEIGHT, 120f, 5, it, squat2.id) }.also { insertLoads(it) }
-
-        User(null, true).also { insertUser(it) }
-
-        // TODO ADD PPL
-        val ppl = Routine("Routine 2 - Test", "testing ordering", 1).also { insertRoutine(it) }
+                    // Load
+                    val insertLoads = loads.mapIndexed { i, load ->
+                        Load(load.type, load.value, load.reps, i, workoutExercise.id)
+                    }
+                    database.loadDao().insert(insertLoads)
+                }
+            }
+        }
     }
 
     companion object {

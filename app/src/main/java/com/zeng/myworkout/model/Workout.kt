@@ -3,6 +3,7 @@ package com.zeng.myworkout.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 import java.util.*
 
 @Entity(tableName = "workout")
@@ -30,4 +31,12 @@ data class Workout(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
+)
+
+@Serializable
+data class WorkoutSerialized(
+    val name: String = "",
+    val description: String = "",
+    val reference: Boolean = false,
+    val exercises: List<WorkoutExerciseSerialized> = emptyList()
 )

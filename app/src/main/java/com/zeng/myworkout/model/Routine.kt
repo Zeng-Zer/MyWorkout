@@ -2,6 +2,7 @@ package com.zeng.myworkout.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "routine")
 data class Routine(
@@ -25,3 +26,10 @@ data class RoutineWithWorkouts(
     @Ignore
     lateinit var workoutsLiveData: LiveData<List<Workout>>
 }
+
+@Serializable
+data class RoutineSerialized(
+    val name: String = "",
+    val description: String = "",
+    val workouts: List<WorkoutSerialized> = emptyList()
+)
