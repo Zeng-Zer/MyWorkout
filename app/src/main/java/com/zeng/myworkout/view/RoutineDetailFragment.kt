@@ -16,6 +16,7 @@ import com.zeng.myworkout.databinding.FragmentRoutineDetailBinding
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.view.adapter.RoutineWorkoutAdapter
 import com.zeng.myworkout.viewmodel.RoutineDetailViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -68,8 +69,13 @@ class RoutineDetailFragment : Fragment() {
                 }
             }
 
-            // TODO
             // EDIT
+            R.id.action_edit_workout -> {
+                if (adapter.itemCount > 0) {
+                    val currentItem = adapter.currentList[binding.viewPager.currentItem]
+                    openEditForm(currentItem)
+                }
+            }
 
             R.id.action_move_right_workout -> {
                 if (binding.viewPager.currentItem + 1 < adapter.itemCount) {
@@ -178,6 +184,22 @@ class RoutineDetailFragment : Fragment() {
             }
             .setNegativeButton("CANCEL") {  _, _ ->  }
             .setView(form.root)
+            .create()
+
+        dialog.show()
+    }
+
+    private fun openEditForm(workout: Workout) {
+        val formDialog = DialogWorkoutFormBinding.inflate(layoutInflater, container, false)
+        formDialog.workoutName.setText(workout.name)
+        val dialog = AlertDialog.Builder(context)
+            .setMessage("Edit Routine")
+            .setPositiveButton("EDIT") { _, _ ->
+                workout.name = formDialog.workoutName.text.toString().trim()
+                viewModel.updateWorkout(workout)
+            }
+            .setNegativeButton("CANCEL") { _, _ -> }
+            .setView(formDialog.root)
             .create()
 
         dialog.show()

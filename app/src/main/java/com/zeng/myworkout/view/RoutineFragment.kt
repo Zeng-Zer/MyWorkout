@@ -45,7 +45,7 @@ class RoutineFragment : Fragment() {
         binding = FragmentRoutineBinding.inflate(inflater, container, false)
 
         setupRecyclerView()
-        setupFab(inflater)
+        setupFab()
         subscribeUi()
 
         return binding.root
@@ -64,9 +64,9 @@ class RoutineFragment : Fragment() {
         helper.attachToRecyclerView(binding.list)
     }
 
-    private fun setupFab(inflater: LayoutInflater) {
+    private fun setupFab() {
         binding.fab.setOnClickListener {
-            showNewRoutineDialog(inflater)
+            showNewRoutineDialog()
         }
     }
 
@@ -76,8 +76,8 @@ class RoutineFragment : Fragment() {
         })
     }
 
-    private fun showNewRoutineDialog(inflater: LayoutInflater) {
-        val formDialog = DialogRoutineFormBinding.inflate(inflater, container, false)
+    private fun showNewRoutineDialog() {
+        val formDialog = DialogRoutineFormBinding.inflate(layoutInflater, container, false)
         val dialog = AlertDialog.Builder(context)
             .setMessage("New routine")
             .setPositiveButton("CREATE") { _, _ ->

@@ -30,6 +30,12 @@ class RoutineDetailViewModel(
         }
     }
 
+    fun updateWorkout(workout: Workout) {
+        viewModelScope.launch {
+            workoutRepo.updateWorkout(workout)
+        }
+    }
+
     fun deleteWorkout(workout: Workout) {
         viewModelScope.launch {
             workoutRepo.deleteWorkoutReorder(workout)
