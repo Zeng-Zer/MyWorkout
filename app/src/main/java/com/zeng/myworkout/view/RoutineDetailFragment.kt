@@ -45,6 +45,7 @@ class RoutineDetailFragment : Fragment() {
         setHasOptionsMenu(true)
         setupViewPager()
         setupFab()
+        setupButton()
         subscribeUi()
         return binding.root
     }
@@ -134,6 +135,12 @@ class RoutineDetailFragment : Fragment() {
         }
     }
 
+    private fun setupButton() {
+        binding.button.setOnClickListener {
+            addNewWorkout()
+        }
+    }
+
     private fun subscribeUi() {
         // Change toolbar title
         viewModel.routine.observe(this, Observer { routine ->
@@ -144,8 +151,12 @@ class RoutineDetailFragment : Fragment() {
         viewModel.workouts.observe(viewLifecycleOwner, Observer { it?.let { workouts ->
             if (workouts.isEmpty()) {
                 binding.fab.hide()
+                binding.viewPager.visibility = View.GONE
+                binding.button.visibility = View.VISIBLE
             } else {
                 binding.fab.show()
+                binding.viewPager.visibility = View.VISIBLE
+                binding.button.visibility = View.GONE
             }
 
             adapter.submitList(workouts) {
