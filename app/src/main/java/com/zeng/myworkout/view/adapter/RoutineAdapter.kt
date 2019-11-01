@@ -18,7 +18,7 @@ import com.zeng.myworkout.util.DraggableListAdapter
 class RoutineAdapter(
     private val context: Context,
     private val onClearView: (List<RoutineWithWorkouts>) -> Unit,
-    private val onItemClick: (Long, Boolean) -> Unit,
+    private val onItemClick: (Long) -> Unit,
     private val onMenuClick: (View, Routine) -> Unit,
     private val onWorkoutShortcutClickNested: (Workout) -> Unit
 ) : DraggableListAdapter<RoutineWithWorkouts>(RoutineWithWorkoutsDiffCallback()) {
@@ -86,7 +86,7 @@ class RoutineAdapter(
 
             // Navigate to routine details
             card.setOnClickListener {
-                onItemClick(routine.id!!, false)
+                onItemClick(routine.id!!)
             }
         }
     }

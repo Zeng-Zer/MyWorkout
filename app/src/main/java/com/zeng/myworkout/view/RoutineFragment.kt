@@ -88,7 +88,7 @@ class RoutineFragment : Fragment() {
                 )
                 viewModel.viewModelScope.launch {
                     routine.id = viewModel.insertRoutineAsync(routine)
-                    navRoutineDetailFragment(routine.id!!, true)
+                    navRoutineDetailFragment(routine.id!!)
                 }
             }
             .setNegativeButton("CANCEL") { _, _ -> }
@@ -149,8 +149,8 @@ class RoutineFragment : Fragment() {
         navController.navigate(action)
     }
 
-    private fun navRoutineDetailFragment(routineId: Long, isNew: Boolean) {
-        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(isNew, routineId)
+    private fun navRoutineDetailFragment(routineId: Long) {
+        val action = RoutineFragmentDirections.actionNavigationRoutineToNavigationRoutineDetail(routineId)
         navController.navigate(action)
     }
 }

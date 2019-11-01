@@ -63,12 +63,7 @@
                 app:exitAnim="@anim/slide_out_left"
                 app:popEnterAnim="@anim/slide_in_left"
                 app:popExitAnim="@anim/slide_out_right"
-                app:popUpTo="@+id/navigation_routine">
-                <argument
-                    android:name="isNew"
-                    android:defaultValue="false"
-                    app:argType="boolean" />
-            </action>
+                app:popUpTo="@+id/navigation_routine"/>
         </fragment>
 
         <fragment
@@ -77,10 +72,6 @@
             <argument
                 android:name="routineId"
                 app:argType="long" />
-            <argument
-                android:name="isNew"
-                app:argType="boolean"
-                android:defaultValue="false" />
             <action
                 android:id="@+id/action_navigation_routine_detail_to_navigation_exercise"
                 app:destination="@id/navigation_exercise"

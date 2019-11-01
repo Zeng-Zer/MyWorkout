@@ -25,7 +25,6 @@ class RoutineDetailFragment : Fragment() {
     // Args
     private val args by navArgs<RoutineDetailFragmentArgs>()
     private val routineId by lazy { args.routineId }
-    private val isNew by lazy { args.isNew }
 
     private lateinit var binding: FragmentRoutineDetailBinding
     private val navController by lazy { findNavController() }
@@ -36,11 +35,6 @@ class RoutineDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentRoutineDetailBinding.inflate(inflater, container, false)
-
-        // Add new workout for new routine
-        if (isNew) {
-            addNewWorkout()
-        }
 
         setHasOptionsMenu(true)
         setupViewPager()
