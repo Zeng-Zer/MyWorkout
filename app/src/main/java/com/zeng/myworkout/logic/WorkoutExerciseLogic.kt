@@ -5,7 +5,6 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import com.zeng.myworkout.R
 import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.LoadType
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
@@ -19,18 +18,18 @@ fun showWorkoutExerciseMenuPopup(context: Context, viewModel: WorkoutViewModel):
         }
         popup.setOnMenuItemClickListener { menuItem ->
             val exercise = item.exercise
-            val loads = item.loads
+            val loads = item.exercise.loads
             val detail = item.detail
             when (menuItem.itemId) {
                 R.id.add_set -> {
-                    val last = loads.lastOrNull() ?: Load(LoadType.WEIGHT, 0F, 0, 0, exercise.id)
-                    val newLoad = last.copy(id = null, order = last.order + 1)
-                    viewModel.insertLoad(newLoad)
+                    val newExercise = exercise.copy(loads = loads + (loads.lastOrNull() ?: Load()))
+                    viewModel.updateWorkoutExercise(newExercise)
                     true
                 }
                 R.id.remove_set -> {
                     if (loads.size > 1) {
-                        viewModel.deleteLoad(loads.last())
+                        val newExercise = exercise.copy(loads = loads.dropLast(1))
+                        viewModel.updateWorkoutExercise(newExercise)
                     }
                     true
                 }

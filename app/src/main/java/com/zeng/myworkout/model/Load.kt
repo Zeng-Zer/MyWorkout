@@ -1,45 +1,17 @@
 package com.zeng.myworkout.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-@Entity(
-    tableName = "load",
-    foreignKeys = [
-        ForeignKey(
-            entity = WorkoutExercise::class,
-            parentColumns = ["id"],
-            childColumns = ["workoutExerciseId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE)
-    ]
-)
 data class Load(
-    @ColumnInfo
     var type: LoadType = LoadType.WEIGHT,
 
-    @ColumnInfo
     var value: Float = 0F,
 
     // Reference rep for routine
-    @ColumnInfo
     var reps: Int = 0,
 
-    @ColumnInfo
-    var order: Int = 0,
-
-    @ColumnInfo(index = true)
-    var workoutExerciseId: Long? = null,
-
     // Actual reps done in workouts
-    @ColumnInfo
-    var repsDone: Int = -1,
-
-    @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
+    var repsDone: Int = -1
 )
 
 enum class LoadType(val value: Int) {

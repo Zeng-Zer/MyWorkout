@@ -5,8 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,12 +19,10 @@ class WorkoutExerciseAdapter(
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
     private val onMenuClick: (View, WorkoutExerciseDetail, Int) -> Unit,
-    private val onLoadClickNested: (View, Load) -> Unit,
-    private val onLoadTextClickNested: (View, Load) -> Unit,
+    private val onLoadClickNested: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val onLoadTextClickNested: (View, Load, WorkoutExerciseDetail) -> Unit,
     private val session: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
-
-    lateinit var viewLifecycleOwner: LifecycleOwner
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         val from = viewHolder.adapterPosition
@@ -70,14 +66,12 @@ class WorkoutExerciseAdapter(
             adapter = LoadAdapter(
                 context = context,
                 session = session,
+                exercise = item,
                 onLoadClick = onLoadClickNested,
                 onLoadTextClick = onLoadTextClickNested
             )
             list.adapter = adapter
-            item.loadsLiveData.observe(viewLifecycleOwner, Observer { loads ->
-                item.loads = loads
-                adapter.submitList(loads)
-            })
+            adapter.submitList(item.exercise.loads)
         }
 
 
@@ -102,8 +96,7 @@ class WorkoutExerciseDiffCallback : DiffUtil.ItemCallback<WorkoutExerciseDetail>
 
     @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: WorkoutExerciseDetail, newItem: WorkoutExerciseDetail): Boolean {
-        return oldItem.exercise == newItem.exercise &&
-                oldItem.detail == newItem.detail
+        return oldItem == newItem
     }
 
 }

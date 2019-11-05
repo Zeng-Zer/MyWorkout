@@ -34,11 +34,11 @@ class WorkoutFragment : Fragment() {
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = requireContext(),
         recycledViewPool = recycledViewPool,
-        session = true,
-        onClearView = { list -> workoutViewModel.updateAllWorkoutExercise(list.map{ it.exercise }) },
+        onClearView = { list -> workoutViewModel.updateWorkoutExercise(list.map{ it.exercise }) },
         onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel),
         onLoadClickNested = setButtonSessionReps(requireContext(), workoutViewModel),
-        onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel)
+        onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel),
+        session = true
     )}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -76,7 +76,6 @@ class WorkoutFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.apply {
-            adapter.viewLifecycleOwner = viewLifecycleOwner
             adapter.enableDrag()
             list.adapter = adapter
 

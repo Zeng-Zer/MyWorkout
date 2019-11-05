@@ -11,13 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemGridLoadBinding
 import com.zeng.myworkout.logic.setLoadButton
 import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.weightToString
 
 class LoadAdapter(
     private val context: Context,
     private val session: Boolean,
-    private val onLoadClick: (View, Load) -> Unit,
-    private val onLoadTextClick: (View, Load) -> Unit
+    private val exercise: WorkoutExerciseDetail,
+    private val onLoadClick: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val onLoadTextClick: (View, Load, WorkoutExerciseDetail) -> Unit
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
@@ -46,19 +48,20 @@ class LoadAdapter(
 
         private fun ListItemGridLoadBinding.setupCallbacks(load: Load) {
             button.setOnClickListener {
-                onLoadClick(it, load)
+                onLoadClick(it, load, exercise)
             }
             value.setOnClickListener {
-                onLoadTextClick(it, load)
+                onLoadTextClick(it, load, exercise)
             }
         }
     }
 
 }
 
+// TODO REMOVE
 class LoadDiffCallback : DiffUtil.ItemCallback<Load>() {
     override fun areItemsTheSame(oldItem: Load, newItem: Load): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem == newItem
     }
 
     @SuppressLint("DiffUtilEquals")
