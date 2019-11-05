@@ -1,6 +1,5 @@
 package com.zeng.myworkout.model
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.serialization.Serializable
 
@@ -18,6 +17,9 @@ import kotlinx.serialization.Serializable
 data class WorkoutExercise(
     @ColumnInfo
     var order: Int = 0,
+
+    @ColumnInfo
+    var loads: List<Load> = emptyList(),
 
     @ColumnInfo(index = true)
     var workoutId: Long? = null,
@@ -41,12 +43,6 @@ data class WorkoutExerciseDetail(
     var detail: Exercise
         get() = exerciseDetail.first()
         set(ex) { exerciseDetail = listOf(ex) }
-
-    @Ignore
-    lateinit var loads: List<Load>
-
-    @Ignore
-    lateinit var loadsLiveData: LiveData<List<Load>>
 }
 
 @Serializable

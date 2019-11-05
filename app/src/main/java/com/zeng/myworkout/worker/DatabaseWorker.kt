@@ -83,19 +83,14 @@ class DatabaseWorker(
                 Workout(workout.name, workout.description, i, routine.id, workout.reference) to workout.exercises
             }.forEach { (workout, exercises) ->
                 workout.id = database.workoutDao().insert(workout)
-                exercises.mapIndexed { i, exercise ->
+                val workoutExercises = exercises.mapIndexed { i, exercise ->
 
                     // WorkoutExercise + Loads
-                    WorkoutExercise(i, workout.id, exerciseIds[exercise.name]) to exercise.loads
-                }.forEach { (workoutExercise, loads) ->
-                    workoutExercise.id = database.workoutExerciseDao().insert(workoutExercise)
-
-                    // Load
-                    val insertLoads = loads.mapIndexed { i, load ->
-                        Load(load.type, load.value, load.reps, i, workoutExercise.id)
-                    }
-                    database.loadDao().insert(insertLoads)
+                    val loads = exercise.loads.map { Load(it.type, it.value, it.reps) }
+                    WorkoutExercise(i, loads, workout.id, exerciseIds[exercise.name])
                 }
+
+                database.workoutExerciseDao().insert(workoutExercises)
             }
         }
     }

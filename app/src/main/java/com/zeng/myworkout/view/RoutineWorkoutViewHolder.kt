@@ -34,11 +34,11 @@ class RoutineWorkoutViewHolder(
     private val adapter by lazy { WorkoutExerciseAdapter(
         context = context,
         recycledViewPool = loadRecycledViewPool,
-        session = false,
-        onClearView = { list -> viewModel.updateAllWorkoutExercise(list.map{ it.exercise }) },
+        onClearView = { list -> viewModel.updateWorkoutExercise(list.map{ it.exercise }) },
         onMenuClick = showWorkoutExerciseMenuPopup(context, viewModel),
         onLoadClickNested = setButtonEdit(context, viewModel),
-        onLoadTextClickNested = setTextEditLoad(context, viewModel)
+        onLoadTextClickNested = setTextEditLoad(context, viewModel),
+        session = false
     )}
 
     fun bind(item: Workout) {
@@ -51,7 +51,6 @@ class RoutineWorkoutViewHolder(
 
     private fun setupRecyclerView() {
         adapter.enableDrag()
-        adapter.viewLifecycleOwner = fragment.viewLifecycleOwner
         binding.list.adapter = adapter
         binding.list.setRecycledViewPool(recycledViewPool)
 
@@ -78,18 +77,15 @@ class RoutineWorkoutViewHolder(
     }
 
     private fun addExercises(exerciseIds: List<Long>) {
-        val exercisesWithLoads = exerciseIds.mapIndexed { i, exerciseId ->
-            // Make a pair of exercise and their load list
-            Pair(
-                WorkoutExercise(
-                    // Add element at the end with its order in the list of ids
-                    i + adapter.itemCount,
-                    viewModel.workoutId.value!!,
-                    exerciseId
-                ),
-                listOf(Load(LoadType.WEIGHT, 0F, 0, 0))
+        val exercises = exerciseIds.mapIndexed { i, exerciseId ->
+            WorkoutExercise(
+                // Add element at the end with its order in the list of ids
+                i + adapter.itemCount,
+                listOf(Load(LoadType.WEIGHT, 0F, 0, 0)),
+                viewModel.workoutId.value!!,
+                exerciseId
             )
         }
-        viewModel.insertWorkoutExerciseWithLoads(exercisesWithLoads)
+        viewModel.insertWorkoutExercises(exercises)
     }
 }

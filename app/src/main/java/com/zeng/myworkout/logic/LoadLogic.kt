@@ -15,6 +15,7 @@ import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
@@ -36,8 +37,8 @@ fun setLoadButton(load: Load, button: Button, session: Boolean, resources: Resou
 }
 
 // Editable button when browsing routine workouts
-fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load) -> Unit {
-    return { view: View, load: Load ->
+fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
+    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
         val button = view as Button
         val pickerBinding = IntegerPickerBinding.inflate(LayoutInflater.from(context))
 
@@ -53,7 +54,7 @@ fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load) -
             .setMessage("Number of reps:")
             .setPositiveButton("OK") { _, _ ->
                 setLoadButton(load, button, false, context.resources)
-                viewModel.updateLoad(load)
+                viewModel.updateWorkoutExercise(exercise.exercise)
             }
             .setNegativeButton("CANCEL") { _, _ -> }
             .setView(pickerBinding.root)
@@ -65,22 +66,22 @@ fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load) -
 }
 
 // TODO SET OTHER TYPE
-fun setButtonSessionReps(context: Context, viewModel: WorkoutViewModel): (View, Load) -> Unit {
-    return { view: View, load: Load ->
+fun setButtonSessionReps(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
+    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
         load.repsDone -= 1
         if (load.repsDone < -1) {
             load.repsDone = load.reps
         }
 
         setLoadButton(load, view as Button, true, context.resources)
-        viewModel.updateLoad(load)
+        viewModel.updateWorkoutExercise(exercise.exercise)
     }
 }
 
 // TODO REFACTOR THIS
 // Editable text when clicking on load value
-fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Load) -> Unit {
-    return { view: View, load: Load ->
+fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
+    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
         val editText = view as EditText
         var weight = load.value
         val numberPickerBinding =
@@ -128,7 +129,7 @@ fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Load)
             .setPositiveButton("OK") { _, _ ->
                 load.value = weight
                 editText.setText(weight.weightToString())
-                viewModel.updateLoad(load)
+                viewModel.updateWorkoutExercise(exercise.exercise)
             }
             .setNegativeButton("CANCEL") { _, _ -> }
             .setView(numberPickerBinding.root)

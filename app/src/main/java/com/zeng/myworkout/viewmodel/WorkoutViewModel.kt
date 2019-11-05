@@ -1,7 +1,6 @@
 package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.*
-import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -24,47 +23,22 @@ class WorkoutViewModel(private val workoutRepo: WorkoutRepository): ViewModel() 
         }
     }
 
-    fun updateAllWorkoutExercise(list: List<WorkoutExercise>) {
+    fun updateWorkoutExercise(exercise: WorkoutExercise) {
         viewModelScope.launch {
-            workoutRepo.updateAllWorkoutExercise(list)
+            workoutRepo.updateWorkoutExercise(exercise)
         }
     }
 
-    fun updateLoad(load: Load) {
+    fun updateWorkoutExercise(list: List<WorkoutExercise>) {
         viewModelScope.launch {
-            workoutRepo.updateLoad(load)
+            workoutRepo.updateWorkoutExercise(list)
         }
     }
 
-    fun deleteLoad(load: Load) {
+    fun insertWorkoutExercises(exercises: List<WorkoutExercise>) {
         viewModelScope.launch {
-            workoutRepo.deleteLoad(load)
+            workoutRepo.insertWorkoutExercise(exercises)
         }
     }
 
-    fun insertLoad(load: Load) {
-        viewModelScope.launch {
-            workoutRepo.insertLoad(load)
-        }
-    }
-
-    fun insertWorkoutExerciseWithLoads(exercisesWithLoads: List<Pair<WorkoutExercise, List<Load>>>) {
-        viewModelScope.launch {
-            val exercises = exercisesWithLoads.map { it.first }
-            val loadsWithoutIds = exercisesWithLoads.map { it.second }
-
-            val ids = workoutRepo.insertWorkoutExercise(exercises)
-
-            // Add workout exercise id to loads
-            val loads = loadsWithoutIds
-                .zip(ids)
-                .flatMap { (loads, id) ->
-                    loads.map { load ->
-                        load.workoutExerciseId = id
-                        load
-                    }
-                }
-            workoutRepo.insertLoad(loads)
-        }
-    }
 }
