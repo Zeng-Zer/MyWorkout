@@ -19,7 +19,7 @@ class WorkoutExerciseAdapter(
     private val recycledViewPool: RecyclerView.RecycledViewPool,
     private val onClearView: (List<WorkoutExerciseDetail>) -> Unit,
     private val onMenuClick: (View, WorkoutExerciseDetail, Int) -> Unit,
-    private val onLoadClickNested: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val onLoadClickNested: (View, Int, WorkoutExerciseDetail) -> Unit,
     private val onLoadTextClickNested: (View, Load, WorkoutExerciseDetail) -> Unit,
     private val session: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
