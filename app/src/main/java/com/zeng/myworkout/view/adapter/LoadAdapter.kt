@@ -18,17 +18,19 @@ class LoadAdapter(
     private val context: Context,
     private val session: Boolean,
     private val exercise: WorkoutExerciseDetail,
-    private val onLoadClick: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val onLoadClick: (View, Int, WorkoutExerciseDetail) -> Unit,
     private val onLoadTextClick: (View, Load, WorkoutExerciseDetail) -> Unit
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
+    private var position = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return LoadViewHolder(ListItemGridLoadBinding.inflate(inflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        this.position = position
         val item = getItem(position)
         (holder as LoadViewHolder).bind(item)
     }
@@ -48,7 +50,7 @@ class LoadAdapter(
 
         private fun ListItemGridLoadBinding.setupCallbacks(load: Load) {
             button.setOnClickListener {
-                onLoadClick(it, load, exercise)
+                onLoadClick(it, position, exercise)
             }
             value.setOnClickListener {
                 onLoadTextClick(it, load, exercise)

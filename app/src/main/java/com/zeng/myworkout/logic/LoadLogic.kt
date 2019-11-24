@@ -37,8 +37,9 @@ fun setLoadButton(load: Load, button: Button, session: Boolean, resources: Resou
 }
 
 // Editable button when browsing routine workouts
-fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
-    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
+fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Int, WorkoutExerciseDetail) -> Unit {
+    return { view: View, position: Int, exercise: WorkoutExerciseDetail ->
+        val load = exercise.exercise.loads[position]
         val button = view as Button
         val pickerBinding = IntegerPickerBinding.inflate(LayoutInflater.from(context))
 
@@ -66,8 +67,9 @@ fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Load, W
 }
 
 // TODO SET OTHER TYPE
-fun setButtonSessionReps(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
-    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
+fun setButtonSessionReps(context: Context, viewModel: WorkoutViewModel): (View, Int, WorkoutExerciseDetail) -> Unit {
+    return { view: View, position: Int, exercise: WorkoutExerciseDetail ->
+        val load = exercise.exercise.loads[position]
         load.repsDone -= 1
         if (load.repsDone < -1) {
             load.repsDone = load.reps
