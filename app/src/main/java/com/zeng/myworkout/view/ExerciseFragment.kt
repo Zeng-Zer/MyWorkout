@@ -2,6 +2,7 @@ package com.zeng.myworkout.view
 
 import android.os.Bundle
 import android.view.*
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -35,6 +36,8 @@ class ExerciseFragment : Fragment() {
             this::onSwipedItem
         )
     }
+    private var exercises: List<Exercise> = emptyList()
+    private var categoryFilter: String = "All"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentExerciseBinding.inflate(inflater, container, false)
@@ -42,7 +45,7 @@ class ExerciseFragment : Fragment() {
         setHasOptionsMenu(true)
         setupBackPressed()
         setupRecyclerView()
-        setupFab()
+        setupFilters()
         subscribeUi()
         return binding.root
     }
@@ -106,15 +109,36 @@ class ExerciseFragment : Fragment() {
         helper.attachToRecyclerView(binding.list)
     }
 
-    private fun setupFab() {
-        binding.fab.setOnClickListener {
-            // TODO FAB
+    private fun setupFilters() {
+        viewModel.viewModelScope.launch {
+            // Init spinner
+            val categories = viewModel.getCategories().map { it.id }.toMutableList()
+            categories.add(0, "All")
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories.toTypedArray())
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinner.adapter = adapter
+            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                    categoryFilter = parent?.getItemAtPosition(pos) as String? ?: "All"
+                    submitFilteredList()
+                }
+
+            }
         }
+    }
+
+    private fun submitFilteredList() {
+        val filtered = exercises.filter { categoryFilter == "All" || it.category == categoryFilter }
+        adapter.submitList(filtered)
     }
 
     private fun subscribeUi() {
         viewModel.exercises.observe(this, Observer { exercises ->
-            adapter.submitList(exercises)
+            this.exercises = exercises
+            submitFilteredList()
         })
 
         // Change toolbar icon
