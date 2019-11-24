@@ -1,22 +1,25 @@
 package com.zeng.myworkout.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ArrayAdapter
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.zeng.myworkout.R
+import com.zeng.myworkout.databinding.DialogExerciseFormBinding
 import com.zeng.myworkout.databinding.FragmentExerciseBinding
 import com.zeng.myworkout.model.Exercise
 import com.zeng.myworkout.util.minusAssign
 import com.zeng.myworkout.util.plusAssign
 import com.zeng.myworkout.view.adapter.ExerciseAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ExerciseFragment : Fragment() {
@@ -31,11 +34,54 @@ class ExerciseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentExerciseBinding.inflate(inflater, container, false)
 
+        setHasOptionsMenu(true)
         setupBackPressed()
         setupRecyclerView()
         setupFab()
         subscribeUi()
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.exercise_page_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                navController.navigateUp()
+            }
+
+            R.id.new_exercise -> {
+                newExerciseDialog()
+            }
+        }
+        return true
+    }
+
+    private fun newExerciseDialog() {
+        viewModel.viewModelScope.launch {
+            val categories = viewModel.getCategories().map { it.id }
+
+            val exerciseForm = DialogExerciseFormBinding.inflate(layoutInflater, null, false)
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories.toTypedArray())
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            exerciseForm.spinner.adapter = adapter
+
+            val dialog = AlertDialog.Builder(requireContext())
+                .setMessage("New Exercise")
+                .setPositiveButton("Create") { _, _ ->
+                    if (!exerciseForm.name.text.isNullOrBlank()) {
+                        val exercise = Exercise(exerciseForm.name.text.toString(), exerciseForm.spinner.selectedItem as String)
+                        viewModel.insertExercise(exercise)
+                    }
+                }
+                .setNegativeButton("Cancel") {  _, _ ->  }
+                .setView(exerciseForm.root)
+                .create()
+
+            dialog.show()
+        }
     }
 
     private fun setupBackPressed() {

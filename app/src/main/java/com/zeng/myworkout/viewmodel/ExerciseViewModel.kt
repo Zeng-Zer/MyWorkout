@@ -1,11 +1,10 @@
 package com.zeng.myworkout.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
+import androidx.lifecycle.*
+import com.zeng.myworkout.model.Category
 import com.zeng.myworkout.model.Exercise
 import com.zeng.myworkout.repository.ExerciseRepository
+import kotlinx.coroutines.launch
 
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {
 
@@ -13,4 +12,11 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
     var exercisesToAdd: MutableLiveData<List<Exercise>> = MutableLiveData(emptyList())
     val hasChecked: LiveData<Boolean> = exercisesToAdd.map { !it.isNullOrEmpty() }
 
+    suspend fun getCategories(): List<Category> = repository.getAllCategory()
+
+    fun insertExercise(exercise: Exercise) {
+        viewModelScope.launch {
+            repository.addExercise(exercise)
+        }
+    }
 }
