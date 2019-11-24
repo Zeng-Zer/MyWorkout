@@ -4,14 +4,19 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemExerciseBinding
 import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.util.DraggableListAdapter
 
 class ExerciseAdapter(
-    private val onCheckedItem: (Boolean, Exercise) -> Unit
-) : ListAdapter<Exercise, RecyclerView.ViewHolder>(ExerciseDiffCallback()) {
+    private val onCheckedItem: (Boolean, Exercise) -> Unit,
+    private val onSwipedItem: (Exercise) -> Unit
+) : DraggableListAdapter<Exercise>(ExerciseDiffCallback()) {
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        onSwipedItem(currentList[viewHolder.adapterPosition])
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ExerciseViewHolder(

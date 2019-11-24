@@ -11,10 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.DialogExerciseFormBinding
 import com.zeng.myworkout.databinding.FragmentExerciseBinding
 import com.zeng.myworkout.model.Exercise
+import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.util.minusAssign
 import com.zeng.myworkout.util.plusAssign
 import com.zeng.myworkout.view.adapter.ExerciseAdapter
@@ -28,7 +30,10 @@ class ExerciseFragment : Fragment() {
     private val navController by lazy { findNavController() }
     private val viewModel by sharedViewModel<ExerciseViewModel>()
     private val adapter by lazy {
-        ExerciseAdapter(this::onCheckedItem)
+        ExerciseAdapter(
+            this::onCheckedItem,
+            this::onSwipedItem
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -95,6 +100,10 @@ class ExerciseFragment : Fragment() {
         val decoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.list.addItemDecoration(decoration)
         binding.list.adapter = adapter
+
+        adapter.enableSwipe()
+        val helper = ItemTouchHelper(adapter.callback)
+        helper.attachToRecyclerView(binding.list)
     }
 
     private fun setupFab() {
@@ -125,5 +134,14 @@ class ExerciseFragment : Fragment() {
         } else {
             viewModel.exercisesToAdd -= item
         }
+    }
+
+    private fun onSwipedItem(item: Exercise) {
+        DialogUtils.openValidationDialog(
+            context = requireContext(),
+            message = "Remove exercise " + item.name + " ?",
+            positiveFun = { viewModel.deleteExercise(item) },
+            negativeFun = { adapter.notifyDataSetChanged() }
+        )
     }
 }

@@ -19,4 +19,10 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
             repository.addExercise(exercise)
         }
     }
+
+    fun deleteExercise(exercise: Exercise) {
+        viewModelScope.launch {
+            repository.deleteExercise(exercise)
+        }
+    }
 }
