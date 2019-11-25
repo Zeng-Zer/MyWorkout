@@ -14,6 +14,6 @@ abstract class ExerciseDao : BaseDao<Exercise>() {
     abstract fun getExerciseById(id: Long): LiveData<Exercise>
 
     @Transaction
-    @Query("SELECT * FROM exercise ORDER BY [name] ASC")
+    @Query("SELECT * FROM exercise WHERE deleted = 0 ORDER BY [name] ASC")
     abstract fun getAllExercise(): LiveData<List<Exercise>>
 }

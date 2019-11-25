@@ -8,7 +8,7 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao, private val categ
 
     fun getAllExercise() = exerciseDao.getAllExercise()
     suspend fun addExercise(exercise: Exercise) = exerciseDao.insert(exercise)
-    suspend fun deleteExercise(exercise: Exercise) = exerciseDao.delete(exercise)
+    suspend fun updateExercise(exercise: Exercise) = exerciseDao.update(exercise)
 
     suspend fun getAllCategory() = categoryDao.getAllCategory()
 }

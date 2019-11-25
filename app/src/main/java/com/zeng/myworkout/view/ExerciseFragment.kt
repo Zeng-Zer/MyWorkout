@@ -164,7 +164,10 @@ class ExerciseFragment : Fragment() {
         DialogUtils.openValidationDialog(
             context = requireContext(),
             message = "Remove exercise " + item.name + " ?",
-            positiveFun = { viewModel.deleteExercise(item) },
+            positiveFun = {
+                item.deleted = true
+                viewModel.updateExercise(item)
+            },
             negativeFun = { adapter.notifyDataSetChanged() }
         )
     }
