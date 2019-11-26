@@ -20,9 +20,12 @@ import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
 // Helper function to set button value based on the load
-fun setLoadButton(load: Load, button: Button, session: Boolean, resources: Resources) {
+fun setLoadButton(load: Load, button: Button, session: Boolean, resources: Resources, customSession: Boolean = false) {
     with(load) {
-        if (session) {
+        if (customSession) {
+            button.text = repsDone.toString()
+            button.background = resources.getDrawable(R.drawable.my_button_ripple)
+        } else if (session) {
             if (repsDone == -1) {
                 button.text = reps.toString()
                 button.background = resources.getDrawable(R.drawable.my_button_unselected)
@@ -30,14 +33,14 @@ fun setLoadButton(load: Load, button: Button, session: Boolean, resources: Resou
                 button.text = repsDone.toString()
                 button.background = resources.getDrawable(R.drawable.my_button_ripple)
             }
-        } else {
+        }else {
             button.text = reps.toString()
         }
     }
 }
 
 // Editable button when browsing routine workouts
-fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Int, WorkoutExerciseDetail) -> Unit {
+fun setButtonEdit(context: Context, viewModel: WorkoutViewModel, session: Boolean): (View, Int, WorkoutExerciseDetail) -> Unit {
     return { view: View, position: Int, exercise: WorkoutExerciseDetail ->
         val load = exercise.exercise.loads[position]
         val button = view as Button
@@ -45,16 +48,24 @@ fun setButtonEdit(context: Context, viewModel: WorkoutViewModel): (View, Int, Wo
 
         pickerBinding.picker.minValue = 1
         pickerBinding.picker.maxValue = 100
-        pickerBinding.picker.value = load.reps
+        if (session) {
+            pickerBinding.picker.value = load.repsDone
+        } else {
+            pickerBinding.picker.value = load.reps
+        }
         pickerBinding.picker.wrapSelectorWheel = true
         pickerBinding.picker.setOnValueChangedListener { _, _, new ->
-            load.reps = new
+            if (session) {
+                load.repsDone = new
+            } else {
+                load.reps = new
+            }
         }
 
         val dialog = AlertDialog.Builder(context)
             .setMessage("Number of reps:")
             .setPositiveButton("OK") { _, _ ->
-                setLoadButton(load, button, false, context.resources)
+                setLoadButton(load, button, false, context.resources, session)
                 viewModel.updateWorkoutExercise(exercise.exercise)
             }
             .setNegativeButton("CANCEL") { _, _ -> }

@@ -10,6 +10,9 @@
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
+    <!--  WorkoutFragment  -->
+    <string name="add_exercise">Add exercise</string>
+
     <!--  ExerciseFragment  -->
     <string name="intent_result_list">result_list</string>
     <string name="new_exercise">New exercise</string>

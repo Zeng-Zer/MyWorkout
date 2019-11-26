@@ -1,6 +1,7 @@
 package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.*
+import com.zeng.myworkout.model.User
 import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -12,6 +13,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val user = workoutRepo.getCurrentUser()
+    fun currentUser() = workoutRepo.currentUser()
 
     // TODO WARNING THE LIVEDATA IS NOT MODIFIED IF THE USER SET THE WORKOUT REFERENCE TO NULL
     val workoutReference = Transformations.switchMap(user) { user ->
@@ -34,14 +36,21 @@ class HomeViewModel(
         workoutRepo.deleteWorkout(workoutSession.value!!)
     }
 
-    suspend fun finishCurrentWorkoutSession() {
+    suspend fun deleteWorkout(workoutId: Long) {
+        workoutRepo.deleteWorkoutById(workoutId)
+    }
+
+    suspend fun finishCurrentWorkoutSession(updateToNext: Boolean = true) {
         workoutSession.value?.let { workoutSession ->
             // add date to the session
             workoutSession.finishDate = Date()
             workoutRepo.updateWorkout(workoutSession)
 
             // update user workoutReferenceId
-            updateToNextWorkout(workoutSession)
+            if (updateToNext) {
+                updateToNextWorkout(workoutSession)
+            }
+
             workoutRepo.updateUserWorkoutSession(null)
         }
     }
@@ -64,6 +73,14 @@ class HomeViewModel(
     suspend fun continueRoutineWorkout() {
         val newWorkout = workoutRepo.newWorkoutSessionFromReference(workoutReference.value!!)
         workoutRepo.updateUserWorkoutSession(newWorkout.id)
+    }
+
+    suspend fun createWorkoutSession(workout: Workout) {
+        workout.id = workoutRepo.insertWorkout(workout)
+    }
+
+    suspend fun updateUser(user: User) {
+        workoutRepo.updateUser(user)
     }
 
 }

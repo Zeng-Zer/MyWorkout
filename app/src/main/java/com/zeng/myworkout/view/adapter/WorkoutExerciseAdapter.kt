@@ -21,7 +21,8 @@ class WorkoutExerciseAdapter(
     private val onMenuClick: (View, WorkoutExerciseDetail, Int) -> Unit,
     private val onLoadClickNested: (View, Int, WorkoutExerciseDetail) -> Unit,
     private val onLoadTextClickNested: (View, Load, WorkoutExerciseDetail) -> Unit,
-    private val session: Boolean = false
+    private val session: Boolean = false,
+    private val customSession: Boolean = false
 ) : DraggableListAdapter<WorkoutExerciseDetail>(WorkoutExerciseDiffCallback()) {
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -66,6 +67,7 @@ class WorkoutExerciseAdapter(
             adapter = LoadAdapter(
                 context = context,
                 session = session,
+                customSession = customSession,
                 exercise = item,
                 onLoadClick = onLoadClickNested,
                 onLoadTextClick = onLoadTextClickNested

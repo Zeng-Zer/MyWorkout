@@ -38,6 +38,15 @@
                 app:enterAnim="@anim/nav_default_enter_anim"
                 app:popUpTo="@+id/mobile_navigation"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_navigation_workout_to_navigation_exercise"
+                app:destination="@id/navigation_exercise"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"
+                app:popUpTo="@+id/navigation_workout"
+                app:popUpToInclusive="false" />
         </fragment>
     </navigation>
     <action
@@ -82,11 +91,13 @@
                 app:popUpTo="@+id/navigation_routine_detail"
                 app:popUpToInclusive="false" />
         </fragment>
-        <fragment
-            android:id="@+id/navigation_exercise"
-            android:name="com.zeng.myworkout.view.ExerciseFragment"
-            android:label="@string/title_exercise" />
     </navigation>
+
+    <fragment
+        android:id="@+id/navigation_exercise"
+        android:name="com.zeng.myworkout.view.ExerciseFragment"
+        android:label="@string/title_exercise" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"

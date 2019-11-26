@@ -36,9 +36,10 @@ class RoutineWorkoutViewHolder(
         recycledViewPool = loadRecycledViewPool,
         onClearView = { list -> viewModel.updateWorkoutExercise(list.map{ it.exercise }) },
         onMenuClick = showWorkoutExerciseMenuPopup(context, viewModel),
-        onLoadClickNested = setButtonEdit(context, viewModel),
+        onLoadClickNested = setButtonEdit(context, viewModel, false),
         onLoadTextClickNested = setTextEditLoad(context, viewModel),
-        session = false
+        session = false,
+        customSession = false
     )}
 
     fun bind(item: Workout) {

@@ -34,6 +34,9 @@ data class User(
     @ColumnInfo(index = true)
     var workoutSessionId: Long? = null,
 
+    @ColumnInfo
+    var customSession: Boolean = false,
+
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 )

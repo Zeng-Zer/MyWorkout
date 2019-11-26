@@ -19,7 +19,8 @@ class LoadAdapter(
     private val session: Boolean,
     private val exercise: WorkoutExerciseDetail,
     private val onLoadClick: (View, Int, WorkoutExerciseDetail) -> Unit,
-    private val onLoadTextClick: (View, Load, WorkoutExerciseDetail) -> Unit
+    private val onLoadTextClick: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val customSession: Boolean = false
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)

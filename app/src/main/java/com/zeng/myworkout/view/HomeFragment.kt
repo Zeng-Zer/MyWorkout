@@ -12,9 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentHomeBinding
+import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class HomeFragment : Fragment() {
 
@@ -50,7 +52,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            if (user.workoutSessionId != null) {
+            if (user.workoutSessionId != null && !user.customSession) {
                 navigateToWorkout()
             }
         }})
@@ -70,7 +72,7 @@ class HomeFragment : Fragment() {
             }
 
             startEmptyWorkout.setOnClickListener {
-                // TODO
+                createEmptyWorkout()
             }
         }
     }
@@ -80,5 +82,18 @@ class HomeFragment : Fragment() {
         homeNav.startDestination = R.id.navigation_workout
         val action = HomeFragmentDirections.actionNavigationHomeToNavigationWorkout()
         findNavController().navigate(action)
+    }
+
+    private fun createEmptyWorkout() {
+        viewModel.viewModelScope.launch {
+            val date = Date()
+            val workout = Workout(name = "Workout $date", startDate = date)
+            viewModel.createWorkoutSession(workout)
+            val user = viewModel.user.value!!
+            user.workoutSessionId = workout.id
+            user.customSession = true
+            viewModel.updateUser(user)
+            navigateToWorkout()
+        }
     }
 }

@@ -1,9 +1,7 @@
 package com.zeng.myworkout.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -15,53 +13,104 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
+import com.zeng.myworkout.logic.setButtonEdit
 import com.zeng.myworkout.logic.setButtonSessionReps
 import com.zeng.myworkout.logic.setTextEditLoad
 import com.zeng.myworkout.logic.showWorkoutExerciseMenuPopup
+import com.zeng.myworkout.model.Load
+import com.zeng.myworkout.model.LoadType
+import com.zeng.myworkout.model.User
+import com.zeng.myworkout.model.WorkoutExercise
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
+import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class WorkoutFragment : Fragment() {
 
     private lateinit var binding: FragmentWorkoutBinding
+    private val navController by lazy { findNavController() }
+    private val sharedViewModel by sharedViewModel<ExerciseViewModel>()
     private val homeViewModel by viewModel<HomeViewModel>()
     private val workoutViewModel by viewModel<WorkoutViewModel> { parametersOf(this) }
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
-    private val adapter by lazy { WorkoutExerciseAdapter(
-        context = requireContext(),
-        recycledViewPool = recycledViewPool,
-        onClearView = { list -> workoutViewModel.updateWorkoutExercise(list.map{ it.exercise }) },
-        onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel),
-        onLoadClickNested = setButtonSessionReps(requireContext(), workoutViewModel),
-        onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel),
-        session = true
-    )}
+    private var user: User? = null
+    private val adapter by lazy {
+        val customSession = user?.customSession == true
+        val fn = { if (customSession) {
+            setButtonEdit(requireContext(), workoutViewModel, true)
+        } else {
+            setButtonSessionReps(requireContext(), workoutViewModel)
+        }}()
+        WorkoutExerciseAdapter(
+            context = requireContext(),
+            recycledViewPool = recycledViewPool,
+            onClearView = { list -> workoutViewModel.updateWorkoutExercise(list.map{ it.exercise }) },
+            onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel),
+            onLoadClickNested = fn,
+            onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel),
+            session = true,
+            customSession = customSession
+        )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentWorkoutBinding.inflate(inflater, container, false)
         (requireActivity() as MainActivity).supportActionBar?.title = ""
 
+        user = homeViewModel.currentUser()
+        if (user?.customSession == true) {
+            setHasOptionsMenu(true)
+        }
         setupButtons()
         setupRecyclerView()
         subscribeUi()
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.workout_page_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                navController.navigateUp()
+            }
+            R.id.add_exercise -> {
+                navController.navigate(R.id.action_navigation_workout_to_navigation_exercise)
+            }
+
+        }
+        return true
+    }
+
     private fun setupButtons() {
         binding.apply {
             cancel.setOnClickListener {
                 homeViewModel.viewModelScope.launch {
-                    homeViewModel.deleteWorkoutSession()
+                    val user = homeViewModel.user.value!!
+                    val workoutId = user.workoutSessionId!!
+                    user.customSession = false
+                    user.workoutSessionId = null
+                    homeViewModel.updateUser(user)
+                    homeViewModel.deleteWorkout(workoutId)
                     navigateToHome()
                 }
             }
             finish.setOnClickListener {
                 homeViewModel.viewModelScope.launch {
-                    homeViewModel.finishCurrentWorkoutSession()
+                    val user = homeViewModel.user.value!!
+                    homeViewModel.finishCurrentWorkoutSession(!user.customSession)
+                    if (user.customSession) {
+                        user.customSession = false
+                        user.workoutSessionId = null
+                        homeViewModel.updateUser(user)
+                    }
                     navigateToHome()
                 }
             }
@@ -69,9 +118,9 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun navigateToHome() {
-        val homeNav = findNavController().graph[R.id.home_nav] as NavGraph
+        val homeNav = navController.graph[R.id.home_nav] as NavGraph
         homeNav.startDestination = R.id.navigation_home
-        findNavController().navigate(R.id.action_navigation_workout_to_navigation_home)
+        navController.navigate(R.id.action_navigation_workout_to_navigation_home)
     }
 
     private fun setupRecyclerView() {
@@ -97,5 +146,27 @@ class WorkoutFragment : Fragment() {
         workoutViewModel.exercises.observe(viewLifecycleOwner, Observer { exercises ->
             adapter.submitList(exercises)
         })
+
+        // Add new exercises from ExerciseFragment
+        sharedViewModel.exercisesToAdd.observe(viewLifecycleOwner, Observer { exercises ->
+            if (!exercises.isNullOrEmpty()) {
+                addExercises(exercises.map { it.id!! })
+                sharedViewModel.exercisesToAdd.value = null
+            }
+        })
+    }
+
+    private fun addExercises(exerciseIds: List<Long>) {
+        val exercises = exerciseIds.mapIndexed { i, exerciseId ->
+            val repsDone = if (user?.customSession == true) 1 else -1
+            WorkoutExercise(
+                // Add element at the end with its order in the list of ids
+                i + adapter.itemCount,
+                listOf(Load(LoadType.WEIGHT, 0F, 0, repsDone)),
+                workoutViewModel.workoutId.value!!,
+                exerciseId
+            )
+        }
+        workoutViewModel.insertWorkoutExercises(exercises)
     }
 }

@@ -15,7 +15,7 @@ abstract class UserDao : BaseDao<User>() {
 
     @Transaction
     @Query("SELECT * FROM user where current = 1")
-    abstract suspend fun currentUser() : User?
+    abstract fun currentUser() : User?
 
     @Transaction
     @Query("UPDATE user SET workoutReferenceId = :workoutId WHERE current = 1")
