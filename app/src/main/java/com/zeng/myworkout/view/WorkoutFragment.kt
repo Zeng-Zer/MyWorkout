@@ -17,10 +17,8 @@ import com.zeng.myworkout.logic.setButtonEdit
 import com.zeng.myworkout.logic.setButtonSessionReps
 import com.zeng.myworkout.logic.setTextEditLoad
 import com.zeng.myworkout.logic.showWorkoutExerciseMenuPopup
-import com.zeng.myworkout.model.Load
-import com.zeng.myworkout.model.LoadType
-import com.zeng.myworkout.model.User
-import com.zeng.myworkout.model.WorkoutExercise
+import com.zeng.myworkout.model.*
+import com.zeng.myworkout.util.DialogUtils
 import com.zeng.myworkout.view.adapter.WorkoutExerciseAdapter
 import com.zeng.myworkout.viewmodel.ExerciseViewModel
 import com.zeng.myworkout.viewmodel.HomeViewModel
@@ -29,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.util.*
 
 class WorkoutFragment : Fragment() {
 
@@ -110,8 +109,10 @@ class WorkoutFragment : Fragment() {
                         user.customSession = false
                         user.workoutSessionId = null
                         homeViewModel.updateUser(user)
+                        saveSessionAsRoutine()
+                    } else {
+                        navigateToHome()
                     }
-                    navigateToHome()
                 }
             }
         }
@@ -168,5 +169,33 @@ class WorkoutFragment : Fragment() {
             )
         }
         workoutViewModel.insertWorkoutExercises(exercises)
+    }
+
+    private fun saveSessionAsRoutine() {
+        DialogUtils.openValidationDialog(
+            context = requireContext(),
+            message = "Save as a new routine ?",
+            negative = "No",
+            positiveFun = {
+                workoutViewModel.viewModelScope.launch {
+                    val exercises = workoutViewModel.exercises.value!!.map { it.copy().apply {
+                        exercise.id = null
+                        exercise.loads = exercise.loads.map { it.apply {
+                            reps = repsDone
+                            repsDone = -1
+                        }}
+                    }}
+                    val description = exercises.fold("") { acc, exercise ->
+                        acc + exercise.exercise.loads.size + "x" + (exercise.exercise.loads.first().reps) + " " + exercise.detail.name + "\n"
+                    }
+                    val routine = Routine(name = Date().toString(), description = description)
+                    workoutViewModel.insertRoutine(routine)
+                    val workout = Workout(name = "Workout", routineId = routine.id, reference = true)
+                    workoutViewModel.insertWorkout(workout)
+                    workoutViewModel.insertWorkoutExercises(exercises.map { it.exercise.apply { workoutId = workout.id } })
+                    navigateToHome()
+                }
+            }
+        )
     }
 }

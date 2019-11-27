@@ -19,7 +19,7 @@ class LoadAdapter(
     private val session: Boolean,
     private val exercise: WorkoutExerciseDetail,
     private val onLoadClick: (View, Int, WorkoutExerciseDetail) -> Unit,
-    private val onLoadTextClick: (View, Load, WorkoutExerciseDetail) -> Unit,
+    private val onLoadTextClick: (View, Int, WorkoutExerciseDetail) -> Unit,
     private val customSession: Boolean = false
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
@@ -54,7 +54,7 @@ class LoadAdapter(
                 onLoadClick(it, position, exercise)
             }
             value.setOnClickListener {
-                onLoadTextClick(it, load, exercise)
+                onLoadTextClick(it, position, exercise)
             }
         }
     }

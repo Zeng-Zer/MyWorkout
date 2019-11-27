@@ -93,8 +93,9 @@ fun setButtonSessionReps(context: Context, viewModel: WorkoutViewModel): (View, 
 
 // TODO REFACTOR THIS
 // Editable text when clicking on load value
-fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Load, WorkoutExerciseDetail) -> Unit {
-    return { view: View, load: Load, exercise: WorkoutExerciseDetail ->
+fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Int, WorkoutExerciseDetail) -> Unit {
+    return { view: View, position: Int, exercise: WorkoutExerciseDetail ->
+        val load = exercise.exercise.loads[position]
         val editText = view as EditText
         var weight = load.value
         val numberPickerBinding =
