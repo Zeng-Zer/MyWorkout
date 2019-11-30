@@ -33,6 +33,7 @@ val appModule = module {
     viewModel { ExerciseViewModel(get()) }
     viewModel { (routineId: Long) -> RoutineDetailViewModel(routineId, get(), get()) }
     viewModel { WorkoutViewModel(get(), get()) }
+    viewModel { HistoryViewModel(get(), get()) }
 
     // Dynamic key for RoutineWorkoutViewModel
     factory(named("factory")) { (fragment: Fragment, workoutId: Long) ->

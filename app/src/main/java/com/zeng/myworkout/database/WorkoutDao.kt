@@ -15,12 +15,16 @@ abstract class WorkoutDao : BaseDao<Workout>() {
     abstract fun getWorkoutById(id: Long): LiveData<Workout?>
 
     @Transaction
+    @Query("SELECT * FROM workout WHERE reference = 0 AND finishDate IS NOT NULL ORDER BY [finishDate] DESC")
+    abstract fun getAllFinishedWorkout(): LiveData<List<Workout>>
+
+    @Transaction
     @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId ORDER BY [order] ASC")
     abstract fun getAllWorkoutExerciseById(workoutId: Long): LiveData<List<WorkoutExerciseDetail>>
 
     @Transaction
     @Query("SELECT * FROM workout_exercise WHERE workoutId = :workoutId ORDER BY [order] ASC")
-    abstract suspend fun allWorkoutExerciseById(workoutId: Long): List<WorkoutExerciseDetail>
+    abstract fun allWorkoutExerciseById(workoutId: Long): List<WorkoutExerciseDetail>
 
     @Transaction
     @Query("SELECT * FROM workout WHERE routineId = :routineId AND reference = 1 ORDER BY [order] ASC")

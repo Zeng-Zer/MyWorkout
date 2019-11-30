@@ -40,3 +40,9 @@ data class WorkoutSerialized(
     val reference: Boolean = false,
     val exercises: List<WorkoutExerciseSerialized> = emptyList()
 )
+
+data class WorkoutWithExercises(
+    val workout: Workout,
+    val exercises: List<WorkoutExerciseDetail>,
+    val routine: String?
+)

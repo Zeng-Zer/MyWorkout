@@ -1,5 +1,6 @@
 package com.zeng.myworkout.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.zeng.myworkout.model.Workout
 import com.zeng.myworkout.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -84,14 +86,17 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun createEmptyWorkout() {
         viewModel.viewModelScope.launch {
             val date = Date()
-            val workout = Workout(name = "Workout $date", startDate = date)
+            val dateString = SimpleDateFormat("dd/MM/yyyy").format(date)
+            val workout = Workout(name = "Workout - $dateString", startDate = date)
             viewModel.createWorkoutSession(workout)
             val user = viewModel.user.value!!
             user.workoutSessionId = workout.id
             user.customSession = true
+            user.workoutReferenceId = null
             viewModel.updateUser(user)
             navigateToWorkout()
         }

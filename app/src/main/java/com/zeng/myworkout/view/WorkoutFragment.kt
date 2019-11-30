@@ -1,5 +1,6 @@
 package com.zeng.myworkout.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
 import java.util.*
 
 class WorkoutFragment : Fragment() {
@@ -171,6 +173,7 @@ class WorkoutFragment : Fragment() {
         workoutViewModel.insertWorkoutExercises(exercises)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun saveSessionAsRoutine() {
         DialogUtils.openValidationDialog(
             context = requireContext(),
@@ -188,7 +191,8 @@ class WorkoutFragment : Fragment() {
                     val description = exercises.fold("") { acc, exercise ->
                         acc + exercise.exercise.loads.size + "x" + (exercise.exercise.loads.first().reps) + " " + exercise.detail.name + "\n"
                     }
-                    val routine = Routine(name = Date().toString(), description = description)
+                    val date = SimpleDateFormat("dd/MM/yyyy").format(Date())
+                    val routine = Routine(name = "Routine - $date", description = description)
                     workoutViewModel.insertRoutine(routine)
                     val workout = Workout(name = "Workout", routineId = routine.id, reference = true)
                     workoutViewModel.insertWorkout(workout)

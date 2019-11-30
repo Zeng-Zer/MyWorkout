@@ -16,6 +16,7 @@ class RoutineRepository(private val routineDao: RoutineDao, private val workoutD
             }}
         }
     fun getRoutineById(routineId: Long): LiveData<Routine> = routineDao.getRoutineById(routineId)
+    fun routineById(routineId: Long): Routine = routineDao.routineById(routineId)
 
     suspend fun insertRoutine(routine: Routine) = routineDao.insertRoutineReorder(routine)
     suspend fun update(routines: List<Routine>) = routineDao.update(routines)

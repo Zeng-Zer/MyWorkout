@@ -20,7 +20,7 @@ abstract class RoutineDao : BaseDao<Routine>() {
 
     @Transaction
     @Query("SELECT * FROM routine WHERE id = :id")
-    abstract suspend fun routineById(id: Long): Routine
+    abstract fun routineById(id: Long): Routine
 
     @Transaction
     @Query("SELECT * FROM routine ORDER BY [order] ASC")
