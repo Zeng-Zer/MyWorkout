@@ -2,6 +2,7 @@ package com.zeng.myworkout.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -12,6 +13,7 @@ import androidx.navigation.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.android.material.snackbar.Snackbar
 import com.zeng.myworkout.R
 import com.zeng.myworkout.databinding.FragmentWorkoutBinding
 import com.zeng.myworkout.logic.setButtonEdit
@@ -30,6 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class WorkoutFragment : Fragment() {
 
@@ -40,6 +43,7 @@ class WorkoutFragment : Fragment() {
     private val workoutViewModel by viewModel<WorkoutViewModel> { parametersOf(this) }
     private val recycledViewPool by lazy { RecyclerView.RecycledViewPool() }
     private var user: User? = null
+    private var countDownTimer: CountDownTimer? = null
     private val adapter by lazy {
         val customSession = user?.customSession == true
         val fn = { if (customSession) {
@@ -92,6 +96,31 @@ class WorkoutFragment : Fragment() {
 
     private fun setupButtons() {
         binding.apply {
+            timer.setOnClickListener {
+                val snackbar = Snackbar.make(root, R.string.timer_90_sec, Snackbar.LENGTH_INDEFINITE)
+                snackbar.setAction("STOP") {
+                    snackbar.dismiss()
+                    countDownTimer?.cancel()
+                    countDownTimer = null
+                }
+                countDownTimer = object : CountDownTimer(resources.getInteger(R.integer.millis_90_sec).toLong(), 1000) {
+                    override fun onFinish() {
+                        snackbar.dismiss()
+                    }
+
+                    override fun onTick(millisUntilFinished: Long) {
+                        if (!snackbar.isShown) {
+                            snackbar.show()
+                        }
+                        val millis = resources.getInteger(R.integer.millis_90_sec) - millisUntilFinished
+                        val time = String.format("%d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(millis),
+                            TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)))
+                        snackbar.setText("$time Make sure to rest 90sec")
+                    }
+                }
+                countDownTimer?.start()
+            }
             cancel.setOnClickListener {
                 homeViewModel.viewModelScope.launch {
                     val user = homeViewModel.user.value!!

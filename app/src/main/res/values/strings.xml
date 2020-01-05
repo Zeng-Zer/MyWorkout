@@ -12,6 +12,7 @@
 
     <!--  WorkoutFragment  -->
     <string name="add_exercise">Add exercise</string>
+    <string name="timer_90_sec">Rest 90 Seconds</string>
 
     <!--  ExerciseFragment  -->
     <string name="intent_result_list">result_list</string>

@@ -3,4 +3,5 @@
     <integer name="grid_load_row_count">5</integer>
     <integer name="grid_routine_workout_count">5</integer>
     <integer name="slide">200</integer>
+    <integer name="millis_90_sec">90000</integer>
 </resources>
