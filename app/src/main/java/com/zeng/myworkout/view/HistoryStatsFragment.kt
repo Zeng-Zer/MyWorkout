@@ -30,7 +30,7 @@ class HistoryStatsFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        viewModel.workouts.observe(viewLifecycleOwner, Observer { workouts ->
+        viewModel.groupedWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
             adapter.submitList(workouts)
         })
     }
