@@ -19,4 +19,13 @@ class HistoryViewModel(
         }
     }
 
+    val groupedWorkouts: LiveData<Map<String, Map<String, List<WorkoutWithExercises>>>> = workouts.map { workouts ->
+        workouts
+            .groupBy { x -> x.routine!! }
+            .map { (k, v) ->
+                k to (v.groupBy { w -> w.workout.name })
+            }
+            .toMap()
+    }
+
 }
