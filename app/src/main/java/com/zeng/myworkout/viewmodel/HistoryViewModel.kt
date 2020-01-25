@@ -7,6 +7,7 @@ import com.zeng.myworkout.model.WorkoutWithExercises
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
 
+
 class HistoryViewModel(
     private val routineRepo: RoutineRepository,
     private val workoutRepo: WorkoutRepository
@@ -19,13 +20,12 @@ class HistoryViewModel(
         }
     }
 
-    val groupedWorkouts: LiveData<Map<String, Map<String, List<WorkoutWithExercises>>>> = workouts.map { workouts ->
-        workouts
-            .groupBy { x -> x.routine!! }
-            .map { (k, v) ->
-                k to (v.groupBy { w -> w.workout.name })
-            }
-            .toMap()
+    // Grouped by routine name and workout name
+    val groupedWorkouts: LiveData<List<GroupedWorkouts>> = workouts.map { workouts ->
+        workouts.groupBy { w -> w.routine to w.workout.name }.toList()
     }
 
 }
+
+typealias RoutineWorkoutName = Pair<String?, String>
+typealias GroupedWorkouts = Pair<RoutineWorkoutName, List<WorkoutWithExercises>>
