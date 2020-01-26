@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemStatBinding
 import com.zeng.myworkout.model.WorkoutWithExercises
+import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.GroupedWorkouts
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,26 +34,48 @@ class HistoryStatAdapter(
             val routineName = item.first.first
             val workoutName = item.first.second
             val workoutFinishDate = getWorkoutStartDate(item.second)
+            val totalWeight = item.second.fold(0f) { acc, it -> acc + getWeightLifted(it)}.weightToString()
             binding.apply {
                 routine.text = routineName ?: "No Routine"
                 workout.text = workoutName
                 date.text = format.format(workoutFinishDate)
+                weightLifted.text = totalWeight
+                nbSessions.text = item.second.count().toString()
                 executePendingBindings()
             }
 
-//            setupRecyclerView(item)
+            setupRecyclerView(item.second)
         }
 
-        private fun setupRecyclerView(item: WorkoutWithExercises) {
-            val adapter = HistoryItemAdapter(context)
+        private fun setupRecyclerView(workouts: List<WorkoutWithExercises>) {
+            val exercises = workouts
+                .flatMap { w ->
+                    w.exercises.map { e -> w.workout.finishDate!! to e }
+                }
+                .groupBy { ex -> ex.second.detail.name }
+                .mapValues { exs ->
+                    exs.value
+                        .sortedBy { it.first }
+                        .map { it.second }
+                }
+                .toList()
+
+            val adapter = StatItemAdapter(context)
             binding.list.adapter = adapter
-            adapter.submitList(item.exercises)
+            adapter.submitList(exercises)
         }
 
         private fun getWorkoutStartDate(workouts: List<WorkoutWithExercises>): Date {
             return workouts
                 .map { w -> w.workout.startDate!! }
                 .reduce { d1, d2 -> if (d1.before(d2)) d1 else d2 }
+        }
+
+        private fun getWeightLifted(workout: WorkoutWithExercises): Float {
+            return workout.exercises
+                .fold(0f) { acc, e ->
+                    e.exercise.loads.fold(acc) { a, l -> a + l.repsDone * l.value }
+                }
         }
     }
 
