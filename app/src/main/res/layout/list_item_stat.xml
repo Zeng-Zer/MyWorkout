@@ -80,7 +80,7 @@
                     android:textSize="10sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Weight lifted"
+                    android:text="Weight lifted:"
                     android:layout_marginEnd="8dp"/>
 
                 <TextView
