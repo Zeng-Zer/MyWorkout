@@ -3,6 +3,7 @@ package com.zeng.myworkout.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
+import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.model.WorkoutWithExercises
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
@@ -29,3 +30,5 @@ class HistoryViewModel(
 
 typealias RoutineWorkoutName = Pair<String?, String>
 typealias GroupedWorkouts = Pair<RoutineWorkoutName, List<WorkoutWithExercises>>
+
+typealias ExercisesByName = Pair<String, List<WorkoutExerciseDetail>>

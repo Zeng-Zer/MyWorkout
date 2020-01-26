@@ -35,7 +35,6 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         fun buildDatabase(context: Context): AppDatabase {
-            context.deleteDatabase("my_workout_database")
             return Room.databaseBuilder(context, AppDatabase::class.java, "my_workout_database")
                 .addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
