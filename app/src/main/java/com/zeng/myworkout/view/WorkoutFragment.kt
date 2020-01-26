@@ -228,6 +228,9 @@ class WorkoutFragment : Fragment() {
                     workoutViewModel.insertWorkoutExercises(exercises.map { it.exercise.apply { workoutId = workout.id } })
                     navigateToHome()
                 }
+            },
+            negativeFun = {
+                navigateToHome()
             }
         )
     }
