@@ -11,11 +11,13 @@ import com.zeng.myworkout.databinding.ListItemStatBinding
 import com.zeng.myworkout.model.WorkoutWithExercises
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.GroupedWorkouts
+import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HistoryStatAdapter(
-    private val context: Context
+    private val context: Context,
+    private val onItemClick: (List<WorkoutExercisesByName>) -> Unit
 ) : ListAdapter<GroupedWorkouts, RecyclerView.ViewHolder>(HistoryStatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -30,6 +32,7 @@ class HistoryStatAdapter(
     private inner class StatViewHolder(val binding: ListItemStatBinding) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SimpleDateFormat")
         fun bind(item: GroupedWorkouts) {
+            val exercisesByName = getExercisesByNames(item.second)
             val format = SimpleDateFormat("dd/MM/yyyy")
             val routineName = item.first.first
             val workoutName = item.first.second
@@ -41,14 +44,19 @@ class HistoryStatAdapter(
                 date.text = format.format(workoutFinishDate)
                 weightLifted.text = totalWeight
                 nbSessions.text = item.second.count().toString()
+                // Navigate to charts
+                card.setOnClickListener {
+                    onItemClick(exercisesByName)
+                }
+
                 executePendingBindings()
             }
 
-            setupRecyclerView(item.second)
+            setupRecyclerView(exercisesByName)
         }
 
-        private fun setupRecyclerView(workouts: List<WorkoutWithExercises>) {
-            val exercises = workouts
+        private fun getExercisesByNames(workouts: List<WorkoutWithExercises>): List<WorkoutExercisesByName> {
+            return workouts
                 .flatMap { w ->
                     w.exercises.map { e -> w.workout.finishDate!! to e }
                 }
@@ -56,10 +64,11 @@ class HistoryStatAdapter(
                 .mapValues { exs ->
                     exs.value
                         .sortedBy { it.first }
-                        .map { it.second }
                 }
                 .toList()
+        }
 
+        private fun setupRecyclerView(exercises: List<WorkoutExercisesByName>) {
             val adapter = StatItemAdapter(context)
             binding.list.adapter = adapter
             adapter.submitList(exercises)

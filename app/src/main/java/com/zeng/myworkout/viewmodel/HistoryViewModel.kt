@@ -1,12 +1,14 @@
 package com.zeng.myworkout.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.zeng.myworkout.model.WorkoutExerciseDetail
 import com.zeng.myworkout.model.WorkoutWithExercises
 import com.zeng.myworkout.repository.RoutineRepository
 import com.zeng.myworkout.repository.WorkoutRepository
+import java.util.*
 
 
 class HistoryViewModel(
@@ -26,9 +28,12 @@ class HistoryViewModel(
         workouts.groupBy { w -> w.routine to w.workout.name }.toList()
     }
 
+    // Shared value for chart
+    val workoutExercisesByNames: MutableLiveData<List<WorkoutExercisesByName>> = MutableLiveData()
+
 }
 
 typealias RoutineWorkoutName = Pair<String?, String>
 typealias GroupedWorkouts = Pair<RoutineWorkoutName, List<WorkoutWithExercises>>
 
-typealias ExercisesByName = Pair<String, List<WorkoutExerciseDetail>>
+typealias WorkoutExercisesByName = Pair<String, List<Pair<Date, WorkoutExerciseDetail>>>

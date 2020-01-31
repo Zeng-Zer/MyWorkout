@@ -6,16 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.zeng.myworkout.databinding.FragmentHistoryStatsBinding
 import com.zeng.myworkout.view.adapter.HistoryStatAdapter
 import com.zeng.myworkout.viewmodel.HistoryViewModel
+import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HistoryStatsFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryStatsBinding
     private val viewModel by sharedViewModel<HistoryViewModel>()
-    private val adapter by lazy { HistoryStatAdapter(requireContext()) }
+    private val navController by lazy { findNavController() }
+    private val adapter by lazy {
+        HistoryStatAdapter(
+            requireContext(),
+            onItemClick = this::navChartExerciseFragment
+        )
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHistoryStatsBinding.inflate(inflater, container, false)
@@ -33,6 +41,12 @@ class HistoryStatsFragment : Fragment() {
         viewModel.groupedWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
             adapter.submitList(workouts)
         })
+    }
+
+    private fun navChartExerciseFragment(exercises: List<WorkoutExercisesByName>) {
+        viewModel.workoutExercisesByNames.value = exercises
+        val action = HistoryStatsFragmentDirections.actionNavigationStatToNavigationChartExercise()
+        navController.navigate(action)
     }
 
 }

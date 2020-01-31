@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemStatExerciseBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.util.weightToString
-import com.zeng.myworkout.viewmodel.ExercisesByName
+import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
 
 class StatItemAdapter(
     private val context: Context
-) : ListAdapter<ExercisesByName, RecyclerView.ViewHolder>(StatItemDiffCallback()) {
+) : ListAdapter<WorkoutExercisesByName, RecyclerView.ViewHolder>(StatItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return StatItemViewHolder(ListItemStatExerciseBinding.inflate(LayoutInflater.from(context), parent, false))
@@ -27,14 +27,14 @@ class StatItemAdapter(
 
     private inner class StatItemViewHolder(val binding: ListItemStatExerciseBinding) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SimpleDateFormat")
-        fun bind(item: ExercisesByName) {
-            var filteredExercises = item.second.filter { it.exercise.loads.any { it.repsDone != -1 } }
+        fun bind(item: WorkoutExercisesByName) {
+            var filteredExercises = item.second.filter { it.second.exercise.loads.any { it.repsDone != -1 } }
             if (filteredExercises.isEmpty()) {
                 filteredExercises = listOf(item.second.last())
             }
-            val firstLoads = filteredExercises.first().exercise.loads
-            val currentLoads = filteredExercises.last().exercise.loads
-            val allLoads = filteredExercises.flatMap { it.exercise.loads }
+            val firstLoads = filteredExercises.first().second.exercise.loads
+            val currentLoads = filteredExercises.last().second.exercise.loads
+            val allLoads = filteredExercises.flatMap { it.second.exercise.loads }
             binding.apply {
                 name.text = item.first
                 initialWeight.text = getHeaviestLoadWeight(firstLoads).weightToString()
@@ -62,13 +62,13 @@ class StatItemAdapter(
 
 }
 
-class StatItemDiffCallback : DiffUtil.ItemCallback<ExercisesByName>() {
-    override fun areItemsTheSame(oldItem: ExercisesByName, newItem: ExercisesByName): Boolean {
+class StatItemDiffCallback : DiffUtil.ItemCallback<WorkoutExercisesByName>() {
+    override fun areItemsTheSame(oldItem: WorkoutExercisesByName, newItem: WorkoutExercisesByName): Boolean {
         return oldItem.first == newItem.first
     }
 
     @SuppressLint("DiffUtilEquals")
-    override fun areContentsTheSame(oldItem: ExercisesByName, newItem: ExercisesByName): Boolean {
+    override fun areContentsTheSame(oldItem: WorkoutExercisesByName, newItem: WorkoutExercisesByName): Boolean {
         return oldItem.second == newItem.second
     }
 
