@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayoutMediator
 import com.zeng.myworkout.databinding.FragmentHistoryBinding
 import com.zeng.myworkout.view.adapter.HistoryAdapter
+import com.zeng.myworkout.viewmodel.HistoryViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HistoryFragment : Fragment() {
 

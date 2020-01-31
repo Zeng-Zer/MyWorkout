@@ -103,6 +103,28 @@
         android:id="@+id/navigation_history"
         android:name="com.zeng.myworkout.view.HistoryFragment"
         android:label="@string/title_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_stat"
+        android:name="com.zeng.myworkout.view.HistoryStatsFragment"
+        android:label="@string/title_stat"
+        tools:layout="@layout/fragment_history_stats">
+    </fragment>
+
+    <action
+        android:id="@+id/action_navigation_stat_to_navigation_chart_exercise"
+        app:destination="@+id/chart_exercise_fragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:popUpTo="@+id/navigation_stat" />
+
+    <fragment
+        android:id="@+id/chart_exercise_fragment"
+        android:name="com.zeng.myworkout.view.ChartExerciseFragment"
+        android:label="ChartExerciseFragment" />
 
 </navigation>
