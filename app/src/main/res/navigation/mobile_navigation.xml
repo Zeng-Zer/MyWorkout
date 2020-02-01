@@ -125,6 +125,10 @@
     <fragment
         android:id="@+id/chart_exercise_fragment"
         android:name="com.zeng.myworkout.view.ChartExerciseFragment"
-        android:label="ChartExerciseFragment" />
+        android:label="{title}" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
+    </fragment>
 
 </navigation>

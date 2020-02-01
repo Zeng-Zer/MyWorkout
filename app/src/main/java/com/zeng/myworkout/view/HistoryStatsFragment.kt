@@ -39,13 +39,18 @@ class HistoryStatsFragment : Fragment() {
 
     private fun subscribeUi() {
         viewModel.groupedWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
-            adapter.submitList(workouts)
+            val filteredSortedWorkouts = workouts
+                // filter workouts without routine name
+                .filter { !it.first.first.isNullOrBlank() }
+                .sortedBy { it.second.first().workout.startDate }
+
+            adapter.submitList(filteredSortedWorkouts)
         })
     }
 
-    private fun navChartExerciseFragment(exercises: List<WorkoutExercisesByName>) {
+    private fun navChartExerciseFragment(routineName: String, workoutName: String, exercises: List<WorkoutExercisesByName>) {
         viewModel.workoutExercisesByNames.value = exercises
-        val action = HistoryStatsFragmentDirections.actionNavigationStatToNavigationChartExercise()
+        val action = HistoryStatsFragmentDirections.actionNavigationStatToNavigationChartExercise("$routineName $workoutName")
         navController.navigate(action)
     }
 
