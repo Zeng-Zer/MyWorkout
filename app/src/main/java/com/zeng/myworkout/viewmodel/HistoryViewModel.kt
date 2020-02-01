@@ -36,4 +36,7 @@ class HistoryViewModel(
 typealias RoutineWorkoutName = Pair<String?, String>
 typealias GroupedWorkouts = Pair<RoutineWorkoutName, List<WorkoutWithExercises>>
 
-typealias WorkoutExercisesByName = Pair<String, List<Pair<Date, WorkoutExerciseDetail>>>
+typealias WorkoutExercisesByName = Pair<String, List<DatedWorkoutExercise>>
+typealias DatedWorkoutExercise = Pair<Date, WorkoutExerciseDetail>
+
+typealias DatedWeight = Pair<Date, Float>

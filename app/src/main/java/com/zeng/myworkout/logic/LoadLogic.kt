@@ -154,3 +154,12 @@ fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Int, 
         dialog.show()
     }
 }
+
+// Get Heaviest weight in the loads
+fun getHeaviestLoadWeight(loads: List<Load>): Float {
+    val maxWeight = loads
+        .filter { it.repsDone != -1 }
+        .map { it.value }
+        .max()
+    return maxWeight ?: loads.first().value
+}

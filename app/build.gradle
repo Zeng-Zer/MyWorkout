@@ -76,8 +76,8 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    // Any Chart
-    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+    // Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'com.android.support:multidex:1.0.3'
     testImplementation 'junit:junit:4.12'

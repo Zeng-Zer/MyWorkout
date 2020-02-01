@@ -58,8 +58,7 @@ class WorkoutFragment : Fragment() {
             onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel),
             onLoadClickNested = fn,
             onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel),
-            session = true,
-            customSession = customSession
+            session = true
         )
     }
 

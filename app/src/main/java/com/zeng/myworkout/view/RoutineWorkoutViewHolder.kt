@@ -38,8 +38,7 @@ class RoutineWorkoutViewHolder(
         onMenuClick = showWorkoutExerciseMenuPopup(context, viewModel),
         onLoadClickNested = setButtonEdit(context, viewModel, false),
         onLoadTextClickNested = setTextEditLoad(context, viewModel),
-        session = false,
-        customSession = false
+        session = false
     )}
 
     fun bind(item: Workout) {
