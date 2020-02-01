@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zeng.myworkout.databinding.ListItemStatExerciseBinding
+import com.zeng.myworkout.logic.getHeaviestLoadWeight
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
 
 class StatItemAdapter(
     private val context: Context
-) : ListAdapter<WorkoutExercisesByName, RecyclerView.ViewHolder>(StatItemDiffCallback()) {
+) : ListAdapter<WorkoutExercisesByName, RecyclerView.ViewHolder>(WorkoutExercisesByNameDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return StatItemViewHolder(ListItemStatExerciseBinding.inflate(LayoutInflater.from(context), parent, false))
@@ -44,14 +45,6 @@ class StatItemAdapter(
             }
         }
 
-        private fun getHeaviestLoadWeight(loads: List<Load>): Float {
-            val maxWeight = loads
-                .filter { it.repsDone != -1 }
-                .map { it.value }
-                .max()
-            return maxWeight ?: loads.first().value
-        }
-
         private fun getRepsDone(loads: List<Load>): Int {
             return loads
                 .map { it.repsDone }
@@ -62,7 +55,7 @@ class StatItemAdapter(
 
 }
 
-class StatItemDiffCallback : DiffUtil.ItemCallback<WorkoutExercisesByName>() {
+class WorkoutExercisesByNameDiffCallback : DiffUtil.ItemCallback<WorkoutExercisesByName>() {
     override fun areItemsTheSame(oldItem: WorkoutExercisesByName, newItem: WorkoutExercisesByName): Boolean {
         return oldItem.first == newItem.first
     }

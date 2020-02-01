@@ -19,8 +19,7 @@ class LoadAdapter(
     private val session: Boolean,
     private val exercise: WorkoutExerciseDetail,
     private val onLoadClick: (View, Int, WorkoutExerciseDetail) -> Unit,
-    private val onLoadTextClick: (View, Int, WorkoutExerciseDetail) -> Unit,
-    private val customSession: Boolean = false
+    private val onLoadTextClick: (View, Int, WorkoutExerciseDetail) -> Unit
 ) : ListAdapter<Load, RecyclerView.ViewHolder>(LoadDiffCallback()) {
 
     private val inflater = LayoutInflater.from(context)
@@ -43,13 +42,13 @@ class LoadAdapter(
                 setLoadButton(item, button, session, context.resources)
                 value.setText(item.value.weightToString())
 
-                setupCallbacks(item)
+                setupCallbacks()
                 executePendingBindings()
             }
 
         }
 
-        private fun ListItemGridLoadBinding.setupCallbacks(load: Load) {
+        private fun ListItemGridLoadBinding.setupCallbacks() {
             button.setOnClickListener {
                 onLoadClick(it, position, exercise)
             }

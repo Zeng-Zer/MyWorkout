@@ -71,6 +71,7 @@ class HistoryStatAdapter(
         private fun setupRecyclerView(exercises: List<WorkoutExercisesByName>) {
             val adapter = StatItemAdapter(context)
             binding.list.adapter = adapter
+            binding.list.suppressLayout(true)
             adapter.submitList(exercises)
         }
 
