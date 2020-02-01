@@ -20,6 +20,9 @@ class WorkoutViewModel(private val workoutRepo: WorkoutRepository, private val r
         }
     }
 
+    suspend fun workoutById(workoutId: Long) = workoutRepo.workoutById(workoutId)
+    suspend fun referenceWorkoutsByRoutineId(routineId: Long) = workoutRepo.allReferenceWorkoutByRoutineId(routineId)
+
     fun deleteWorkoutExercise(exercise: WorkoutExercise) {
         viewModelScope.launch {
             workoutRepo.deleteWorkoutExercise(exercise)
