@@ -55,7 +55,7 @@ class WorkoutFragment : Fragment() {
             context = requireContext(),
             recycledViewPool = recycledViewPool,
             onClearView = { list -> workoutViewModel.updateWorkoutExercise(list.map{ it.exercise }) },
-            onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel),
+            onMenuClick = showWorkoutExerciseMenuPopup(requireContext(), workoutViewModel, navController),
             onLoadClickNested = fn,
             onLoadTextClickNested = setTextEditLoad(requireContext(), workoutViewModel),
             session = true

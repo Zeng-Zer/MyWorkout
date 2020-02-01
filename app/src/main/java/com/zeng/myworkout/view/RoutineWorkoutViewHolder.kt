@@ -2,6 +2,7 @@ package com.zeng.myworkout.view
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -35,7 +36,7 @@ class RoutineWorkoutViewHolder(
         context = context,
         recycledViewPool = loadRecycledViewPool,
         onClearView = { list -> viewModel.updateWorkoutExercise(list.map{ it.exercise }) },
-        onMenuClick = showWorkoutExerciseMenuPopup(context, viewModel),
+        onMenuClick = showWorkoutExerciseMenuPopup(context, viewModel, fragment.findNavController()),
         onLoadClickNested = setButtonEdit(context, viewModel, false),
         onLoadTextClickNested = setTextEditLoad(context, viewModel),
         session = false
