@@ -31,6 +31,8 @@ class HistoryViewModel(
     // Shared value for chart
     val workoutExercisesByNames: MutableLiveData<List<WorkoutExercisesByName>> = MutableLiveData()
 
+    // Routine, Workout, Exercise
+    val filters: MutableLiveData<Triple<String, String, String>> = MutableLiveData(Triple("All", "All", "All"))
 }
 
 typealias RoutineWorkoutName = Pair<String?, String>

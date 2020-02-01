@@ -31,4 +31,7 @@
 
     <!--  RoutineFragment  -->
     <string name="routine_delete">Delete</string>
+
+    <!--  History filters  -->
+    <string name="action_filter">Filter</string>
 </resources>

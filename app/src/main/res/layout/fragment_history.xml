@@ -18,6 +18,16 @@
             app:tabTextColor="@android:color/white"
             android:background="?attr/colorPrimary" />
 
+        <TextView
+            android:id="@+id/filters"
+            android:textSize="10sp"
+            android:text="Routine: 5x5 Stronglifts - Program: Workout A - Exercise: Squat"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"

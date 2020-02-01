@@ -81,7 +81,6 @@ class RoutineDetailFragment : Fragment() {
                         viewModel.updateWorkout(it)
                     }
                 }
-                return true
             }
 
             R.id.action_move_left_workout -> {
@@ -94,7 +93,6 @@ class RoutineDetailFragment : Fragment() {
                         onListChangeCallback = null
                     }
                 }
-                return true
             }
         }
         return true
