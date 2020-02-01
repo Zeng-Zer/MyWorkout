@@ -10,6 +10,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.zeng.myworkout.logic.getHeaviestLoadWeight
+import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.DatedWeight
 import com.zeng.myworkout.viewmodel.DatedWorkoutExercise
 import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
@@ -39,30 +40,33 @@ class ExerciseLineChart(private val chart: LineChart) {
         chart.data = LineData(lineDataSet)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun initializeChart() {
         chart.xAxis.setDrawAxisLine(true)
         chart.xAxis.setDrawGridLines(true)
         chart.xAxis.textColor = Color.BLACK
         chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        chart.xAxis.valueFormatter = XAxisDateFormatter()
+        chart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                val fmt = SimpleDateFormat("dd MMM")
+                val date = dataset[value.toInt()].first
+                return fmt.format(date)
+            }
+        }
 
         chart.axisLeft.axisMinimum = dataset.map{ it.second }.min()!! * (1f - PADDING)
         chart.axisLeft.axisMaximum = dataset.map{ it.second }.max()!! * (1f + PADDING)
         chart.axisLeft.textColor = Color.BLACK
+        chart.axisLeft.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return value.weightToString()
+            }
+        }
 
         chart.axisRight.isEnabled = false
         chart.description.isEnabled = false
         chart.setDrawGridBackground(false)
         chart.legend.isEnabled = false
         chart.setTouchEnabled(false)
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private inner class XAxisDateFormatter : ValueFormatter() {
-        override fun getFormattedValue(value: Float): String {
-            val fmt = SimpleDateFormat("dd MMM")
-            val date = dataset[value.toInt()].first
-            return fmt.format(date)
-        }
     }
 }
