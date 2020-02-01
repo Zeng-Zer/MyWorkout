@@ -39,12 +39,12 @@ class HistoryStatsFragment : Fragment() {
 
     private fun subscribeUi() {
         viewModel.groupedWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
-            val filteredSortedWorkouts = workouts
+            val sortedWorkouts = workouts
                 // filter workouts without routine name
                 .filter { !it.first.first.isNullOrBlank() }
                 .sortedBy { it.second.first().workout.startDate }
 
-            adapter.submitList(filteredSortedWorkouts)
+            adapter.submitList(sortedWorkouts)
         })
     }
 
