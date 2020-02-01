@@ -41,6 +41,12 @@ operator fun <T> MutableLiveData<List<T>>.minusAssign(newValues: List<T>) {
 }
 
 fun Float.weightToString(): String {
+    // Imperial
+    if (SettingsSingleton.isImperial()) {
+        return DecimalFormat("#.##").format(this * 2.20462f) + "lbs"
+    }
+
+    // Metric
     return if (this.roundToInt().toFloat() == this) {
         this.toInt().toString() + "kg"
     } else {

@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home,
                 R.id.navigation_workout,
                 R.id.navigation_routine,
-                R.id.navigation_history
+                R.id.navigation_history,
+                R.id.navigation_settings
             )
         )
         setSupportActionBar(binding.toolbar)
