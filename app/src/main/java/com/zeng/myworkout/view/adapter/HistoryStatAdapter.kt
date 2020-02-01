@@ -17,7 +17,7 @@ import java.util.*
 
 class HistoryStatAdapter(
     private val context: Context,
-    private val onItemClick: (List<WorkoutExercisesByName>) -> Unit
+    private val onItemClick: (String, String, List<WorkoutExercisesByName>) -> Unit
 ) : ListAdapter<GroupedWorkouts, RecyclerView.ViewHolder>(HistoryStatDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -34,19 +34,19 @@ class HistoryStatAdapter(
         fun bind(item: GroupedWorkouts) {
             val exercisesByName = getExercisesByNames(item.second)
             val format = SimpleDateFormat("dd/MM/yyyy")
-            val routineName = item.first.first
+            val routineName = item.first.first ?: "No Routine"
             val workoutName = item.first.second
             val workoutFinishDate = getWorkoutStartDate(item.second)
             val totalWeight = item.second.fold(0f) { acc, it -> acc + getWeightLifted(it)}.weightToString()
             binding.apply {
-                routine.text = routineName ?: "No Routine"
+                routine.text = routineName
                 workout.text = workoutName
                 date.text = format.format(workoutFinishDate)
                 weightLifted.text = totalWeight
                 nbSessions.text = item.second.count().toString()
                 // Navigate to charts
                 card.setOnClickListener {
-                    onItemClick(exercisesByName)
+                    onItemClick(routineName, workoutName, exercisesByName)
                 }
 
                 executePendingBindings()
