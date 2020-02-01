@@ -50,8 +50,8 @@ class HistoryHistoryFragment : Fragment() {
 
     private fun subscribeUi() {
         viewModel.workouts.observe(viewLifecycleOwner, Observer { workouts ->
-            val (rf, wf, ef) = viewModel.filters.value!!
             this.workouts = workouts
+            val (rf, wf, ef) = viewModel.filters.value!!
             submitFilteredList(rf, wf, ef)
         })
 

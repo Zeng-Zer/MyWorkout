@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.zeng.myworkout.databinding.FragmentHistoryStatsBinding
+import com.zeng.myworkout.model.WorkoutWithExercises
 import com.zeng.myworkout.view.adapter.HistoryStatAdapter
+import com.zeng.myworkout.viewmodel.GroupedWorkouts
 import com.zeng.myworkout.viewmodel.HistoryViewModel
 import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -25,6 +27,8 @@ class HistoryStatsFragment : Fragment() {
         )
     }
 
+    private lateinit var groupedWorkouts: List<GroupedWorkouts>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHistoryStatsBinding.inflate(inflater, container, false)
 
@@ -37,14 +41,43 @@ class HistoryStatsFragment : Fragment() {
         binding.list.adapter = adapter
     }
 
+    private fun submitFilteredList(routineFilter: String, workoutFilter: String, exerciseFilter: String) {
+        val filteredList: List<GroupedWorkouts> = groupedWorkouts
+            .filter { routineFilter == "All" || it.first.first!! == routineFilter }
+            .filter { workoutFilter == "All" || it.first.second == workoutFilter }
+            .mapNotNull { gw ->
+                val workoutWithExercises = gw.second.mapNotNull { workout ->
+                    val exercises = workout.exercises.filter { exerciseFilter == "All" || it.detail.name == exerciseFilter }
+                    if (exercises.isEmpty()) {
+                        null
+                    } else {
+                        WorkoutWithExercises(workout.workout, exercises, workout.routine)
+                    }
+                }
+                if (workoutWithExercises.isEmpty()) {
+                    null
+                } else {
+                    Pair(gw.first, workoutWithExercises)
+                }
+            }
+        adapter.submitList(filteredList)
+    }
+
     private fun subscribeUi() {
         viewModel.groupedWorkouts.observe(viewLifecycleOwner, Observer { workouts ->
-            val sortedWorkouts = workouts
+            groupedWorkouts = workouts
                 // filter workouts without routine name
                 .filter { !it.first.first.isNullOrBlank() }
                 .sortedBy { it.second.first().workout.startDate }
 
-            adapter.submitList(sortedWorkouts)
+            val (rf, wf, ef) = viewModel.filters.value!!
+            submitFilteredList(rf, wf, ef)
+        })
+
+        viewModel.filters.observe(viewLifecycleOwner, Observer { (rf, wf, ef) ->
+            if (::groupedWorkouts.isInitialized) {
+                submitFilteredList(rf, wf, ef)
+            }
         })
     }
 
