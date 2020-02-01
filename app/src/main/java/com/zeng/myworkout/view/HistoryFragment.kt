@@ -1,5 +1,6 @@
 package com.zeng.myworkout.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
@@ -26,6 +27,7 @@ class HistoryFragment : Fragment() {
 
         setHasOptionsMenu(true)
         setupViewPager()
+        subscribeUi()
         return binding.root
     }
 
@@ -46,6 +48,18 @@ class HistoryFragment : Fragment() {
         binding.viewPager.adapter = adapter
         binding.viewPager.offscreenPageLimit = 2
         binding.tabs.setupWithViewPager(binding.viewPager)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun subscribeUi() {
+        viewModel.filters.observe(viewLifecycleOwner, Observer { (routineFilter, workoutFilter, exerciseFilter) ->
+            if (routineFilter != "All" || workoutFilter != "All" || exerciseFilter != "All") {
+                binding.filters.visibility = View.VISIBLE
+                binding.filters.text = "Routine: $routineFilter - Workout: $workoutFilter - Exercise: $exerciseFilter"
+            } else {
+                binding.filters.visibility = View.GONE
+            }
+        })
     }
 
     private fun initAdapters(): Triple<ArrayAdapter<String>, ArrayAdapter<String>, ArrayAdapter<String>> {
@@ -147,11 +161,7 @@ class HistoryFragment : Fragment() {
         view.spinnerExercise.onItemSelectedListener = SpinnerOnItemSelectedListener(FilterType.EXERCISE, true)
     }
 
-    private inner class SpinnerOnItemSelectedListener(
-        private val type: FilterType,
-        private var init: Boolean
-    ) : AdapterView.OnItemSelectedListener {
-
+    private inner class SpinnerOnItemSelectedListener(private val type: FilterType, private var init: Boolean) : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(p0: AdapterView<*>?) {
         }
 
@@ -168,7 +178,6 @@ class HistoryFragment : Fragment() {
             }
             init = false
         }
-
     }
 
     private enum class FilterType {
