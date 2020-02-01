@@ -7,6 +7,6 @@ import org.koin.core.inject
 
 object SettingsSingleton : KoinComponent {
     private val context by inject<Context>()
-    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     fun isImperial(): Boolean = preferences.getBoolean("imperial", false)
 }
