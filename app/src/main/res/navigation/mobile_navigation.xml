@@ -100,6 +100,11 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.zeng.myworkout.view.SettingsFragment"
+        android:label="@string/title_settings" />
+
+    <fragment
         android:id="@+id/navigation_history"
         android:name="com.zeng.myworkout.view.HistoryFragment"
         android:label="@string/title_history"

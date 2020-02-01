@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="imperial"
+        app:title="Use Imperial Weight Unit"
+        app:summary="Unit system to display weight either lbs or kg"/>
+
+    <SwitchPreferenceCompat
+        app:key="subscribe"
+        app:title="Subscribe for advanced features"
+        app:summary="Obtain even more features to compete with the bests"/>
+
+</PreferenceScreen>

@@ -79,6 +79,9 @@ dependencies {
     // Chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // Settings
+    implementation 'androidx.preference:preference:1.1.0'
+
     implementation 'com.android.support:multidex:1.0.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
