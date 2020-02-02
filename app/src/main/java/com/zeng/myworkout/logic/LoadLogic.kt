@@ -16,6 +16,7 @@ import com.zeng.myworkout.databinding.IntegerPickerBinding
 import com.zeng.myworkout.databinding.NumberPickerBinding
 import com.zeng.myworkout.model.Load
 import com.zeng.myworkout.model.WorkoutExerciseDetail
+import com.zeng.myworkout.util.SettingsSingleton
 import com.zeng.myworkout.util.weightToString
 import com.zeng.myworkout.viewmodel.WorkoutViewModel
 
@@ -97,7 +98,7 @@ fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Int, 
     return { view: View, position: Int, exercise: WorkoutExerciseDetail ->
         val load = exercise.exercise.loads[position]
         val editText = view as EditText
-        var weight = load.value
+        var weight = if (SettingsSingleton.isImperial()) load.value * SettingsSingleton.imperialCoef else load.value
         val numberPickerBinding =
             NumberPickerBinding.inflate(LayoutInflater.from(context), null, false)
         numberPickerBinding.value = weight
@@ -141,8 +142,8 @@ fun setTextEditLoad(context: Context, viewModel: WorkoutViewModel): (View, Int, 
         val dialog = android.app.AlertDialog.Builder(context)
             .setMessage("Weight")
             .setPositiveButton("OK") { _, _ ->
-                load.value = weight
-                editText.setText(weight.weightToString())
+                load.value = if (SettingsSingleton.isImperial()) weight / SettingsSingleton.imperialCoef else weight
+                editText.setText(load.value.weightToString())
                 viewModel.updateWorkoutExercise(exercise.exercise)
             }
             .setNegativeButton("CANCEL") { _, _ -> }

@@ -10,7 +10,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.zeng.myworkout.logic.getHeaviestLoadWeight
-import com.zeng.myworkout.util.weightToString
+import com.zeng.myworkout.util.SettingsSingleton
 import com.zeng.myworkout.viewmodel.DatedWeight
 import com.zeng.myworkout.viewmodel.DatedWorkoutExercise
 import com.zeng.myworkout.viewmodel.WorkoutExercisesByName
@@ -33,7 +33,11 @@ class ExerciseLineChart(private val chart: LineChart) {
         this.dataset = dataset.map { it.first to getHeaviestLoadWeight(it.second.exercise.loads)}
         val entries = this.dataset
             .mapIndexed { i, datedWeight ->
-                Entry(i.toFloat(), datedWeight.second)
+                if (SettingsSingleton.isImperial()) {
+                    Entry(i.toFloat(), datedWeight.second * SettingsSingleton.imperialCoef)
+                } else {
+                    Entry(i.toFloat(), datedWeight.second)
+                }
             }
         val lineDataSet = LineDataSet(entries, exerciseName)
         lineDataSet.axisDependency = YAxis.AxisDependency.LEFT
@@ -54,14 +58,14 @@ class ExerciseLineChart(private val chart: LineChart) {
             }
         }
 
-        chart.axisLeft.axisMinimum = dataset.map{ it.second }.min()!! * (1f - PADDING)
-        chart.axisLeft.axisMaximum = dataset.map{ it.second }.max()!! * (1f + PADDING)
-        chart.axisLeft.textColor = Color.BLACK
-        chart.axisLeft.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return value.weightToString()
-            }
+        if (SettingsSingleton.isImperial()) {
+            chart.axisLeft.axisMinimum = dataset.map{ it.second * SettingsSingleton.imperialCoef }.min()!! * (1f - PADDING)
+            chart.axisLeft.axisMaximum = dataset.map{ it.second * SettingsSingleton.imperialCoef }.max()!! * (1f + PADDING)
+        } else {
+            chart.axisLeft.axisMinimum = dataset.map{ it.second }.min()!! * (1f - PADDING)
+            chart.axisLeft.axisMaximum = dataset.map{ it.second }.max()!! * (1f + PADDING)
         }
+        chart.axisLeft.textColor = Color.BLACK
 
         chart.axisRight.isEnabled = false
         chart.description.isEnabled = false
